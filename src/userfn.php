@@ -43,21 +43,9 @@ function Database_Connecting(&$info)
     //    $info["password"] = "";
     //}
     if (!IsLocal()) { // Testing on local PC
-        // $info["host"] = "localhost";
         $info["user"] = "u736643050_jobtrucking";
         $info["dbname"] = "u736643050_jobtrucking";
         $info["password"] = "PresarioCQ43@";
-        // $info["host"] = "localhost";
-        // $info["user"] = "root";
-        // $info["password"] = "";
-    } else {
-        $info["host"] = "localhost";
-        $info["user"] = "root";
-        $info["password"] = "";
-        // $info["host"] = "localhost";
-        // $info["user"] = "u736643050_jobtrucking";
-        // $info["db_name"] = "u736643050_jobtrucking";
-        // $info["password"] = "PresarioCQ43@";
     }
 }
 
