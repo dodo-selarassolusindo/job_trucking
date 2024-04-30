@@ -32,7 +32,6 @@ function GetStartsWithAFilter($FldExpression, $dbid = "")
 }
 
 // Global user functions
-
 // Database Connecting event
 function Database_Connecting(&$info)
 {
@@ -43,6 +42,15 @@ function Database_Connecting(&$info)
     //    $info["user"] = "root";
     //    $info["password"] = "";
     //}
+    if ($info["id"] == "DB" && IsLocal()) { // Testing on local PC
+        $info["host"] = "locahost";
+        $info["user"] = "root";
+        $info["password"] = "";
+    } else {
+        $info["host"] = "locahost";
+        $info["user"] = "u736643050_jobtrucking";
+        $info["password"] = "PresarioCQ43@";
+    }
 }
 
 // Database Connected event
