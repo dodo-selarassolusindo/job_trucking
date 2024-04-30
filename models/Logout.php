@@ -362,7 +362,6 @@ class Logout
     {
         // Example:
         //$url = "your URL";
-        $url = ".";
     }
 
     // Message Showing event
