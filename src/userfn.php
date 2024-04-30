@@ -36,16 +36,16 @@ function GetStartsWithAFilter($FldExpression, $dbid = "")
 function Database_Connecting(&$info)
 {
     // Example:
-    //var_dump($info);
+    // var_dump($info);
     //if ($info["id"] == "DB" && IsLocal()) { // Testing on local PC
     //    $info["host"] = "locahost";
     //    $info["user"] = "root";
     //    $info["password"] = "";
     //}
     if (!IsLocal()) { // Testing on local PC
-        $info["host"] = "localhost";
+        // $info["host"] = "localhost";
         $info["user"] = "u736643050_jobtrucking";
-        $info["db_name"] = "u736643050_jobtrucking";
+        $info["dbname"] = "u736643050_jobtrucking";
         $info["password"] = "PresarioCQ43@";
         // $info["host"] = "localhost";
         // $info["user"] = "root";
