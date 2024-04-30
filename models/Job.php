@@ -132,10 +132,10 @@ class Job extends DbTable
             'x_Tanggal', // Variable name
             'Tanggal', // Name
             '`Tanggal`', // Expression
-            CastDateFieldForLike("`Tanggal`", 0, "DB"), // Basic search expression
+            CastDateFieldForLike("`Tanggal`", 7, "DB"), // Basic search expression
             133, // Type
             10, // Size
-            0, // Date/Time format
+            7, // Date/Time format
             false, // Is upload field
             '`Tanggal`', // Virtual expression
             false, // Is virtual
@@ -148,7 +148,7 @@ class Job extends DbTable
         $this->Tanggal->Raw = true;
         $this->Tanggal->Nullable = false; // NOT NULL field
         $this->Tanggal->Required = true; // Required field
-        $this->Tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Tanggal->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->Tanggal->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Tanggal'] = &$this->Tanggal;
 
@@ -182,10 +182,10 @@ class Job extends DbTable
             'x_Tanggal_Muat', // Variable name
             'Tanggal_Muat', // Name
             '`Tanggal_Muat`', // Expression
-            CastDateFieldForLike("`Tanggal_Muat`", 0, "DB"), // Basic search expression
+            CastDateFieldForLike("`Tanggal_Muat`", 7, "DB"), // Basic search expression
             133, // Type
             10, // Size
-            0, // Date/Time format
+            7, // Date/Time format
             false, // Is upload field
             '`Tanggal_Muat`', // Virtual expression
             false, // Is virtual
@@ -198,7 +198,7 @@ class Job extends DbTable
         $this->Tanggal_Muat->Raw = true;
         $this->Tanggal_Muat->Nullable = false; // NOT NULL field
         $this->Tanggal_Muat->Required = true; // Required field
-        $this->Tanggal_Muat->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->Tanggal_Muat->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->Tanggal_Muat->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Tanggal_Muat'] = &$this->Tanggal_Muat;
 

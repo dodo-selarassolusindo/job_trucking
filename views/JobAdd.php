@@ -84,7 +84,7 @@ $Page->showMessage();
 <?php if (!$Page->Tanggal->ReadOnly && !$Page->Tanggal->Disabled && !isset($Page->Tanggal->EditAttrs["readonly"]) && !isset($Page->Tanggal->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fjobadd", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
+    let format = "<?= DateFormat(7) ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
@@ -136,7 +136,7 @@ loadjs.ready(["fjobadd", "datetimepicker"], function () {
 <?php if (!$Page->Tanggal_Muat->ReadOnly && !$Page->Tanggal_Muat->Disabled && !isset($Page->Tanggal_Muat->EditAttrs["readonly"]) && !isset($Page->Tanggal_Muat->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fjobadd", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
+    let format = "<?= DateFormat(7) ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
