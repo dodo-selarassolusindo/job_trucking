@@ -50,6 +50,9 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
+<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+        <th class="<?= $Page->Lokasi->headerCellClass() ?>"><span id="elh_job_Lokasi" class="job_Lokasi"><?= $Page->Lokasi->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
         <th class="<?= $Page->Tanggal->headerCellClass() ?>"><span id="elh_job_Tanggal" class="job_Tanggal"><?= $Page->Tanggal->caption() ?></span></th>
 <?php } ?>
@@ -64,9 +67,6 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->Shipper->Visible) { // Shipper ?>
         <th class="<?= $Page->Shipper->headerCellClass() ?>"><span id="elh_job_Shipper" class="job_Shipper"><?= $Page->Shipper->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-        <th class="<?= $Page->Lokasi->headerCellClass() ?>"><span id="elh_job_Lokasi" class="job_Lokasi"><?= $Page->Lokasi->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -89,6 +89,14 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+        <td<?= $Page->Lokasi->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->Lokasi->viewAttributes() ?>>
+<?= $Page->Lokasi->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
         <td<?= $Page->Tanggal->cellAttributes() ?>>
 <span id="">
@@ -126,14 +134,6 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->Shipper->viewAttributes() ?>>
 <?= $Page->Shipper->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-        <td<?= $Page->Lokasi->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->Lokasi->viewAttributes() ?>>
-<?= $Page->Lokasi->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

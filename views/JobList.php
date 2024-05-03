@@ -147,6 +147,9 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+        <th data-name="Lokasi" class="<?= $Page->Lokasi->headerCellClass() ?>"><div id="elh_job_Lokasi" class="job_Lokasi"><?= $Page->renderFieldHeader($Page->Lokasi) ?></div></th>
+<?php } ?>
 <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
         <th data-name="Tanggal" class="<?= $Page->Tanggal->headerCellClass() ?>"><div id="elh_job_Tanggal" class="job_Tanggal"><?= $Page->renderFieldHeader($Page->Tanggal) ?></div></th>
 <?php } ?>
@@ -161,9 +164,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->Shipper->Visible) { // Shipper ?>
         <th data-name="Shipper" class="<?= $Page->Shipper->headerCellClass() ?>"><div id="elh_job_Shipper" class="job_Shipper"><?= $Page->renderFieldHeader($Page->Shipper) ?></div></th>
-<?php } ?>
-<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-        <th data-name="Lokasi" class="<?= $Page->Lokasi->headerCellClass() ?>"><div id="elh_job_Lokasi" class="job_Lokasi"><?= $Page->renderFieldHeader($Page->Lokasi) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -192,6 +192,14 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+        <td data-name="Lokasi"<?= $Page->Lokasi->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_Lokasi" class="el_job_Lokasi">
+<span<?= $Page->Lokasi->viewAttributes() ?>>
+<?= $Page->Lokasi->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
         <td data-name="Tanggal"<?= $Page->Tanggal->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_Tanggal" class="el_job_Tanggal">
@@ -229,14 +237,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_Shipper" class="el_job_Shipper">
 <span<?= $Page->Shipper->viewAttributes() ?>>
 <?= $Page->Shipper->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-        <td data-name="Lokasi"<?= $Page->Lokasi->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_Lokasi" class="el_job_Lokasi">
-<span<?= $Page->Lokasi->viewAttributes() ?>>
-<?= $Page->Lokasi->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

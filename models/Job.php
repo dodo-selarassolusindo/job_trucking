@@ -47,12 +47,12 @@ class Job extends DbTable
 
     // Fields
     public $id;
+    public $Lokasi;
     public $Tanggal;
     public $Nomor;
     public $Tanggal_Muat;
     public $Customer;
     public $Shipper;
-    public $Lokasi;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -125,6 +125,36 @@ class Job extends DbTable
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['id'] = &$this->id;
+
+        // Lokasi
+        $this->Lokasi = new DbField(
+            $this, // Table
+            'x_Lokasi', // Variable name
+            'Lokasi', // Name
+            '`Lokasi`', // Expression
+            '`Lokasi`', // Basic search expression
+            3, // Type
+            11, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Lokasi`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'SELECT' // Edit Tag
+        );
+        $this->Lokasi->InputTextType = "text";
+        $this->Lokasi->Raw = true;
+        $this->Lokasi->Nullable = false; // NOT NULL field
+        $this->Lokasi->Required = true; // Required field
+        $this->Lokasi->setSelectMultiple(false); // Select one
+        $this->Lokasi->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->Lokasi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->Lokasi->Lookup = new Lookup($this->Lokasi, 'lokasi', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->Lokasi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Lokasi->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['Lokasi'] = &$this->Lokasi;
 
         // Tanggal
         $this->Tanggal = new DbField(
@@ -253,36 +283,6 @@ class Job extends DbTable
         $this->Shipper->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Shipper->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Shipper'] = &$this->Shipper;
-
-        // Lokasi
-        $this->Lokasi = new DbField(
-            $this, // Table
-            'x_Lokasi', // Variable name
-            'Lokasi', // Name
-            '`Lokasi`', // Expression
-            '`Lokasi`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Lokasi`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->Lokasi->InputTextType = "text";
-        $this->Lokasi->Raw = true;
-        $this->Lokasi->Nullable = false; // NOT NULL field
-        $this->Lokasi->Required = true; // Required field
-        $this->Lokasi->setSelectMultiple(false); // Select one
-        $this->Lokasi->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->Lokasi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Lokasi->Lookup = new Lookup($this->Lokasi, 'lokasi', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->Lokasi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Lokasi->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Lokasi'] = &$this->Lokasi;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -803,12 +803,12 @@ class Job extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
+        $this->Lokasi->DbValue = $row['Lokasi'];
         $this->Tanggal->DbValue = $row['Tanggal'];
         $this->Nomor->DbValue = $row['Nomor'];
         $this->Tanggal_Muat->DbValue = $row['Tanggal_Muat'];
         $this->Customer->DbValue = $row['Customer'];
         $this->Shipper->DbValue = $row['Shipper'];
-        $this->Lokasi->DbValue = $row['Lokasi'];
     }
 
     // Delete uploaded files
@@ -1169,12 +1169,12 @@ class Job extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
         $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
         $this->Customer->setDbValue($row['Customer']);
         $this->Shipper->setDbValue($row['Shipper']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
     }
 
     // Render list content
@@ -1207,6 +1207,8 @@ class Job extends DbTable
 
         // id
 
+        // Lokasi
+
         // Tanggal
 
         // Nomor
@@ -1216,30 +1218,9 @@ class Job extends DbTable
         // Customer
 
         // Shipper
-
-        // Lokasi
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
-
-        // Tanggal
-        $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-        $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-        // Nomor
-        $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-        // Tanggal_Muat
-        $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-        $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-        // Customer
-        $this->Customer->ViewValue = $this->Customer->CurrentValue;
-        $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
-
-        // Shipper
-        $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
-        $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
 
         // Lokasi
         $curVal = strval($this->Lokasi->CurrentValue);
@@ -1264,9 +1245,32 @@ class Job extends DbTable
             $this->Lokasi->ViewValue = null;
         }
 
+        // Tanggal
+        $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
+        $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+
+        // Nomor
+        $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+
+        // Tanggal_Muat
+        $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
+        $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+
+        // Customer
+        $this->Customer->ViewValue = $this->Customer->CurrentValue;
+        $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+
+        // Shipper
+        $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
+        $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
+
         // id
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
+
+        // Lokasi
+        $this->Lokasi->HrefValue = "";
+        $this->Lokasi->TooltipValue = "";
 
         // Tanggal
         $this->Tanggal->HrefValue = "";
@@ -1288,10 +1292,6 @@ class Job extends DbTable
         $this->Shipper->HrefValue = "";
         $this->Shipper->TooltipValue = "";
 
-        // Lokasi
-        $this->Lokasi->HrefValue = "";
-        $this->Lokasi->TooltipValue = "";
-
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1310,6 +1310,10 @@ class Job extends DbTable
         // id
         $this->id->setupEditAttributes();
         $this->id->EditValue = $this->id->CurrentValue;
+
+        // Lokasi
+        $this->Lokasi->setupEditAttributes();
+        $this->Lokasi->PlaceHolder = RemoveHtml($this->Lokasi->caption());
 
         // Tanggal
         $this->Tanggal->setupEditAttributes();
@@ -1345,10 +1349,6 @@ class Job extends DbTable
             $this->Shipper->EditValue = FormatNumber($this->Shipper->EditValue, null);
         }
 
-        // Lokasi
-        $this->Lokasi->setupEditAttributes();
-        $this->Lokasi->PlaceHolder = RemoveHtml($this->Lokasi->caption());
-
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1377,20 +1377,20 @@ class Job extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
+                    $doc->exportCaption($this->Lokasi);
                     $doc->exportCaption($this->Tanggal);
                     $doc->exportCaption($this->Nomor);
                     $doc->exportCaption($this->Tanggal_Muat);
                     $doc->exportCaption($this->Customer);
                     $doc->exportCaption($this->Shipper);
-                    $doc->exportCaption($this->Lokasi);
                 } else {
                     $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->Lokasi);
                     $doc->exportCaption($this->Tanggal);
                     $doc->exportCaption($this->Nomor);
                     $doc->exportCaption($this->Tanggal_Muat);
                     $doc->exportCaption($this->Customer);
                     $doc->exportCaption($this->Shipper);
-                    $doc->exportCaption($this->Lokasi);
                 }
                 $doc->endExportRow();
             }
@@ -1417,20 +1417,20 @@ class Job extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
+                        $doc->exportField($this->Lokasi);
                         $doc->exportField($this->Tanggal);
                         $doc->exportField($this->Nomor);
                         $doc->exportField($this->Tanggal_Muat);
                         $doc->exportField($this->Customer);
                         $doc->exportField($this->Shipper);
-                        $doc->exportField($this->Lokasi);
                     } else {
                         $doc->exportField($this->id);
+                        $doc->exportField($this->Lokasi);
                         $doc->exportField($this->Tanggal);
                         $doc->exportField($this->Nomor);
                         $doc->exportField($this->Tanggal_Muat);
                         $doc->exportField($this->Customer);
                         $doc->exportField($this->Shipper);
-                        $doc->exportField($this->Lokasi);
                     }
                     $doc->endExportRow($rowCnt);
                 }

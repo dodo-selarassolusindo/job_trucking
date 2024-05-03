@@ -122,12 +122,12 @@ class JobAdd extends Job
     public function setVisibility()
     {
         $this->id->Visible = false;
+        $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
         $this->Tanggal_Muat->setVisibility();
         $this->Customer->setVisibility();
         $this->Shipper->setVisibility();
-        $this->Lokasi->setVisibility();
     }
 
     // Constructor
@@ -671,6 +671,16 @@ class JobAdd extends Job
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
+        // Check field name 'Lokasi' first before field var 'x_Lokasi'
+        $val = $CurrentForm->hasValue("Lokasi") ? $CurrentForm->getValue("Lokasi") : $CurrentForm->getValue("x_Lokasi");
+        if (!$this->Lokasi->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Lokasi->Visible = false; // Disable update for API request
+            } else {
+                $this->Lokasi->setFormValue($val);
+            }
+        }
+
         // Check field name 'Tanggal' first before field var 'x_Tanggal'
         $val = $CurrentForm->hasValue("Tanggal") ? $CurrentForm->getValue("Tanggal") : $CurrentForm->getValue("x_Tanggal");
         if (!$this->Tanggal->IsDetailKey) {
@@ -723,16 +733,6 @@ class JobAdd extends Job
             }
         }
 
-        // Check field name 'Lokasi' first before field var 'x_Lokasi'
-        $val = $CurrentForm->hasValue("Lokasi") ? $CurrentForm->getValue("Lokasi") : $CurrentForm->getValue("x_Lokasi");
-        if (!$this->Lokasi->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Lokasi->Visible = false; // Disable update for API request
-            } else {
-                $this->Lokasi->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -741,6 +741,7 @@ class JobAdd extends Job
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->Lokasi->CurrentValue = $this->Lokasi->FormValue;
         $this->Tanggal->CurrentValue = $this->Tanggal->FormValue;
         $this->Tanggal->CurrentValue = UnFormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern());
         $this->Nomor->CurrentValue = $this->Nomor->FormValue;
@@ -748,7 +749,6 @@ class JobAdd extends Job
         $this->Tanggal_Muat->CurrentValue = UnFormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern());
         $this->Customer->CurrentValue = $this->Customer->FormValue;
         $this->Shipper->CurrentValue = $this->Shipper->FormValue;
-        $this->Lokasi->CurrentValue = $this->Lokasi->FormValue;
     }
 
     /**
@@ -790,12 +790,12 @@ class JobAdd extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
         $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
         $this->Customer->setDbValue($row['Customer']);
         $this->Shipper->setDbValue($row['Shipper']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
     }
 
     // Return a row with default values
@@ -803,12 +803,12 @@ class JobAdd extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
         $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
         $row['Customer'] = $this->Customer->DefaultValue;
         $row['Shipper'] = $this->Shipper->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         return $row;
     }
 
@@ -846,6 +846,9 @@ class JobAdd extends Job
         // id
         $this->id->RowCssClass = "row";
 
+        // Lokasi
+        $this->Lokasi->RowCssClass = "row";
+
         // Tanggal
         $this->Tanggal->RowCssClass = "row";
 
@@ -861,32 +864,10 @@ class JobAdd extends Job
         // Shipper
         $this->Shipper->RowCssClass = "row";
 
-        // Lokasi
-        $this->Lokasi->RowCssClass = "row";
-
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-            // Customer
-            $this->Customer->ViewValue = $this->Customer->CurrentValue;
-            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
-
-            // Shipper
-            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
-            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
@@ -912,6 +893,28 @@ class JobAdd extends Job
             }
 
             // Tanggal
+            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
+            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+
+            // Nomor
+            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+
+            // Tanggal_Muat
+            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
+            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+
+            // Customer
+            $this->Customer->ViewValue = $this->Customer->CurrentValue;
+            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+
+            // Shipper
+            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
+            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
+
+            // Lokasi
+            $this->Lokasi->HrefValue = "";
+
+            // Tanggal
             $this->Tanggal->HrefValue = "";
 
             // Nomor
@@ -925,44 +928,7 @@ class JobAdd extends Job
 
             // Shipper
             $this->Shipper->HrefValue = "";
-
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
-            // Tanggal
-            $this->Tanggal->setupEditAttributes();
-            $this->Tanggal->EditValue = HtmlEncode(FormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern()));
-            $this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
-
-            // Nomor
-            $this->Nomor->setupEditAttributes();
-            if (!$this->Nomor->Raw) {
-                $this->Nomor->CurrentValue = HtmlDecode($this->Nomor->CurrentValue);
-            }
-            $this->Nomor->EditValue = HtmlEncode($this->Nomor->CurrentValue);
-            $this->Nomor->PlaceHolder = RemoveHtml($this->Nomor->caption());
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->setupEditAttributes();
-            $this->Tanggal_Muat->EditValue = HtmlEncode(FormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern()));
-            $this->Tanggal_Muat->PlaceHolder = RemoveHtml($this->Tanggal_Muat->caption());
-
-            // Customer
-            $this->Customer->setupEditAttributes();
-            $this->Customer->EditValue = $this->Customer->CurrentValue;
-            $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
-            if (strval($this->Customer->EditValue) != "" && is_numeric($this->Customer->EditValue)) {
-                $this->Customer->EditValue = FormatNumber($this->Customer->EditValue, null);
-            }
-
-            // Shipper
-            $this->Shipper->setupEditAttributes();
-            $this->Shipper->EditValue = $this->Shipper->CurrentValue;
-            $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
-            if (strval($this->Shipper->EditValue) != "" && is_numeric($this->Shipper->EditValue)) {
-                $this->Shipper->EditValue = FormatNumber($this->Shipper->EditValue, null);
-            }
-
             // Lokasi
             $curVal = trim(strval($this->Lokasi->CurrentValue));
             if ($curVal != "") {
@@ -998,7 +964,44 @@ class JobAdd extends Job
             }
             $this->Lokasi->PlaceHolder = RemoveHtml($this->Lokasi->caption());
 
+            // Tanggal
+            $this->Tanggal->setupEditAttributes();
+            $this->Tanggal->EditValue = HtmlEncode(FormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern()));
+            $this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
+
+            // Nomor
+            $this->Nomor->setupEditAttributes();
+            if (!$this->Nomor->Raw) {
+                $this->Nomor->CurrentValue = HtmlDecode($this->Nomor->CurrentValue);
+            }
+            $this->Nomor->EditValue = HtmlEncode($this->Nomor->CurrentValue);
+            $this->Nomor->PlaceHolder = RemoveHtml($this->Nomor->caption());
+
+            // Tanggal_Muat
+            $this->Tanggal_Muat->setupEditAttributes();
+            $this->Tanggal_Muat->EditValue = HtmlEncode(FormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern()));
+            $this->Tanggal_Muat->PlaceHolder = RemoveHtml($this->Tanggal_Muat->caption());
+
+            // Customer
+            $this->Customer->setupEditAttributes();
+            $this->Customer->EditValue = $this->Customer->CurrentValue;
+            $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
+            if (strval($this->Customer->EditValue) != "" && is_numeric($this->Customer->EditValue)) {
+                $this->Customer->EditValue = FormatNumber($this->Customer->EditValue, null);
+            }
+
+            // Shipper
+            $this->Shipper->setupEditAttributes();
+            $this->Shipper->EditValue = $this->Shipper->CurrentValue;
+            $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
+            if (strval($this->Shipper->EditValue) != "" && is_numeric($this->Shipper->EditValue)) {
+                $this->Shipper->EditValue = FormatNumber($this->Shipper->EditValue, null);
+            }
+
             // Add refer script
+
+            // Lokasi
+            $this->Lokasi->HrefValue = "";
 
             // Tanggal
             $this->Tanggal->HrefValue = "";
@@ -1014,9 +1017,6 @@ class JobAdd extends Job
 
             // Shipper
             $this->Shipper->HrefValue = "";
-
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1038,6 +1038,11 @@ class JobAdd extends Job
             return true;
         }
         $validateForm = true;
+            if ($this->Lokasi->Visible && $this->Lokasi->Required) {
+                if (!$this->Lokasi->IsDetailKey && EmptyValue($this->Lokasi->FormValue)) {
+                    $this->Lokasi->addErrorMessage(str_replace("%s", $this->Lokasi->caption(), $this->Lokasi->RequiredErrorMessage));
+                }
+            }
             if ($this->Tanggal->Visible && $this->Tanggal->Required) {
                 if (!$this->Tanggal->IsDetailKey && EmptyValue($this->Tanggal->FormValue)) {
                     $this->Tanggal->addErrorMessage(str_replace("%s", $this->Tanggal->caption(), $this->Tanggal->RequiredErrorMessage));
@@ -1074,11 +1079,6 @@ class JobAdd extends Job
             }
             if (!CheckInteger($this->Shipper->FormValue)) {
                 $this->Shipper->addErrorMessage($this->Shipper->getErrorMessage(false));
-            }
-            if ($this->Lokasi->Visible && $this->Lokasi->Required) {
-                if (!$this->Lokasi->IsDetailKey && EmptyValue($this->Lokasi->FormValue)) {
-                    $this->Lokasi->addErrorMessage(str_replace("%s", $this->Lokasi->caption(), $this->Lokasi->RequiredErrorMessage));
-                }
             }
 
         // Return validate result
@@ -1151,6 +1151,9 @@ class JobAdd extends Job
         global $Security;
         $rsnew = [];
 
+        // Lokasi
+        $this->Lokasi->setDbValueDef($rsnew, $this->Lokasi->CurrentValue, false);
+
         // Tanggal
         $this->Tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern()), false);
 
@@ -1165,9 +1168,6 @@ class JobAdd extends Job
 
         // Shipper
         $this->Shipper->setDbValueDef($rsnew, $this->Shipper->CurrentValue, false);
-
-        // Lokasi
-        $this->Lokasi->setDbValueDef($rsnew, $this->Lokasi->CurrentValue, false);
         return $rsnew;
     }
 
@@ -1177,6 +1177,9 @@ class JobAdd extends Job
      */
     protected function restoreAddFormFromRow($row)
     {
+        if (isset($row['Lokasi'])) { // Lokasi
+            $this->Lokasi->setFormValue($row['Lokasi']);
+        }
         if (isset($row['Tanggal'])) { // Tanggal
             $this->Tanggal->setFormValue($row['Tanggal']);
         }
@@ -1191,9 +1194,6 @@ class JobAdd extends Job
         }
         if (isset($row['Shipper'])) { // Shipper
             $this->Shipper->setFormValue($row['Shipper']);
-        }
-        if (isset($row['Lokasi'])) { // Lokasi
-            $this->Lokasi->setFormValue($row['Lokasi']);
         }
     }
 

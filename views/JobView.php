@@ -51,6 +51,17 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="job">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
+<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+    <tr id="r_Lokasi"<?= $Page->Lokasi->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_Lokasi"><?= $Page->Lokasi->caption() ?></span></td>
+        <td data-name="Lokasi"<?= $Page->Lokasi->cellAttributes() ?>>
+<span id="el_job_Lokasi">
+<span<?= $Page->Lokasi->viewAttributes() ?>>
+<?= $Page->Lokasi->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
     <tr id="r_Tanggal"<?= $Page->Tanggal->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_Tanggal"><?= $Page->Tanggal->caption() ?></span></td>
@@ -102,17 +113,6 @@ loadjs.ready("head", function () {
 <span id="el_job_Shipper">
 <span<?= $Page->Shipper->viewAttributes() ?>>
 <?= $Page->Shipper->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-    <tr id="r_Lokasi"<?= $Page->Lokasi->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_Lokasi"><?= $Page->Lokasi->caption() ?></span></td>
-        <td data-name="Lokasi"<?= $Page->Lokasi->cellAttributes() ?>>
-<span id="el_job_Lokasi">
-<span<?= $Page->Lokasi->viewAttributes() ?>>
-<?= $Page->Lokasi->getViewValue() ?></span>
 </span>
 </td>
     </tr>

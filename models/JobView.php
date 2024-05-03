@@ -140,12 +140,12 @@ class JobView extends Job
     public function setVisibility()
     {
         $this->id->setVisibility();
+        $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
         $this->Tanggal_Muat->setVisibility();
         $this->Customer->setVisibility();
         $this->Shipper->setVisibility();
-        $this->Lokasi->setVisibility();
     }
 
     // Constructor
@@ -736,12 +736,12 @@ class JobView extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
         $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
         $this->Customer->setDbValue($row['Customer']);
         $this->Shipper->setDbValue($row['Shipper']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
     }
 
     // Return a row with default values
@@ -749,12 +749,12 @@ class JobView extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
         $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
         $row['Customer'] = $this->Customer->DefaultValue;
         $row['Shipper'] = $this->Shipper->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         return $row;
     }
 
@@ -778,6 +778,8 @@ class JobView extends Job
 
         // id
 
+        // Lokasi
+
         // Tanggal
 
         // Nomor
@@ -788,31 +790,10 @@ class JobView extends Job
 
         // Shipper
 
-        // Lokasi
-
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-            // Customer
-            $this->Customer->ViewValue = $this->Customer->CurrentValue;
-            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
-
-            // Shipper
-            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
-            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
@@ -838,6 +819,29 @@ class JobView extends Job
             }
 
             // Tanggal
+            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
+            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+
+            // Nomor
+            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+
+            // Tanggal_Muat
+            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
+            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+
+            // Customer
+            $this->Customer->ViewValue = $this->Customer->CurrentValue;
+            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+
+            // Shipper
+            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
+            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
+
+            // Lokasi
+            $this->Lokasi->HrefValue = "";
+            $this->Lokasi->TooltipValue = "";
+
+            // Tanggal
             $this->Tanggal->HrefValue = "";
             $this->Tanggal->TooltipValue = "";
 
@@ -856,10 +860,6 @@ class JobView extends Job
             // Shipper
             $this->Shipper->HrefValue = "";
             $this->Shipper->TooltipValue = "";
-
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-            $this->Lokasi->TooltipValue = "";
         }
 
         // Call Row Rendered event

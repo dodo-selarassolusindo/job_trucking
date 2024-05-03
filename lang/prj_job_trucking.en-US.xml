@@ -177,6 +177,9 @@
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
+      <field id="lokasi">
+        <phrase id="fldcaption" value="Lokasi" />
+      </field>
       <field id="tanggal">
         <phrase id="fldcaption" value="Tanggal" />
       </field>
@@ -191,9 +194,6 @@
       </field>
       <field id="shipper">
         <phrase id="fldcaption" value="Shipper" />
-      </field>
-      <field id="lokasi">
-        <phrase id="fldcaption" value="Lokasi" />
       </field>
     </table>
     <table id="lokasi">

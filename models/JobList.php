@@ -146,12 +146,12 @@ class JobList extends Job
     public function setVisibility()
     {
         $this->id->Visible = false;
+        $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
         $this->Tanggal_Muat->setVisibility();
         $this->Customer->setVisibility();
         $this->Shipper->setVisibility();
-        $this->Lokasi->setVisibility();
     }
 
     // Constructor
@@ -1031,12 +1031,12 @@ class JobList extends Job
         // Initialize
         $filterList = "";
         $savedFilterList = "";
+        $filterList = Concat($filterList, $this->Lokasi->AdvancedSearch->toJson(), ","); // Field Lokasi
         $filterList = Concat($filterList, $this->Tanggal->AdvancedSearch->toJson(), ","); // Field Tanggal
         $filterList = Concat($filterList, $this->Nomor->AdvancedSearch->toJson(), ","); // Field Nomor
         $filterList = Concat($filterList, $this->Tanggal_Muat->AdvancedSearch->toJson(), ","); // Field Tanggal_Muat
         $filterList = Concat($filterList, $this->Customer->AdvancedSearch->toJson(), ","); // Field Customer
         $filterList = Concat($filterList, $this->Shipper->AdvancedSearch->toJson(), ","); // Field Shipper
-        $filterList = Concat($filterList, $this->Lokasi->AdvancedSearch->toJson(), ","); // Field Lokasi
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1075,6 +1075,14 @@ class JobList extends Job
         }
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
+
+        // Field Lokasi
+        $this->Lokasi->AdvancedSearch->SearchValue = @$filter["x_Lokasi"];
+        $this->Lokasi->AdvancedSearch->SearchOperator = @$filter["z_Lokasi"];
+        $this->Lokasi->AdvancedSearch->SearchCondition = @$filter["v_Lokasi"];
+        $this->Lokasi->AdvancedSearch->SearchValue2 = @$filter["y_Lokasi"];
+        $this->Lokasi->AdvancedSearch->SearchOperator2 = @$filter["w_Lokasi"];
+        $this->Lokasi->AdvancedSearch->save();
 
         // Field Tanggal
         $this->Tanggal->AdvancedSearch->SearchValue = @$filter["x_Tanggal"];
@@ -1115,14 +1123,6 @@ class JobList extends Job
         $this->Shipper->AdvancedSearch->SearchValue2 = @$filter["y_Shipper"];
         $this->Shipper->AdvancedSearch->SearchOperator2 = @$filter["w_Shipper"];
         $this->Shipper->AdvancedSearch->save();
-
-        // Field Lokasi
-        $this->Lokasi->AdvancedSearch->SearchValue = @$filter["x_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchOperator = @$filter["z_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchCondition = @$filter["v_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchValue2 = @$filter["y_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchOperator2 = @$filter["w_Lokasi"];
-        $this->Lokasi->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1241,12 +1241,12 @@ class JobList extends Job
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->Lokasi); // Lokasi
             $this->updateSort($this->Tanggal); // Tanggal
             $this->updateSort($this->Nomor); // Nomor
             $this->updateSort($this->Tanggal_Muat); // Tanggal_Muat
             $this->updateSort($this->Customer); // Customer
             $this->updateSort($this->Shipper); // Shipper
-            $this->updateSort($this->Lokasi); // Lokasi
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1272,12 +1272,12 @@ class JobList extends Job
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
+                $this->Lokasi->setSort("");
                 $this->Tanggal->setSort("");
                 $this->Nomor->setSort("");
                 $this->Tanggal_Muat->setSort("");
                 $this->Customer->setSort("");
                 $this->Shipper->setSort("");
-                $this->Lokasi->setSort("");
             }
 
             // Reset start position
@@ -1515,12 +1515,12 @@ class JobList extends Job
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
+            $this->createColumnOption($option, "Lokasi");
             $this->createColumnOption($option, "Tanggal");
             $this->createColumnOption($option, "Nomor");
             $this->createColumnOption($option, "Tanggal_Muat");
             $this->createColumnOption($option, "Customer");
             $this->createColumnOption($option, "Shipper");
-            $this->createColumnOption($option, "Lokasi");
         }
 
         // Set up custom actions
@@ -1960,12 +1960,12 @@ class JobList extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
         $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
         $this->Customer->setDbValue($row['Customer']);
         $this->Shipper->setDbValue($row['Shipper']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
     }
 
     // Return a row with default values
@@ -1973,12 +1973,12 @@ class JobList extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
         $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
         $row['Customer'] = $this->Customer->DefaultValue;
         $row['Shipper'] = $this->Shipper->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
         return $row;
     }
 
@@ -2021,6 +2021,8 @@ class JobList extends Job
 
         // id
 
+        // Lokasi
+
         // Tanggal
 
         // Nomor
@@ -2031,31 +2033,10 @@ class JobList extends Job
 
         // Shipper
 
-        // Lokasi
-
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-            // Customer
-            $this->Customer->ViewValue = $this->Customer->CurrentValue;
-            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
-
-            // Shipper
-            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
-            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
@@ -2081,6 +2062,29 @@ class JobList extends Job
             }
 
             // Tanggal
+            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
+            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+
+            // Nomor
+            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+
+            // Tanggal_Muat
+            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
+            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+
+            // Customer
+            $this->Customer->ViewValue = $this->Customer->CurrentValue;
+            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+
+            // Shipper
+            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
+            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
+
+            // Lokasi
+            $this->Lokasi->HrefValue = "";
+            $this->Lokasi->TooltipValue = "";
+
+            // Tanggal
             $this->Tanggal->HrefValue = "";
             $this->Tanggal->TooltipValue = "";
 
@@ -2099,10 +2103,6 @@ class JobList extends Job
             // Shipper
             $this->Shipper->HrefValue = "";
             $this->Shipper->TooltipValue = "";
-
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-            $this->Lokasi->TooltipValue = "";
         }
 
         // Call Row Rendered event

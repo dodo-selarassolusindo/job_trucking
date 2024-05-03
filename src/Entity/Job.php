@@ -33,6 +33,9 @@ class Job extends AbstractEntity
     #[GeneratedValue]
     private int $id;
 
+    #[Column(name: "Lokasi", type: "integer")]
+    private int $lokasi;
+
     #[Column(name: "Tanggal", type: "date")]
     private DateTime $tanggal;
 
@@ -48,9 +51,6 @@ class Job extends AbstractEntity
     #[Column(name: "Shipper", type: "integer")]
     private int $shipper;
 
-    #[Column(name: "Lokasi", type: "integer")]
-    private int $lokasi;
-
     public function getId(): int
     {
         return $this->id;
@@ -59,6 +59,17 @@ class Job extends AbstractEntity
     public function setId(int $value): static
     {
         $this->id = $value;
+        return $this;
+    }
+
+    public function getLokasi(): int
+    {
+        return $this->lokasi;
+    }
+
+    public function setLokasi(int $value): static
+    {
+        $this->lokasi = $value;
         return $this;
     }
 
@@ -114,17 +125,6 @@ class Job extends AbstractEntity
     public function setShipper(int $value): static
     {
         $this->shipper = $value;
-        return $this;
-    }
-
-    public function getLokasi(): int
-    {
-        return $this->lokasi;
-    }
-
-    public function setLokasi(int $value): static
-    {
-        $this->lokasi = $value;
         return $this;
     }
 }

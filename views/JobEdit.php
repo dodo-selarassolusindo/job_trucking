@@ -28,12 +28,12 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
+            ["Lokasi", [fields.Lokasi.visible && fields.Lokasi.required ? ew.Validators.required(fields.Lokasi.caption) : null], fields.Lokasi.isInvalid],
             ["Tanggal", [fields.Tanggal.visible && fields.Tanggal.required ? ew.Validators.required(fields.Tanggal.caption) : null, ew.Validators.datetime(fields.Tanggal.clientFormatPattern)], fields.Tanggal.isInvalid],
             ["Nomor", [fields.Nomor.visible && fields.Nomor.required ? ew.Validators.required(fields.Nomor.caption) : null], fields.Nomor.isInvalid],
             ["Tanggal_Muat", [fields.Tanggal_Muat.visible && fields.Tanggal_Muat.required ? ew.Validators.required(fields.Tanggal_Muat.caption) : null, ew.Validators.datetime(fields.Tanggal_Muat.clientFormatPattern)], fields.Tanggal_Muat.isInvalid],
             ["Customer", [fields.Customer.visible && fields.Customer.required ? ew.Validators.required(fields.Customer.caption) : null, ew.Validators.integer], fields.Customer.isInvalid],
-            ["Shipper", [fields.Shipper.visible && fields.Shipper.required ? ew.Validators.required(fields.Shipper.caption) : null, ew.Validators.integer], fields.Shipper.isInvalid],
-            ["Lokasi", [fields.Lokasi.visible && fields.Lokasi.required ? ew.Validators.required(fields.Lokasi.caption) : null], fields.Lokasi.isInvalid]
+            ["Shipper", [fields.Shipper.visible && fields.Shipper.required ? ew.Validators.required(fields.Shipper.caption) : null, ew.Validators.integer], fields.Shipper.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -74,6 +74,44 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
+    <div id="r_Lokasi"<?= $Page->Lokasi->rowAttributes() ?>>
+        <label id="elh_job_Lokasi" for="x_Lokasi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Lokasi->caption() ?><?= $Page->Lokasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Lokasi->cellAttributes() ?>>
+<span id="el_job_Lokasi">
+    <select
+        id="x_Lokasi"
+        name="x_Lokasi"
+        class="form-control ew-select<?= $Page->Lokasi->isInvalidClass() ?>"
+        data-select2-id="fjobedit_x_Lokasi"
+        data-table="job"
+        data-field="x_Lokasi"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->Lokasi->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->Lokasi->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->Lokasi->getPlaceHolder()) ?>"
+        <?= $Page->Lokasi->editAttributes() ?>>
+        <?= $Page->Lokasi->selectOptionListHtml("x_Lokasi") ?>
+    </select>
+    <?= $Page->Lokasi->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->Lokasi->getErrorMessage() ?></div>
+<?= $Page->Lokasi->Lookup->getParamTag($Page, "p_x_Lokasi") ?>
+<script>
+loadjs.ready("fjobedit", function() {
+    var options = { name: "x_Lokasi", selectId: "fjobedit_x_Lokasi" };
+    if (fjobedit.lists.Lokasi?.lookupOptions.length) {
+        options.data = { id: "x_Lokasi", form: "fjobedit" };
+    } else {
+        options.ajax = { id: "x_Lokasi", form: "fjobedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.job.fields.Lokasi.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->Tanggal->Visible) { // Tanggal ?>
     <div id="r_Tanggal"<?= $Page->Tanggal->rowAttributes() ?>>
         <label id="elh_job_Tanggal" for="x_Tanggal" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Tanggal->caption() ?><?= $Page->Tanggal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -188,44 +226,6 @@ loadjs.ready(["fjobedit", "datetimepicker"], function () {
 <input type="<?= $Page->Shipper->getInputTextType() ?>" name="x_Shipper" id="x_Shipper" data-table="job" data-field="x_Shipper" value="<?= $Page->Shipper->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Shipper->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Shipper->formatPattern()) ?>"<?= $Page->Shipper->editAttributes() ?> aria-describedby="x_Shipper_help">
 <?= $Page->Shipper->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->Shipper->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->Lokasi->Visible) { // Lokasi ?>
-    <div id="r_Lokasi"<?= $Page->Lokasi->rowAttributes() ?>>
-        <label id="elh_job_Lokasi" for="x_Lokasi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Lokasi->caption() ?><?= $Page->Lokasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Lokasi->cellAttributes() ?>>
-<span id="el_job_Lokasi">
-    <select
-        id="x_Lokasi"
-        name="x_Lokasi"
-        class="form-control ew-select<?= $Page->Lokasi->isInvalidClass() ?>"
-        data-select2-id="fjobedit_x_Lokasi"
-        data-table="job"
-        data-field="x_Lokasi"
-        data-caption="<?= HtmlEncode(RemoveHtml($Page->Lokasi->caption())) ?>"
-        data-modal-lookup="true"
-        data-value-separator="<?= $Page->Lokasi->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->Lokasi->getPlaceHolder()) ?>"
-        <?= $Page->Lokasi->editAttributes() ?>>
-        <?= $Page->Lokasi->selectOptionListHtml("x_Lokasi") ?>
-    </select>
-    <?= $Page->Lokasi->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->Lokasi->getErrorMessage() ?></div>
-<?= $Page->Lokasi->Lookup->getParamTag($Page, "p_x_Lokasi") ?>
-<script>
-loadjs.ready("fjobedit", function() {
-    var options = { name: "x_Lokasi", selectId: "fjobedit_x_Lokasi" };
-    if (fjobedit.lists.Lokasi?.lookupOptions.length) {
-        options.data = { id: "x_Lokasi", form: "fjobedit" };
-    } else {
-        options.ajax = { id: "x_Lokasi", form: "fjobedit", limit: ew.LOOKUP_PAGE_SIZE };
-    }
-    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.job.fields.Lokasi.modalLookupOptions);
-    ew.createModalLookup(options);
-});
-</script>
 </span>
 </div></div>
     </div>
