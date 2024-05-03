@@ -186,7 +186,7 @@
     </table>
     <table id="job">
       <phrase id="tblcaption" value="Job" />
-      <phrase id="tblpagecaption1" value="Global" />
+      <phrase id="tblpagecaption1" value="Umum" />
       <phrase id="tblpagecaption2" value="Detail" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
