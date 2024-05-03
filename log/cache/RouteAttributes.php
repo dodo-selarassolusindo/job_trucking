@@ -26,6 +26,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_job_trucking\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
@@ -43,6 +48,31 @@
     [
         'PHPMaker2024\\prj_job_trucking\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -237,6 +267,11 @@
                 '/audittrailedit[/{Id}]',
                 '/audittraildelete[/{Id}]',
                 '/beranda[/{params:.*}]',
+                '/customerlist[/{id}]',
+                '/customeradd[/{id}]',
+                '/customerview[/{id}]',
+                '/customeredit[/{id}]',
+                '/customerdelete[/{id}]',
                 '/employeeslist[/{EmployeeID}]',
                 '/employeesadd[/{EmployeeID}]',
                 '/employeesview[/{EmployeeID}]',
@@ -277,6 +312,11 @@
                 'PHPMaker2024\\prj_job_trucking\\AudittrailController:edit',
                 'PHPMaker2024\\prj_job_trucking\\AudittrailController:delete',
                 'PHPMaker2024\\prj_job_trucking\\BerandaController:custom',
+                'PHPMaker2024\\prj_job_trucking\\CustomerController:list',
+                'PHPMaker2024\\prj_job_trucking\\CustomerController:add',
+                'PHPMaker2024\\prj_job_trucking\\CustomerController:view',
+                'PHPMaker2024\\prj_job_trucking\\CustomerController:edit',
+                'PHPMaker2024\\prj_job_trucking\\CustomerController:delete',
                 'PHPMaker2024\\prj_job_trucking\\EmployeesController:list',
                 'PHPMaker2024\\prj_job_trucking\\EmployeesController:add',
                 'PHPMaker2024\\prj_job_trucking\\EmployeesController:view',
@@ -311,6 +351,21 @@
                 'PHPMaker2024\\prj_job_trucking\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
@@ -431,6 +486,11 @@
                 'edit.audittrail',
                 'delete.audittrail',
                 'custom.beranda',
+                'list.customer',
+                'add.customer',
+                'view.customer',
+                'edit.customer',
+                'delete.customer',
                 'list.employees',
                 'add.employees',
                 'view.employees',
@@ -465,6 +525,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -545,6 +610,11 @@
         $o[35],
         $o[36],
         $o[37],
+        $o[38],
+        $o[39],
+        $o[40],
+        $o[41],
+        $o[42],
     ],
     []
 );

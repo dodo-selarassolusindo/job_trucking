@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "lokasidelete";
+    public $CurrentPageName = "customerdelete";
 
     // Page headings
     public $Heading = "";
