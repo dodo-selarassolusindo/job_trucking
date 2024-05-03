@@ -241,7 +241,7 @@
         <phrase id="fldcaption" value="Nama" />
       </field>
       <field id="nomor_telepon">
-        <phrase id="fldcaption" value="Nomor Telepon" />
+        <phrase id="fldcaption" value="Nomor Telp/HP" />
       </field>
       <field id="contact_person">
         <phrase id="fldcaption" value="Contact Person" />
