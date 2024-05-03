@@ -376,7 +376,7 @@ class Saml2 extends AbstractAdapter implements AdapterInterface
                 $key = self::$attributeMap[$key] ?? $key;
                 $prop = $props->first(fn ($v, $k) => SameText($v, $key));
                 if ($prop) {
-                    $userProfile->$prop = $value;
+                    $userProfile->$key = $value;
                 } else {
                     $userProfile->data[$key] = $value;
                 }

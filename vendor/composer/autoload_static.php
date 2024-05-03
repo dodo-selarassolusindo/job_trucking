@@ -31,10 +31,6 @@ class ComposerStaticInit374faad7350f3c0f313765cf5810411f
         array (
             'voku\\' => 5,
         ),
-        'l' => 
-        array (
-            'libphonenumber\\' => 15,
-        ),
         'W' => 
         array (
             'Whoops\\' => 7,
@@ -118,10 +114,6 @@ class ComposerStaticInit374faad7350f3c0f313765cf5810411f
             'Illuminate\\Encryption\\' => 22,
             'Illuminate\\Contracts\\' => 21,
         ),
-        'G' => 
-        array (
-            'Giggsey\\Locale\\' => 15,
-        ),
         'F' => 
         array (
             'FontLib\\' => 8,
@@ -163,10 +155,6 @@ class ComposerStaticInit374faad7350f3c0f313765cf5810411f
         'voku\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
-        ),
-        'libphonenumber\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
         ),
         'Whoops\\' => 
         array (
@@ -398,10 +386,6 @@ class ComposerStaticInit374faad7350f3c0f313765cf5810411f
         'Illuminate\\Contracts\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/contracts',
-        ),
-        'Giggsey\\Locale\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/giggsey/locale/src',
         ),
         'FontLib\\' => 
         array (

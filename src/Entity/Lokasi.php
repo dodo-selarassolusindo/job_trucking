@@ -28,11 +28,6 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "lokasi")]
 class Lokasi extends AbstractEntity
 {
-    public static array $propertyNames = [
-        'id' => 'id',
-        'Nama' => 'nama',
-    ];
-
     #[Id]
     #[Column(type: "integer", unique: true)]
     #[GeneratedValue]
