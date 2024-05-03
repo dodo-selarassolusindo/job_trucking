@@ -18,13 +18,13 @@
       <phrase id="menutext" value="Shipper" />
     </menu>
     <menu id="2">
-      <phrase id="menutext" value="employees" />
+      <phrase id="menutext" value="User" />
     </menu>
     <menu id="17">
       <phrase id="menutext" value="Setting" />
     </menu>
     <menu id="4">
-      <phrase id="menutext" value="userlevels" />
+      <phrase id="menutext" value="Hak Akses" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="audittrail" />
@@ -69,7 +69,7 @@
       </field>
     </table>
     <table id="employees">
-      <phrase id="tblcaption" value="employees" />
+      <phrase id="tblcaption" value="User" />
       <field id="employeeid">
         <phrase id="fldcaption" value="Employee ID" />
       </field>
@@ -173,7 +173,7 @@
       </field>
     </table>
     <table id="userlevels">
-      <phrase id="tblcaption" value="userlevels" />
+      <phrase id="tblcaption" value="Hak Akses" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="userlevelid" />
       </field>

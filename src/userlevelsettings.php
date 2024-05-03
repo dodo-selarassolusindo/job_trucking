@@ -53,9 +53,9 @@ $USER_LEVEL_PRIVS = [["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}audittrail","-2","0
  * [5] string URL (for OthersController::index)
  */
 $USER_LEVEL_TABLES = [["audittrail","audittrail","audittrail",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","audittraillist"],
-    ["employees","employees","employees",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","employeeslist"],
+    ["employees","employees","User",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","employeeslist"],
     ["userlevelpermissions","userlevelpermissions","userlevelpermissions",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelpermissionslist"],
-    ["userlevels","userlevels","userlevels",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelslist"],
+    ["userlevels","userlevels","Hak Akses",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelslist"],
     ["beranda.php","beranda","Beranda",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda"],
     ["job","job","Job",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","joblist"],
     ["lokasi","lokasi","Lokasi",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","lokasilist"],

@@ -114,6 +114,7 @@ C:\xampp\htdocs\job_trucking\models\LokasiView.php
 C:\xampp\htdocs\job_trucking\models\LokasiView.php
 C:\xampp\htdocs\job_trucking\models\PersonalData.php
 C:\xampp\htdocs\job_trucking\models\PersonalData.php
+C:\xampp\htdocs\job_trucking\models\Register.php
 C:\xampp\htdocs\job_trucking\models\Shipper.php
 C:\xampp\htdocs\job_trucking\models\ShipperAdd.php
 C:\xampp\htdocs\job_trucking\models\ShipperDelete.php
@@ -485,6 +486,7 @@ C:\xampp\htdocs\job_trucking\views\LokasiView.php
 C:\xampp\htdocs\job_trucking\views\LokasiView.php
 C:\xampp\htdocs\job_trucking\views\PersonalData.php
 C:\xampp\htdocs\job_trucking\views\PersonalData.php
+C:\xampp\htdocs\job_trucking\views\Register.php
 C:\xampp\htdocs\job_trucking\views\ShipperAdd.php
 C:\xampp\htdocs\job_trucking\views\ShipperDelete.php
 C:\xampp\htdocs\job_trucking\views\ShipperEdit.php

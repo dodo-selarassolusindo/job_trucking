@@ -42,6 +42,13 @@ class OthersController extends ControllerBase
         return $this->runPage($request, $response, $args, "ChangePassword");
     }
 
+    // register
+    #[Map(["GET","POST","OPTIONS"], "/register", [PermissionMiddleware::class], "register")]
+    public function register(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "Register");
+    }
+
     // userpriv
     #[Map(["GET","POST","OPTIONS"], "/userpriv", [PermissionMiddleware::class], "userpriv")]
     public function userpriv(Request $request, Response $response, array $args): Response

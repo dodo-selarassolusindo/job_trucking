@@ -303,7 +303,7 @@ class PersonalData
      */
     protected function personalDataResult()
     {
-        $fldNames = [];
+        $fldNames = ["EmployeeID", "LastName", "FirstName", "Username", "Password"];
         $user = FindUserByUserName(CurrentUserName());
         if ($user) {
             $row = $user->toArray();

@@ -31,6 +31,7 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_job_trucking\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
@@ -53,6 +54,11 @@
     [
         'PHPMaker2024\\prj_job_trucking\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -320,6 +326,7 @@
                 '/personaldata',
                 '/login[/{provider}]',
                 '/changepassword',
+                '/register',
                 '/userpriv',
                 '/logout',
                 '/swagger/swagger',
@@ -370,6 +377,7 @@
                 'PHPMaker2024\\prj_job_trucking\\OthersController:personaldata',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:login',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:changepassword',
+                'PHPMaker2024\\prj_job_trucking\\OthersController:register',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:userpriv',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:logout',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:swagger',
@@ -391,6 +399,9 @@
                 'PHPMaker2024\\prj_job_trucking\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
@@ -564,6 +575,7 @@
                 'personaldata',
                 'login',
                 'changepassword',
+                'register',
                 'userpriv',
                 'logout',
                 'swagger',
@@ -585,6 +597,7 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
                 [],
                 [],
                 [],
@@ -685,6 +698,7 @@
         $o[45],
         $o[46],
         $o[47],
+        $o[48],
     ],
     []
 );
