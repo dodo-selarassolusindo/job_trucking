@@ -23,6 +23,7 @@ C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
 C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
 C:\xampp\htdocs\job_trucking\controllers\OthersController.php
 C:\xampp\htdocs\job_trucking\controllers\OthersController.php
+C:\xampp\htdocs\job_trucking\controllers\ShipperController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelsController.php
@@ -113,6 +114,12 @@ C:\xampp\htdocs\job_trucking\models\LokasiView.php
 C:\xampp\htdocs\job_trucking\models\LokasiView.php
 C:\xampp\htdocs\job_trucking\models\PersonalData.php
 C:\xampp\htdocs\job_trucking\models\PersonalData.php
+C:\xampp\htdocs\job_trucking\models\Shipper.php
+C:\xampp\htdocs\job_trucking\models\ShipperAdd.php
+C:\xampp\htdocs\job_trucking\models\ShipperDelete.php
+C:\xampp\htdocs\job_trucking\models\ShipperEdit.php
+C:\xampp\htdocs\job_trucking\models\ShipperList.php
+C:\xampp\htdocs\job_trucking\models\ShipperView.php
 C:\xampp\htdocs\job_trucking\models\Userlevelpermissions.php
 C:\xampp\htdocs\job_trucking\models\Userlevelpermissions.php
 C:\xampp\htdocs\job_trucking\models\UserlevelpermissionsAdd.php
@@ -244,6 +251,7 @@ C:\xampp\htdocs\job_trucking\src\Entity\Job.php
 C:\xampp\htdocs\job_trucking\src\Entity\Job.php
 C:\xampp\htdocs\job_trucking\src\Entity\Lokasi.php
 C:\xampp\htdocs\job_trucking\src\Entity\Lokasi.php
+C:\xampp\htdocs\job_trucking\src\Entity\Shipper.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevel.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevel.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevelpermission.php
@@ -477,6 +485,11 @@ C:\xampp\htdocs\job_trucking\views\LokasiView.php
 C:\xampp\htdocs\job_trucking\views\LokasiView.php
 C:\xampp\htdocs\job_trucking\views\PersonalData.php
 C:\xampp\htdocs\job_trucking\views\PersonalData.php
+C:\xampp\htdocs\job_trucking\views\ShipperAdd.php
+C:\xampp\htdocs\job_trucking\views\ShipperDelete.php
+C:\xampp\htdocs\job_trucking\views\ShipperEdit.php
+C:\xampp\htdocs\job_trucking\views\ShipperList.php
+C:\xampp\htdocs\job_trucking\views\ShipperView.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsAdd.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsAdd.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsDelete.php

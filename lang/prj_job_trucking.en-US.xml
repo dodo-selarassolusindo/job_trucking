@@ -14,6 +14,9 @@
     <menu id="8">
       <phrase id="menutext" value="Customer" />
     </menu>
+    <menu id="18">
+      <phrase id="menutext" value="Shipper" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="employees" />
     </menu>
@@ -224,6 +227,21 @@
       </field>
       <field id="nomor_telepon">
         <phrase id="fldcaption" value="Nomor Telp/HP" />
+      </field>
+      <field id="contact_person">
+        <phrase id="fldcaption" value="Contact Person" />
+      </field>
+    </table>
+    <table id="shipper">
+      <phrase id="tblcaption" value="Shipper" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="nomor_telepon">
+        <phrase id="fldcaption" value="Nomor Telepon" />
       </field>
       <field id="contact_person">
         <phrase id="fldcaption" value="Contact Person" />

@@ -43,6 +43,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -259,6 +264,31 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -294,6 +324,11 @@
                 '/logout',
                 '/swagger/swagger',
                 '/[index]',
+                '/shipperlist[/{id}]',
+                '/shipperadd[/{id}]',
+                '/shipperview[/{id}]',
+                '/shipperedit[/{id}]',
+                '/shipperdelete[/{id}]',
                 '/userlevelpermissionslist[/{keys:.*}]',
                 '/userlevelpermissionsadd[/{keys:.*}]',
                 '/userlevelpermissionsview[/{keys:.*}]',
@@ -339,6 +374,11 @@
                 'PHPMaker2024\\prj_job_trucking\\OthersController:logout',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:swagger',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:index',
+                'PHPMaker2024\\prj_job_trucking\\ShipperController:list',
+                'PHPMaker2024\\prj_job_trucking\\ShipperController:add',
+                'PHPMaker2024\\prj_job_trucking\\ShipperController:view',
+                'PHPMaker2024\\prj_job_trucking\\ShipperController:edit',
+                'PHPMaker2024\\prj_job_trucking\\ShipperController:delete',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:list',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:add',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:view',
@@ -478,6 +518,21 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -513,6 +568,11 @@
                 'logout',
                 'swagger',
                 'index',
+                'list.shipper',
+                'add.shipper',
+                'view.shipper',
+                'edit.shipper',
+                'delete.shipper',
                 'list.userlevelpermissions',
                 'add.userlevelpermissions',
                 'view.userlevelpermissions',
@@ -525,6 +585,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -615,6 +680,11 @@
         $o[40],
         $o[41],
         $o[42],
+        $o[43],
+        $o[44],
+        $o[45],
+        $o[46],
+        $o[47],
     ],
     []
 );

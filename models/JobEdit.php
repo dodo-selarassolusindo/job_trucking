@@ -518,6 +518,7 @@ class JobEdit extends Job
         // Set up lookup cache
         $this->setupLookupOptions($this->Lokasi);
         $this->setupLookupOptions($this->Customer);
+        $this->setupLookupOptions($this->Shipper);
 
         // Check modal
         if ($this->IsModal) {
@@ -758,7 +759,7 @@ class JobEdit extends Job
             if (IsApi() && $val === null) {
                 $this->Shipper->Visible = false; // Disable update for API request
             } else {
-                $this->Shipper->setFormValue($val, true, $validate);
+                $this->Shipper->setFormValue($val);
             }
         }
 
@@ -960,8 +961,27 @@ class JobEdit extends Job
             }
 
             // Shipper
-            $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
-            $this->Shipper->ViewValue = FormatNumber($this->Shipper->ViewValue, $this->Shipper->formatPattern());
+            $curVal = strval($this->Shipper->CurrentValue);
+            if ($curVal != "") {
+                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
+                if ($this->Shipper->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
+                        $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
+                    } else {
+                        $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
+                    }
+                }
+            } else {
+                $this->Shipper->ViewValue = null;
+            }
 
             // Lokasi
             $this->Lokasi->HrefValue = "";
@@ -1070,12 +1090,39 @@ class JobEdit extends Job
             $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
 
             // Shipper
-            $this->Shipper->setupEditAttributes();
-            $this->Shipper->EditValue = $this->Shipper->CurrentValue;
-            $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
-            if (strval($this->Shipper->EditValue) != "" && is_numeric($this->Shipper->EditValue)) {
-                $this->Shipper->EditValue = FormatNumber($this->Shipper->EditValue, null);
+            $curVal = trim(strval($this->Shipper->CurrentValue));
+            if ($curVal != "") {
+                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
+            } else {
+                $this->Shipper->ViewValue = $this->Shipper->Lookup !== null && is_array($this->Shipper->lookupOptions()) && count($this->Shipper->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->Shipper->ViewValue !== null) { // Load from cache
+                $this->Shipper->EditValue = array_values($this->Shipper->lookupOptions());
+                if ($this->Shipper->ViewValue == "") {
+                    $this->Shipper->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->Shipper->CurrentValue, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->Shipper->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
+                    $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
+                } else {
+                    $this->Shipper->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->Shipper->EditValue = $arwrk;
+            }
+            $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
 
             // Edit refer script
 
@@ -1152,9 +1199,6 @@ class JobEdit extends Job
                 if (!$this->Shipper->IsDetailKey && EmptyValue($this->Shipper->FormValue)) {
                     $this->Shipper->addErrorMessage(str_replace("%s", $this->Shipper->caption(), $this->Shipper->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->Shipper->FormValue)) {
-                $this->Shipper->addErrorMessage($this->Shipper->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1318,6 +1362,8 @@ class JobEdit extends Job
                 case "x_Lokasi":
                     break;
                 case "x_Customer":
+                    break;
+                case "x_Shipper":
                     break;
                 default:
                     $lookupFilter = "";

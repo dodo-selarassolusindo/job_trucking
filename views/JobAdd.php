@@ -27,7 +27,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["Nomor", [fields.Nomor.visible && fields.Nomor.required ? ew.Validators.required(fields.Nomor.caption) : null], fields.Nomor.isInvalid],
             ["Tanggal_Muat", [fields.Tanggal_Muat.visible && fields.Tanggal_Muat.required ? ew.Validators.required(fields.Tanggal_Muat.caption) : null, ew.Validators.datetime(fields.Tanggal_Muat.clientFormatPattern)], fields.Tanggal_Muat.isInvalid],
             ["Customer", [fields.Customer.visible && fields.Customer.required ? ew.Validators.required(fields.Customer.caption) : null], fields.Customer.isInvalid],
-            ["Shipper", [fields.Shipper.visible && fields.Shipper.required ? ew.Validators.required(fields.Shipper.caption) : null, ew.Validators.integer], fields.Shipper.isInvalid]
+            ["Shipper", [fields.Shipper.visible && fields.Shipper.required ? ew.Validators.required(fields.Shipper.caption) : null], fields.Shipper.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -45,6 +45,7 @@ loadjs.ready(["wrapper", "head"], function () {
         .setLists({
             "Lokasi": <?= $Page->Lokasi->toClientList($Page) ?>,
             "Customer": <?= $Page->Customer->toClientList($Page) ?>,
+            "Shipper": <?= $Page->Shipper->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -249,9 +250,35 @@ loadjs.ready("fjobadd", function() {
         <label id="elh_job_Shipper" for="x_Shipper" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Shipper->caption() ?><?= $Page->Shipper->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Shipper->cellAttributes() ?>>
 <span id="el_job_Shipper">
-<input type="<?= $Page->Shipper->getInputTextType() ?>" name="x_Shipper" id="x_Shipper" data-table="job" data-field="x_Shipper" value="<?= $Page->Shipper->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Shipper->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Shipper->formatPattern()) ?>"<?= $Page->Shipper->editAttributes() ?> aria-describedby="x_Shipper_help">
-<?= $Page->Shipper->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->Shipper->getErrorMessage() ?></div>
+    <select
+        id="x_Shipper"
+        name="x_Shipper"
+        class="form-control ew-select<?= $Page->Shipper->isInvalidClass() ?>"
+        data-select2-id="fjobadd_x_Shipper"
+        data-table="job"
+        data-field="x_Shipper"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->Shipper->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->Shipper->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->Shipper->getPlaceHolder()) ?>"
+        <?= $Page->Shipper->editAttributes() ?>>
+        <?= $Page->Shipper->selectOptionListHtml("x_Shipper") ?>
+    </select>
+    <?= $Page->Shipper->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->Shipper->getErrorMessage() ?></div>
+<?= $Page->Shipper->Lookup->getParamTag($Page, "p_x_Shipper") ?>
+<script>
+loadjs.ready("fjobadd", function() {
+    var options = { name: "x_Shipper", selectId: "fjobadd_x_Shipper" };
+    if (fjobadd.lists.Shipper?.lookupOptions.length) {
+        options.data = { id: "x_Shipper", form: "fjobadd" };
+    } else {
+        options.ajax = { id: "x_Shipper", form: "fjobadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.job.fields.Shipper.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
 </span>
 </div></div>
     </div>

@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JobList extends Job
+class ShipperList extends Shipper
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class JobList extends Job
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobList";
+    public $PageObjName = "ShipperList";
 
     // View file path
     public $View = null;
@@ -38,13 +38,13 @@ class JobList extends Job
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fjoblist";
+    public $FormName = "fshipperlist";
     public $FormActionName = "";
     public $FormBlankRowName = "";
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "joblist";
+    public $CurrentPageName = "shipperlist";
 
     // Page URLs
     public $AddUrl;
@@ -145,13 +145,10 @@ class JobList extends Job
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
-        $this->Lokasi->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->Nomor->setVisibility();
-        $this->Tanggal_Muat->setVisibility();
-        $this->Customer->setVisibility();
-        $this->Shipper->setVisibility();
+        $this->id->setVisibility();
+        $this->Nama->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -162,8 +159,8 @@ class JobList extends Job
         $this->FormActionName = Config("FORM_ROW_ACTION_NAME");
         $this->FormBlankRowName = Config("FORM_BLANK_ROW_NAME");
         $this->FormKeyCountName = Config("FORM_KEY_COUNT_NAME");
-        $this->TableVar = 'job';
-        $this->TableName = 'job';
+        $this->TableVar = 'shipper';
+        $this->TableName = 'shipper';
 
         // Table CSS class
         $this->TableClass = "table table-bordered table-hover table-sm ew-table";
@@ -183,26 +180,26 @@ class JobList extends Job
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job)
-        if (!isset($GLOBALS["job"]) || $GLOBALS["job"]::class == PROJECT_NAMESPACE . "job") {
-            $GLOBALS["job"] = &$this;
+        // Table object (shipper)
+        if (!isset($GLOBALS["shipper"]) || $GLOBALS["shipper"]::class == PROJECT_NAMESPACE . "shipper") {
+            $GLOBALS["shipper"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "jobadd";
+        $this->AddUrl = "shipperadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "jobdelete";
-        $this->MultiUpdateUrl = "jobupdate";
+        $this->MultiDeleteUrl = "shipperdelete";
+        $this->MultiUpdateUrl = "shipperupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'shipper');
         }
 
         // Start timer
@@ -353,7 +350,7 @@ class JobList extends Job
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -692,14 +689,9 @@ class JobList extends Job
         // Setup other options
         $this->setupOtherOptions();
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Lokasi);
-        $this->setupLookupOptions($this->Customer);
-        $this->setupLookupOptions($this->Shipper);
-
         // Update form name to avoid conflict
         if ($this->IsModal) {
-            $this->FormName = "fjobgrid";
+            $this->FormName = "fshippergrid";
         }
 
         // Set up page action
@@ -1033,12 +1025,10 @@ class JobList extends Job
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->Lokasi->AdvancedSearch->toJson(), ","); // Field Lokasi
-        $filterList = Concat($filterList, $this->Tanggal->AdvancedSearch->toJson(), ","); // Field Tanggal
-        $filterList = Concat($filterList, $this->Nomor->AdvancedSearch->toJson(), ","); // Field Nomor
-        $filterList = Concat($filterList, $this->Tanggal_Muat->AdvancedSearch->toJson(), ","); // Field Tanggal_Muat
-        $filterList = Concat($filterList, $this->Customer->AdvancedSearch->toJson(), ","); // Field Customer
-        $filterList = Concat($filterList, $this->Shipper->AdvancedSearch->toJson(), ","); // Field Shipper
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
+        $filterList = Concat($filterList, $this->Nomor_Telepon->AdvancedSearch->toJson(), ","); // Field Nomor_Telepon
+        $filterList = Concat($filterList, $this->Contact_Person->AdvancedSearch->toJson(), ","); // Field Contact_Person
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1059,7 +1049,7 @@ class JobList extends Job
     {
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            Profile()->setSearchFilters("fjobsrch", $filters);
+            Profile()->setSearchFilters("fshippersrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1078,53 +1068,37 @@ class JobList extends Job
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field Lokasi
-        $this->Lokasi->AdvancedSearch->SearchValue = @$filter["x_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchOperator = @$filter["z_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchCondition = @$filter["v_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchValue2 = @$filter["y_Lokasi"];
-        $this->Lokasi->AdvancedSearch->SearchOperator2 = @$filter["w_Lokasi"];
-        $this->Lokasi->AdvancedSearch->save();
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
 
-        // Field Tanggal
-        $this->Tanggal->AdvancedSearch->SearchValue = @$filter["x_Tanggal"];
-        $this->Tanggal->AdvancedSearch->SearchOperator = @$filter["z_Tanggal"];
-        $this->Tanggal->AdvancedSearch->SearchCondition = @$filter["v_Tanggal"];
-        $this->Tanggal->AdvancedSearch->SearchValue2 = @$filter["y_Tanggal"];
-        $this->Tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_Tanggal"];
-        $this->Tanggal->AdvancedSearch->save();
+        // Field Nama
+        $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
+        $this->Nama->AdvancedSearch->SearchCondition = @$filter["v_Nama"];
+        $this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
+        $this->Nama->AdvancedSearch->save();
 
-        // Field Nomor
-        $this->Nomor->AdvancedSearch->SearchValue = @$filter["x_Nomor"];
-        $this->Nomor->AdvancedSearch->SearchOperator = @$filter["z_Nomor"];
-        $this->Nomor->AdvancedSearch->SearchCondition = @$filter["v_Nomor"];
-        $this->Nomor->AdvancedSearch->SearchValue2 = @$filter["y_Nomor"];
-        $this->Nomor->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor"];
-        $this->Nomor->AdvancedSearch->save();
+        // Field Nomor_Telepon
+        $this->Nomor_Telepon->AdvancedSearch->SearchValue = @$filter["x_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchOperator = @$filter["z_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchCondition = @$filter["v_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchValue2 = @$filter["y_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->save();
 
-        // Field Tanggal_Muat
-        $this->Tanggal_Muat->AdvancedSearch->SearchValue = @$filter["x_Tanggal_Muat"];
-        $this->Tanggal_Muat->AdvancedSearch->SearchOperator = @$filter["z_Tanggal_Muat"];
-        $this->Tanggal_Muat->AdvancedSearch->SearchCondition = @$filter["v_Tanggal_Muat"];
-        $this->Tanggal_Muat->AdvancedSearch->SearchValue2 = @$filter["y_Tanggal_Muat"];
-        $this->Tanggal_Muat->AdvancedSearch->SearchOperator2 = @$filter["w_Tanggal_Muat"];
-        $this->Tanggal_Muat->AdvancedSearch->save();
-
-        // Field Customer
-        $this->Customer->AdvancedSearch->SearchValue = @$filter["x_Customer"];
-        $this->Customer->AdvancedSearch->SearchOperator = @$filter["z_Customer"];
-        $this->Customer->AdvancedSearch->SearchCondition = @$filter["v_Customer"];
-        $this->Customer->AdvancedSearch->SearchValue2 = @$filter["y_Customer"];
-        $this->Customer->AdvancedSearch->SearchOperator2 = @$filter["w_Customer"];
-        $this->Customer->AdvancedSearch->save();
-
-        // Field Shipper
-        $this->Shipper->AdvancedSearch->SearchValue = @$filter["x_Shipper"];
-        $this->Shipper->AdvancedSearch->SearchOperator = @$filter["z_Shipper"];
-        $this->Shipper->AdvancedSearch->SearchCondition = @$filter["v_Shipper"];
-        $this->Shipper->AdvancedSearch->SearchValue2 = @$filter["y_Shipper"];
-        $this->Shipper->AdvancedSearch->SearchOperator2 = @$filter["w_Shipper"];
-        $this->Shipper->AdvancedSearch->save();
+        // Field Contact_Person
+        $this->Contact_Person->AdvancedSearch->SearchValue = @$filter["x_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchOperator = @$filter["z_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchCondition = @$filter["v_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchValue2 = @$filter["y_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchOperator2 = @$filter["w_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1164,7 +1138,9 @@ class JobList extends Job
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->Nomor;
+        $searchFlds[] = &$this->Nama;
+        $searchFlds[] = &$this->Nomor_Telepon;
+        $searchFlds[] = &$this->Contact_Person;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1243,12 +1219,10 @@ class JobList extends Job
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->Lokasi); // Lokasi
-            $this->updateSort($this->Tanggal); // Tanggal
-            $this->updateSort($this->Nomor); // Nomor
-            $this->updateSort($this->Tanggal_Muat); // Tanggal_Muat
-            $this->updateSort($this->Customer); // Customer
-            $this->updateSort($this->Shipper); // Shipper
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->Nama); // Nama
+            $this->updateSort($this->Nomor_Telepon); // Nomor_Telepon
+            $this->updateSort($this->Contact_Person); // Contact_Person
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1274,12 +1248,9 @@ class JobList extends Job
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->Lokasi->setSort("");
-                $this->Tanggal->setSort("");
-                $this->Nomor->setSort("");
-                $this->Tanggal_Muat->setSort("");
-                $this->Customer->setSort("");
-                $this->Shipper->setSort("");
+                $this->Nama->setSort("");
+                $this->Nomor_Telepon->setSort("");
+                $this->Contact_Person->setSort("");
             }
 
             // Reset start position
@@ -1386,7 +1357,7 @@ class JobList extends Job
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
                 if ($this->ModalView && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"job\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"shipper\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
                 }
@@ -1399,7 +1370,7 @@ class JobList extends Job
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
             if ($Security->canEdit()) {
                 if ($this->ModalEdit && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"job\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"shipper\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
                 }
@@ -1412,7 +1383,7 @@ class JobList extends Job
             $copycaption = HtmlTitle($Language->phrase("CopyLink"));
             if ($Security->canAdd()) {
                 if ($this->ModalAdd && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"job\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"shipper\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
                 }
@@ -1453,12 +1424,12 @@ class JobList extends Job
                         $icon = ($listAction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listAction->Icon)) . "\" data-caption=\"" . $title . "\"></i> " : "";
                         $link = $disabled
                             ? "<li><div class=\"alert alert-light\">" . $icon . " " . $caption . "</div></li>"
-                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjoblist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
+                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fshipperlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
                         $links[] = $link;
                         if ($body == "") { // Setup first button
                             $body = $disabled
                             ? "<div class=\"alert alert-light\">" . $icon . " " . $caption . "</div>"
-                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjoblist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
+                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fshipperlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
                         }
                     }
                 }
@@ -1504,7 +1475,7 @@ class JobList extends Job
         $item = &$option->add("add");
         $addcaption = HtmlTitle($Language->phrase("AddLink"));
         if ($this->ModalAdd && !IsMobile()) {
-            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"job\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
+            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"shipper\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
         } else {
             $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
         }
@@ -1517,12 +1488,10 @@ class JobList extends Job
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "Lokasi");
-            $this->createColumnOption($option, "Tanggal");
-            $this->createColumnOption($option, "Nomor");
-            $this->createColumnOption($option, "Tanggal_Muat");
-            $this->createColumnOption($option, "Customer");
-            $this->createColumnOption($option, "Shipper");
+            $this->createColumnOption($option, "id");
+            $this->createColumnOption($option, "Nama");
+            $this->createColumnOption($option, "Nomor_Telepon");
+            $this->createColumnOption($option, "Contact_Person");
         }
 
         // Set up custom actions
@@ -1547,10 +1516,10 @@ class JobList extends Job
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fjobsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fshippersrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fjobsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fshippersrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1610,7 +1579,7 @@ class JobList extends Job
                 $item = &$option->add("custom_" . $listAction->Action);
                 $caption = $listAction->Caption;
                 $icon = ($listAction->Icon != "") ? '<i class="' . HtmlEncode($listAction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fjoblist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fshipperlist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
                 $item->Visible = $listAction->Allowed;
             }
         }
@@ -1781,7 +1750,7 @@ class JobList extends Job
 
                 // Set row properties
                 $this->resetAttributes();
-                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_job", "data-rowtype" => RowType::ADD]);
+                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_shipper", "data-rowtype" => RowType::ADD]);
                 $this->RowAttrs->appendClass("ew-template");
                 // Render row
                 $this->RowType = RowType::ADD;
@@ -1842,7 +1811,7 @@ class JobList extends Job
         $this->RowAttrs->merge([
             "data-rowindex" => $this->RowCount,
             "data-key" => $this->getKey(true),
-            "id" => "r" . $this->RowCount . "_job",
+            "id" => "r" . $this->RowCount . "_shipper",
             "data-rowtype" => $this->RowType,
             "data-inline" => ($this->isAdd() || $this->isCopy() || $this->isEdit()) ? "true" : "false", // Inline-Add/Copy/Edit
             "class" => ($this->RowCount % 2 != 1) ? "ew-table-alt-row" : "",
@@ -1962,12 +1931,9 @@ class JobList extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->Nomor->setDbValue($row['Nomor']);
-        $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
-        $this->Customer->setDbValue($row['Customer']);
-        $this->Shipper->setDbValue($row['Shipper']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -1975,12 +1941,9 @@ class JobList extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['Nomor'] = $this->Nomor->DefaultValue;
-        $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
-        $row['Customer'] = $this->Customer->DefaultValue;
-        $row['Shipper'] = $this->Shipper->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -2023,126 +1986,41 @@ class JobList extends Job
 
         // id
 
-        // Lokasi
+        // Nama
 
-        // Tanggal
+        // Nomor_Telepon
 
-        // Nomor
-
-        // Tanggal_Muat
-
-        // Customer
-
-        // Shipper
+        // Contact_Person
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
-            // Lokasi
-            $curVal = strval($this->Lokasi->CurrentValue);
-            if ($curVal != "") {
-                $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-                if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                        $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                    } else {
-                        $this->Lokasi->ViewValue = FormatNumber($this->Lokasi->CurrentValue, $this->Lokasi->formatPattern());
-                    }
-                }
-            } else {
-                $this->Lokasi->ViewValue = null;
-            }
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
 
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+            // id
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // Customer
-            $curVal = strval($this->Customer->CurrentValue);
-            if ($curVal != "") {
-                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-                if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                        $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                    } else {
-                        $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
-                    }
-                }
-            } else {
-                $this->Customer->ViewValue = null;
-            }
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
 
-            // Shipper
-            $curVal = strval($this->Shipper->CurrentValue);
-            if ($curVal != "") {
-                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-                if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                        $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                    } else {
-                        $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
-                    }
-                }
-            } else {
-                $this->Shipper->ViewValue = null;
-            }
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+            $this->Nomor_Telepon->TooltipValue = "";
 
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-            $this->Lokasi->TooltipValue = "";
-
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-            $this->Tanggal->TooltipValue = "";
-
-            // Nomor
-            $this->Nomor->HrefValue = "";
-            $this->Nomor->TooltipValue = "";
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->HrefValue = "";
-            $this->Tanggal_Muat->TooltipValue = "";
-
-            // Customer
-            $this->Customer->HrefValue = "";
-            $this->Customer->TooltipValue = "";
-
-            // Shipper
-            $this->Shipper->HrefValue = "";
-            $this->Shipper->TooltipValue = "";
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+            $this->Contact_Person->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2161,7 +2039,7 @@ class JobList extends Job
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fjobsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fshippersrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -2230,12 +2108,6 @@ class JobList extends Job
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Lokasi":
-                    break;
-                case "x_Customer":
-                    break;
-                case "x_Shipper":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

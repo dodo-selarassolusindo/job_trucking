@@ -15,18 +15,18 @@ use Closure;
 /**
  * Page class
  */
-class JobView extends Job
+class ShipperEdit extends Shipper
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "view";
+    public $PageID = "edit";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobView";
+    public $PageObjName = "ShipperEdit";
 
     // View file path
     public $View = null;
@@ -38,25 +38,7 @@ class JobView extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "jobview";
-
-    // Page URLs
-    public $AddUrl;
-    public $EditUrl;
-    public $DeleteUrl;
-    public $ViewUrl;
-    public $CopyUrl;
-    public $ListUrl;
-
-    // Update URLs
-    public $InlineAddUrl;
-    public $InlineCopyUrl;
-    public $InlineEditUrl;
-    public $GridAddUrl;
-    public $GridEditUrl;
-    public $MultiEditUrl;
-    public $MultiDeleteUrl;
-    public $MultiUpdateUrl;
+    public $CurrentPageName = "shipperedit";
 
     // Page headings
     public $Heading = "";
@@ -140,12 +122,9 @@ class JobView extends Job
     public function setVisibility()
     {
         $this->id->setVisibility();
-        $this->Lokasi->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->Nomor->setVisibility();
-        $this->Tanggal_Muat->setVisibility();
-        $this->Customer->setVisibility();
-        $this->Shipper->setVisibility();
+        $this->Nama->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -153,11 +132,11 @@ class JobView extends Job
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'job';
-        $this->TableName = 'job';
+        $this->TableVar = 'shipper';
+        $this->TableName = 'shipper';
 
         // Table CSS class
-        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-view-table";
+        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-edit-table";
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -165,19 +144,14 @@ class JobView extends Job
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job)
-        if (!isset($GLOBALS["job"]) || $GLOBALS["job"]::class == PROJECT_NAMESPACE . "job") {
-            $GLOBALS["job"] = &$this;
-        }
-
-        // Set up record key
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->RecKey["id"] = $keyValue;
+        // Table object (shipper)
+        if (!isset($GLOBALS["shipper"]) || $GLOBALS["shipper"]::class == PROJECT_NAMESPACE . "shipper") {
+            $GLOBALS["shipper"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'shipper');
         }
 
         // Start timer
@@ -191,17 +165,6 @@ class JobView extends Job
 
         // User table object
         $UserTable = Container("usertable");
-
-        // Export options
-        $this->ExportOptions = new ListOptions(TagClassName: "ew-export-option");
-
-        // Other options
-        $this->OtherOptions = new ListOptionsArray();
-
-        // Detail tables
-        $this->OtherOptions["detail"] = new ListOptions(TagClassName: "ew-detail-option");
-        // Actions
-        $this->OtherOptions["action"] = new ListOptions(TagClassName: "ew-action-option");
     }
 
     // Get content from stream
@@ -295,12 +258,21 @@ class JobView extends Job
             if ($this->IsModal) { // Show as modal
                 $pageName = GetPageName($url);
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
-                if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
-                    $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
-                } else { // List page
-                    $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
-                    $this->clearFailureMessage();
+                if (
+                    SameString($pageName, GetPageName($this->getListUrl())) ||
+                    SameString($pageName, GetPageName($this->getViewUrl())) ||
+                    SameString($pageName, GetPageName(CurrentMasterTable()?->getViewUrl() ?? ""))
+                ) { // List / View / Master View page
+                    if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
+                        $result["caption"] = $this->getModalCaption($pageName);
+                        $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
+                    } else { // List page
+                        $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
+                        $this->clearFailureMessage();
+                    }
+                } else { // Other pages (add messages and then clear messages)
+                    $result = array_merge($this->getMessages(), ["modal" => "1"]);
+                    $this->clearMessages();
                 }
                 WriteJson($result);
             } else {
@@ -474,17 +446,20 @@ class JobView extends Job
         }
         return $lookup->toJson($this, $response); // Use settings from current page
     }
-    public $ExportOptions; // Export options
-    public $OtherOptions; // Other options
-    public $DisplayRecords = 1;
+
+    // Properties
+    public $FormClassName = "ew-form ew-edit-form overlay-wrapper";
+    public $IsModal = false;
+    public $IsMobileOrModal = false;
     public $DbMasterFilter;
     public $DbDetailFilter;
+    public $HashValue; // Hash Value
+    public $DisplayRecords = 1;
     public $StartRecord;
     public $StopRecord;
     public $TotalRecords = 0;
     public $RecordRange = 10;
-    public $RecKey = [];
-    public $IsModal = false;
+    public $RecordCount;
 
     /**
      * Page run
@@ -509,6 +484,9 @@ class JobView extends Job
         if (IsLoggedIn()) {
             Profile()->setUserName(CurrentUserName())->loadFromStorage();
         }
+
+        // Create form object
+        $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->setVisibility();
 
@@ -534,81 +512,150 @@ class JobView extends Job
             $this->InlineDelete = true;
         }
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Lokasi);
-        $this->setupLookupOptions($this->Customer);
-        $this->setupLookupOptions($this->Shipper);
-
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
         }
+        $this->IsMobileOrModal = IsMobile() || $this->IsModal;
+        $loaded = false;
+        $postBack = false;
 
-        // Load current record
-        $loadCurrentRecord = false;
-        $returnUrl = "";
-        $matchRecord = false;
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
-        } elseif (Post("id") !== null) {
-            $this->id->setFormValue(Post("id"));
-            $this->RecKey["id"] = $this->id->FormValue;
-        } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
-        } elseif (!$loadCurrentRecord) {
-            $returnUrl = "joblist"; // Return to list
+        // Set up current action and primary key
+        if (IsApi()) {
+            // Load key values
+            $loaded = true;
+            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+                $this->id->setOldValue($this->id->QueryStringValue);
+            } elseif (Post("id") !== null) {
+                $this->id->setFormValue(Post("id"));
+                $this->id->setOldValue($this->id->FormValue);
+            } else {
+                $loaded = false; // Unable to load key
+            }
+
+            // Load record
+            if ($loaded) {
+                $loaded = $this->loadRow();
+            }
+            if (!$loaded) {
+                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                $this->terminate();
+                return;
+            }
+            $this->CurrentAction = "update"; // Update record directly
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $postBack = true;
+        } else {
+            if (Post("action", "") !== "") {
+                $this->CurrentAction = Post("action"); // Get action code
+                if (!$this->isShow()) { // Not reload record, handle as postback
+                    $postBack = true;
+                }
+
+                // Get key from Form
+                $this->setKey(Post($this->OldKeyName), $this->isShow());
+            } else {
+                $this->CurrentAction = "show"; // Default action is display
+
+                // Load key from QueryString
+                $loadByQuery = false;
+                if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                    $this->id->setQueryStringValue($keyValue);
+                    $loadByQuery = true;
+                } else {
+                    $this->id->CurrentValue = null;
+                }
+            }
+
+            // Load result set
+            if ($this->isShow()) {
+                    // Load current record
+                    $loaded = $this->loadRow();
+                $this->OldKey = $loaded ? $this->getKey(true) : ""; // Get from CurrentValue
+            }
         }
 
-        // Get action
-        $this->CurrentAction = "show"; // Display
+        // Process form if post back
+        if ($postBack) {
+            $this->loadFormValues(); // Get form values
+        }
+
+        // Validate form if post back
+        if ($postBack) {
+            if (!$this->validateForm()) {
+                $this->EventCancelled = true; // Event cancelled
+                $this->restoreFormValues();
+                if (IsApi()) {
+                    $this->terminate();
+                    return;
+                } else {
+                    $this->CurrentAction = ""; // Form error, reset action
+                }
+            }
+        }
+
+        // Perform current action
         switch ($this->CurrentAction) {
             case "show": // Get a record to display
-
-                    // Load record based on key
-                    if (IsApi()) {
-                        $filter = $this->getRecordFilter();
-                        $this->CurrentFilter = $filter;
-                        $sql = $this->getCurrentSql();
-                        $conn = $this->getConnection();
-                        $res = ($this->Recordset = ExecuteQuery($sql, $conn));
-                    } else {
-                        $res = $this->loadRow();
-                    }
-                    if (!$res) { // Load record based on key
-                        if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
-                            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                    if (!$loaded) { // Load record based on key
+                        if ($this->getFailureMessage() == "") {
+                            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $returnUrl = "joblist"; // No matching record, return to list
+                        $this->terminate("shipperlist"); // No matching record, return to list
+                        return;
                     }
                 break;
-        }
-        if ($returnUrl != "") {
-            $this->terminate($returnUrl);
-            return;
+            case "update": // Update
+                $returnUrl = $this->getReturnUrl();
+                if (GetPageName($returnUrl) == "shipperlist") {
+                    $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
+                }
+                $this->SendEmail = true; // Send email on update success
+                if ($this->editRow()) { // Update record based on key
+                    if ($this->getSuccessMessage() == "") {
+                        $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Update success
+                    }
+
+                    // Handle UseAjaxActions with return page
+                    if ($this->IsModal && $this->UseAjaxActions) {
+                        $this->IsModal = false;
+                        if (GetPageName($returnUrl) != "shipperlist") {
+                            Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
+                            $returnUrl = "shipperlist"; // Return list page content
+                        }
+                    }
+                    if (IsJsonResponse()) {
+                        $this->terminate(true);
+                        return;
+                    } else {
+                        $this->terminate($returnUrl); // Return to caller
+                        return;
+                    }
+                } elseif (IsApi()) { // API request, return
+                    $this->terminate();
+                    return;
+                } elseif ($this->IsModal && $this->UseAjaxActions) { // Return JSON error message
+                    WriteJson(["success" => false, "validation" => $this->getValidationErrors(), "error" => $this->getFailureMessage()]);
+                    $this->clearFailureMessage();
+                    $this->terminate();
+                    return;
+                } elseif ($this->getFailureMessage() == $Language->phrase("NoRecord")) {
+                    $this->terminate($returnUrl); // Return to caller
+                    return;
+                } else {
+                    $this->EventCancelled = true; // Event cancelled
+                    $this->restoreFormValues(); // Restore form values if update failed
+                }
         }
 
         // Set up Breadcrumb
-        if (!$this->isExport()) {
-            $this->setupBreadcrumb();
-        }
+        $this->setupBreadcrumb();
 
-        // Render row
-        $this->RowType = RowType::VIEW;
+        // Render the record
+        $this->RowType = RowType::EDIT; // Render as Edit
         $this->resetAttributes();
         $this->renderRow();
-
-        // Normal return
-        if (IsApi()) {
-            if (!$this->isExport()) {
-                $row = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
-                $this->Recordset?->free();
-                WriteJson(["success" => true, "action" => Config("API_VIEW_ACTION"), $this->TableVar => $row]);
-                $this->terminate(true);
-            }
-            return;
-        }
 
         // Set LoginStatus / Page_Rendering / Page_Render
         if (!IsApi() && !$this->isTerminated()) {
@@ -633,70 +680,64 @@ class JobView extends Job
         }
     }
 
-    // Set up other options
-    protected function setupOtherOptions()
+    // Get upload files
+    protected function getUploadFiles()
     {
-        global $Language, $Security;
+        global $CurrentForm, $Language;
+    }
 
-        // Disable Add/Edit/Copy/Delete for Modal and UseAjaxActions
-        /*
-        if ($this->IsModal && $this->UseAjaxActions) {
-            $this->AddUrl = "";
-            $this->EditUrl = "";
-            $this->CopyUrl = "";
-            $this->DeleteUrl = "";
+    // Load form values
+    protected function loadFormValues()
+    {
+        // Load from form
+        global $CurrentForm;
+        $validate = !Config("SERVER_VALIDATE");
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
-        */
-        $options = &$this->OtherOptions;
-        $option = $options["action"];
 
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("ViewPageAddLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
+        // Check field name 'Nama' first before field var 'x_Nama'
+        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
+        if (!$this->Nama->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Nama->Visible = false; // Disable update for API request
+            } else {
+                $this->Nama->setFormValue($val);
+            }
         }
-        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
 
-        // Edit
-        $item = &$option->add("edit");
-        $editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
+        // Check field name 'Nomor_Telepon' first before field var 'x_Nomor_Telepon'
+        $val = $CurrentForm->hasValue("Nomor_Telepon") ? $CurrentForm->getValue("Nomor_Telepon") : $CurrentForm->getValue("x_Nomor_Telepon");
+        if (!$this->Nomor_Telepon->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Nomor_Telepon->Visible = false; // Disable update for API request
+            } else {
+                $this->Nomor_Telepon->setFormValue($val);
+            }
         }
-        $item->Visible = $this->EditUrl != "" && $Security->canEdit();
 
-        // Copy
-        $item = &$option->add("copy");
-        $copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
+        // Check field name 'Contact_Person' first before field var 'x_Contact_Person'
+        $val = $CurrentForm->hasValue("Contact_Person") ? $CurrentForm->getValue("Contact_Person") : $CurrentForm->getValue("x_Contact_Person");
+        if (!$this->Contact_Person->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Contact_Person->Visible = false; // Disable update for API request
+            } else {
+                $this->Contact_Person->setFormValue($val);
+            }
         }
-        $item->Visible = $this->CopyUrl != "" && $Security->canAdd();
+    }
 
-        // Delete
-        $item = &$option->add("delete");
-        $url = GetUrl($this->DeleteUrl);
-        $item->Body = "<a class=\"ew-action ew-delete\"" .
-            ($this->InlineDelete || $this->IsModal ? " data-ew-action=\"inline-delete\"" : "") .
-            " title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) .
-            "\" href=\"" . HtmlEncode($url) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        $item->Visible = $this->DeleteUrl != "" && $Security->canDelete();
-
-        // Set up action default
-        $option = $options["action"];
-        $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
-        $option->UseDropDownButton = !IsJsonResponse() && false;
-        $option->UseButtonGroup = true;
-        $item = &$option->addGroupOption();
-        $item->Body = "";
-        $item->Visible = false;
+    // Restore form values
+    public function restoreFormValues()
+    {
+        global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
+        $this->Nama->CurrentValue = $this->Nama->FormValue;
+        $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
+        $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
     }
 
     /**
@@ -738,12 +779,9 @@ class JobView extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->Nomor->setDbValue($row['Nomor']);
-        $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
-        $this->Customer->setDbValue($row['Customer']);
-        $this->Shipper->setDbValue($row['Shipper']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -751,13 +789,29 @@ class JobView extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['Nomor'] = $this->Nomor->DefaultValue;
-        $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
-        $row['Customer'] = $this->Customer->DefaultValue;
-        $row['Shipper'] = $this->Shipper->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
+    }
+
+    // Load old record
+    protected function loadOldRecord()
+    {
+        // Load old record
+        if ($this->OldKey != "") {
+            $this->setKey($this->OldKey);
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $rs = ExecuteQuery($sql, $conn);
+            if ($row = $rs->fetch()) {
+                $this->loadRowValues($row); // Load row values
+                return $row;
+            }
+        }
+        $this->loadRowValues(); // Load default row values
+        return null;
     }
 
     // Render row values based on field settings
@@ -766,12 +820,6 @@ class JobView extends Job
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
-        $this->AddUrl = $this->getAddUrl();
-        $this->EditUrl = $this->getEditUrl();
-        $this->CopyUrl = $this->getCopyUrl();
-        $this->DeleteUrl = $this->getDeleteUrl();
-        $this->ListUrl = $this->getListUrl();
-        $this->setupOtherOptions();
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -779,132 +827,239 @@ class JobView extends Job
         // Common render codes for all row types
 
         // id
+        $this->id->RowCssClass = "row";
 
-        // Lokasi
+        // Nama
+        $this->Nama->RowCssClass = "row";
 
-        // Tanggal
+        // Nomor_Telepon
+        $this->Nomor_Telepon->RowCssClass = "row";
 
-        // Nomor
-
-        // Tanggal_Muat
-
-        // Customer
-
-        // Shipper
+        // Contact_Person
+        $this->Contact_Person->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
-            // Lokasi
-            $curVal = strval($this->Lokasi->CurrentValue);
-            if ($curVal != "") {
-                $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-                if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                        $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                    } else {
-                        $this->Lokasi->ViewValue = FormatNumber($this->Lokasi->CurrentValue, $this->Lokasi->formatPattern());
-                    }
-                }
-            } else {
-                $this->Lokasi->ViewValue = null;
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
+
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
+
+            // id
+            $this->id->HrefValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
+
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+        } elseif ($this->RowType == RowType::EDIT) {
+            // id
+            $this->id->setupEditAttributes();
+            $this->id->EditValue = $this->id->CurrentValue;
+
+            // Nama
+            $this->Nama->setupEditAttributes();
+            if (!$this->Nama->Raw) {
+                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
             }
+            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
+            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-            // Customer
-            $curVal = strval($this->Customer->CurrentValue);
-            if ($curVal != "") {
-                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-                if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                        $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                    } else {
-                        $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
-                    }
-                }
-            } else {
-                $this->Customer->ViewValue = null;
+            // Nomor_Telepon
+            $this->Nomor_Telepon->setupEditAttributes();
+            if (!$this->Nomor_Telepon->Raw) {
+                $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
             }
+            $this->Nomor_Telepon->EditValue = HtmlEncode($this->Nomor_Telepon->CurrentValue);
+            $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
 
-            // Shipper
-            $curVal = strval($this->Shipper->CurrentValue);
-            if ($curVal != "") {
-                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-                if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                        $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                    } else {
-                        $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
-                    }
-                }
-            } else {
-                $this->Shipper->ViewValue = null;
+            // Contact_Person
+            $this->Contact_Person->setupEditAttributes();
+            if (!$this->Contact_Person->Raw) {
+                $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
             }
+            $this->Contact_Person->EditValue = HtmlEncode($this->Contact_Person->CurrentValue);
+            $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
 
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-            $this->Lokasi->TooltipValue = "";
+            // Edit refer script
 
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-            $this->Tanggal->TooltipValue = "";
+            // id
+            $this->id->HrefValue = "";
 
-            // Nomor
-            $this->Nomor->HrefValue = "";
-            $this->Nomor->TooltipValue = "";
+            // Nama
+            $this->Nama->HrefValue = "";
 
-            // Tanggal_Muat
-            $this->Tanggal_Muat->HrefValue = "";
-            $this->Tanggal_Muat->TooltipValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
 
-            // Customer
-            $this->Customer->HrefValue = "";
-            $this->Customer->TooltipValue = "";
-
-            // Shipper
-            $this->Shipper->HrefValue = "";
-            $this->Shipper->TooltipValue = "";
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+        }
+        if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
+            $this->setupFieldTitles();
         }
 
         // Call Row Rendered event
         if ($this->RowType != RowType::AGGREGATEINIT) {
             $this->rowRendered();
+        }
+    }
+
+    // Validate form
+    protected function validateForm()
+    {
+        global $Language, $Security;
+
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+        $validateForm = true;
+            if ($this->id->Visible && $this->id->Required) {
+                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+                }
+            }
+            if ($this->Nama->Visible && $this->Nama->Required) {
+                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
+                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
+                }
+            }
+            if ($this->Nomor_Telepon->Visible && $this->Nomor_Telepon->Required) {
+                if (!$this->Nomor_Telepon->IsDetailKey && EmptyValue($this->Nomor_Telepon->FormValue)) {
+                    $this->Nomor_Telepon->addErrorMessage(str_replace("%s", $this->Nomor_Telepon->caption(), $this->Nomor_Telepon->RequiredErrorMessage));
+                }
+            }
+            if ($this->Contact_Person->Visible && $this->Contact_Person->Required) {
+                if (!$this->Contact_Person->IsDetailKey && EmptyValue($this->Contact_Person->FormValue)) {
+                    $this->Contact_Person->addErrorMessage(str_replace("%s", $this->Contact_Person->caption(), $this->Contact_Person->RequiredErrorMessage));
+                }
+            }
+
+        // Return validate result
+        $validateForm = $validateForm && !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateForm = $validateForm && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateForm;
+    }
+
+    // Update record based on key values
+    protected function editRow()
+    {
+        global $Security, $Language;
+        $oldKeyFilter = $this->getRecordFilter();
+        $filter = $this->applyUserIDFilters($oldKeyFilter);
+        $conn = $this->getConnection();
+
+        // Load old row
+        $this->CurrentFilter = $filter;
+        $sql = $this->getCurrentSql();
+        $rsold = $conn->fetchAssociative($sql);
+        if (!$rsold) {
+            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+            return false; // Update Failed
+        } else {
+            // Load old values
+            $this->loadDbValues($rsold);
+        }
+
+        // Get new row
+        $rsnew = $this->getEditRow($rsold);
+
+        // Update current values
+        $this->setCurrentValues($rsnew);
+
+        // Call Row Updating event
+        $updateRow = $this->rowUpdating($rsold, $rsnew);
+        if ($updateRow) {
+            if (count($rsnew) > 0) {
+                $this->CurrentFilter = $filter; // Set up current filter
+                $editRow = $this->update($rsnew, "", $rsold);
+                if (!$editRow && !EmptyValue($this->DbErrorMessage)) { // Show database error
+                    $this->setFailureMessage($this->DbErrorMessage);
+                }
+            } else {
+                $editRow = true; // No field to update
+            }
+            if ($editRow) {
+            }
+        } else {
+            if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
+                // Use the message, do nothing
+            } elseif ($this->CancelMessage != "") {
+                $this->setFailureMessage($this->CancelMessage);
+                $this->CancelMessage = "";
+            } else {
+                $this->setFailureMessage($Language->phrase("UpdateCancelled"));
+            }
+            $editRow = false;
+        }
+
+        // Call Row_Updated event
+        if ($editRow) {
+            $this->rowUpdated($rsold, $rsnew);
+        }
+
+        // Write JSON response
+        if (IsJsonResponse() && $editRow) {
+            $row = $this->getRecordsFromRecordset([$rsnew], true);
+            $table = $this->TableVar;
+            WriteJson(["success" => true, "action" => Config("API_EDIT_ACTION"), $table => $row]);
+        }
+        return $editRow;
+    }
+
+    /**
+     * Get edit row
+     *
+     * @return array
+     */
+    protected function getEditRow($rsold)
+    {
+        global $Security;
+        $rsnew = [];
+
+        // Nama
+        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, $this->Nama->ReadOnly);
+
+        // Nomor_Telepon
+        $this->Nomor_Telepon->setDbValueDef($rsnew, $this->Nomor_Telepon->CurrentValue, $this->Nomor_Telepon->ReadOnly);
+
+        // Contact_Person
+        $this->Contact_Person->setDbValueDef($rsnew, $this->Contact_Person->CurrentValue, $this->Contact_Person->ReadOnly);
+        return $rsnew;
+    }
+
+    /**
+     * Restore edit form from row
+     * @param array $row Row
+     */
+    protected function restoreEditFormFromRow($row)
+    {
+        if (isset($row['Nama'])) { // Nama
+            $this->Nama->CurrentValue = $row['Nama'];
+        }
+        if (isset($row['Nomor_Telepon'])) { // Nomor_Telepon
+            $this->Nomor_Telepon->CurrentValue = $row['Nomor_Telepon'];
+        }
+        if (isset($row['Contact_Person'])) { // Contact_Person
+            $this->Contact_Person->CurrentValue = $row['Contact_Person'];
         }
     }
 
@@ -914,9 +1069,9 @@ class JobView extends Job
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
-        $pageId = "view";
-        $Breadcrumb->add("view", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
+        $pageId = "edit";
+        $Breadcrumb->add("edit", $pageId, $url);
     }
 
     // Setup lookup options
@@ -932,12 +1087,6 @@ class JobView extends Job
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Lokasi":
-                    break;
-                case "x_Customer":
-                    break;
-                case "x_Shipper":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -1063,27 +1212,10 @@ class JobView extends Job
         //$content = "<div style=\"break-after:page;\"></div>"; // Modify page break content
     }
 
-    // Page Exporting event
-    // $doc = export object
-    public function pageExporting(&$doc)
+    // Form Custom Validate event
+    public function formCustomValidate(&$customError)
     {
-        //$doc->Text = "my header"; // Export header
-        //return false; // Return false to skip default export and use Row_Export event
-        return true; // Return true to use default export and skip Row_Export event
-    }
-
-    // Row Export event
-    // $doc = export document object
-    public function rowExport($doc, $rs)
-    {
-        //$doc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
-    }
-
-    // Page Exported event
-    // $doc = export document object
-    public function pageExported($doc)
-    {
-        //$doc->Text .= "my footer"; // Export footer
-        //Log($doc->Text);
+        // Return error message in $customError
+        return true;
     }
 }

@@ -37,7 +37,9 @@ $USER_LEVEL_PRIVS = [["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}audittrail","-2","0
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}lokasi","-2","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}lokasi","0","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}customer","-2","0"],
-    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}customer","0","0"]];
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}customer","0","0"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}shipper","-2","0"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}shipper","0","0"]];
 
 /**
  * Tables
@@ -57,4 +59,5 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","audittrail",true,"{DB904388-BB
     ["beranda.php","beranda","Beranda",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda"],
     ["job","job","Job",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","joblist"],
     ["lokasi","lokasi","Lokasi",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","lokasilist"],
-    ["customer","customer","Customer",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","customerlist"]];
+    ["customer","customer","Customer",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","customerlist"],
+    ["shipper","shipper","Shipper",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","shipperlist"]];

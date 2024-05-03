@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JobAdd extends Job
+class ShipperAdd extends Shipper
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class JobAdd extends Job
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobAdd";
+    public $PageObjName = "ShipperAdd";
 
     // View file path
     public $View = null;
@@ -38,7 +38,7 @@ class JobAdd extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "jobadd";
+    public $CurrentPageName = "shipperadd";
 
     // Page headings
     public $Heading = "";
@@ -122,12 +122,9 @@ class JobAdd extends Job
     public function setVisibility()
     {
         $this->id->Visible = false;
-        $this->Lokasi->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->Nomor->setVisibility();
-        $this->Tanggal_Muat->setVisibility();
-        $this->Customer->setVisibility();
-        $this->Shipper->setVisibility();
+        $this->Nama->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -135,8 +132,8 @@ class JobAdd extends Job
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'job';
-        $this->TableName = 'job';
+        $this->TableVar = 'shipper';
+        $this->TableName = 'shipper';
 
         // Table CSS class
         $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-add-table";
@@ -147,14 +144,14 @@ class JobAdd extends Job
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job)
-        if (!isset($GLOBALS["job"]) || $GLOBALS["job"]::class == PROJECT_NAMESPACE . "job") {
-            $GLOBALS["job"] = &$this;
+        // Table object (shipper)
+        if (!isset($GLOBALS["shipper"]) || $GLOBALS["shipper"]::class == PROJECT_NAMESPACE . "shipper") {
+            $GLOBALS["shipper"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'shipper');
         }
 
         // Start timer
@@ -268,7 +265,7 @@ class JobAdd extends Job
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -509,11 +506,6 @@ class JobAdd extends Job
             $this->InlineDelete = true;
         }
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Lokasi);
-        $this->setupLookupOptions($this->Customer);
-        $this->setupLookupOptions($this->Shipper);
-
         // Load default values for add
         $this->loadDefaultValues();
 
@@ -576,7 +568,7 @@ class JobAdd extends Job
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("joblist"); // No matching record, return to list
+                    $this->terminate("shipperlist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -587,18 +579,18 @@ class JobAdd extends Job
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "joblist") {
+                    if (GetPageName($returnUrl) == "shipperlist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "jobview") {
+                    } elseif (GetPageName($returnUrl) == "shipperview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "joblist") {
+                        if (GetPageName($returnUrl) != "shipperlist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "joblist"; // Return list page content
+                            $returnUrl = "shipperlist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -673,65 +665,33 @@ class JobAdd extends Job
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'Lokasi' first before field var 'x_Lokasi'
-        $val = $CurrentForm->hasValue("Lokasi") ? $CurrentForm->getValue("Lokasi") : $CurrentForm->getValue("x_Lokasi");
-        if (!$this->Lokasi->IsDetailKey) {
+        // Check field name 'Nama' first before field var 'x_Nama'
+        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
+        if (!$this->Nama->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Lokasi->Visible = false; // Disable update for API request
+                $this->Nama->Visible = false; // Disable update for API request
             } else {
-                $this->Lokasi->setFormValue($val);
+                $this->Nama->setFormValue($val);
             }
         }
 
-        // Check field name 'Tanggal' first before field var 'x_Tanggal'
-        $val = $CurrentForm->hasValue("Tanggal") ? $CurrentForm->getValue("Tanggal") : $CurrentForm->getValue("x_Tanggal");
-        if (!$this->Tanggal->IsDetailKey) {
+        // Check field name 'Nomor_Telepon' first before field var 'x_Nomor_Telepon'
+        $val = $CurrentForm->hasValue("Nomor_Telepon") ? $CurrentForm->getValue("Nomor_Telepon") : $CurrentForm->getValue("x_Nomor_Telepon");
+        if (!$this->Nomor_Telepon->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Tanggal->Visible = false; // Disable update for API request
+                $this->Nomor_Telepon->Visible = false; // Disable update for API request
             } else {
-                $this->Tanggal->setFormValue($val, true, $validate);
-            }
-            $this->Tanggal->CurrentValue = UnFormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern());
-        }
-
-        // Check field name 'Nomor' first before field var 'x_Nomor'
-        $val = $CurrentForm->hasValue("Nomor") ? $CurrentForm->getValue("Nomor") : $CurrentForm->getValue("x_Nomor");
-        if (!$this->Nomor->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Nomor->Visible = false; // Disable update for API request
-            } else {
-                $this->Nomor->setFormValue($val);
+                $this->Nomor_Telepon->setFormValue($val);
             }
         }
 
-        // Check field name 'Tanggal_Muat' first before field var 'x_Tanggal_Muat'
-        $val = $CurrentForm->hasValue("Tanggal_Muat") ? $CurrentForm->getValue("Tanggal_Muat") : $CurrentForm->getValue("x_Tanggal_Muat");
-        if (!$this->Tanggal_Muat->IsDetailKey) {
+        // Check field name 'Contact_Person' first before field var 'x_Contact_Person'
+        $val = $CurrentForm->hasValue("Contact_Person") ? $CurrentForm->getValue("Contact_Person") : $CurrentForm->getValue("x_Contact_Person");
+        if (!$this->Contact_Person->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Tanggal_Muat->Visible = false; // Disable update for API request
+                $this->Contact_Person->Visible = false; // Disable update for API request
             } else {
-                $this->Tanggal_Muat->setFormValue($val, true, $validate);
-            }
-            $this->Tanggal_Muat->CurrentValue = UnFormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern());
-        }
-
-        // Check field name 'Customer' first before field var 'x_Customer'
-        $val = $CurrentForm->hasValue("Customer") ? $CurrentForm->getValue("Customer") : $CurrentForm->getValue("x_Customer");
-        if (!$this->Customer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Customer->Visible = false; // Disable update for API request
-            } else {
-                $this->Customer->setFormValue($val);
-            }
-        }
-
-        // Check field name 'Shipper' first before field var 'x_Shipper'
-        $val = $CurrentForm->hasValue("Shipper") ? $CurrentForm->getValue("Shipper") : $CurrentForm->getValue("x_Shipper");
-        if (!$this->Shipper->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Shipper->Visible = false; // Disable update for API request
-            } else {
-                $this->Shipper->setFormValue($val);
+                $this->Contact_Person->setFormValue($val);
             }
         }
 
@@ -743,14 +703,9 @@ class JobAdd extends Job
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->Lokasi->CurrentValue = $this->Lokasi->FormValue;
-        $this->Tanggal->CurrentValue = $this->Tanggal->FormValue;
-        $this->Tanggal->CurrentValue = UnFormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern());
-        $this->Nomor->CurrentValue = $this->Nomor->FormValue;
-        $this->Tanggal_Muat->CurrentValue = $this->Tanggal_Muat->FormValue;
-        $this->Tanggal_Muat->CurrentValue = UnFormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern());
-        $this->Customer->CurrentValue = $this->Customer->FormValue;
-        $this->Shipper->CurrentValue = $this->Shipper->FormValue;
+        $this->Nama->CurrentValue = $this->Nama->FormValue;
+        $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
+        $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
     }
 
     /**
@@ -792,12 +747,9 @@ class JobAdd extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->Nomor->setDbValue($row['Nomor']);
-        $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
-        $this->Customer->setDbValue($row['Customer']);
-        $this->Shipper->setDbValue($row['Shipper']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -805,12 +757,9 @@ class JobAdd extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['Nomor'] = $this->Nomor->DefaultValue;
-        $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
-        $row['Customer'] = $this->Customer->DefaultValue;
-        $row['Shipper'] = $this->Shipper->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -848,269 +797,72 @@ class JobAdd extends Job
         // id
         $this->id->RowCssClass = "row";
 
-        // Lokasi
-        $this->Lokasi->RowCssClass = "row";
+        // Nama
+        $this->Nama->RowCssClass = "row";
 
-        // Tanggal
-        $this->Tanggal->RowCssClass = "row";
+        // Nomor_Telepon
+        $this->Nomor_Telepon->RowCssClass = "row";
 
-        // Nomor
-        $this->Nomor->RowCssClass = "row";
-
-        // Tanggal_Muat
-        $this->Tanggal_Muat->RowCssClass = "row";
-
-        // Customer
-        $this->Customer->RowCssClass = "row";
-
-        // Shipper
-        $this->Shipper->RowCssClass = "row";
+        // Contact_Person
+        $this->Contact_Person->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
-            // Lokasi
-            $curVal = strval($this->Lokasi->CurrentValue);
-            if ($curVal != "") {
-                $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-                if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                        $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                    } else {
-                        $this->Lokasi->ViewValue = FormatNumber($this->Lokasi->CurrentValue, $this->Lokasi->formatPattern());
-                    }
-                }
-            } else {
-                $this->Lokasi->ViewValue = null;
-            }
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
 
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+            // Nama
+            $this->Nama->HrefValue = "";
 
-            // Customer
-            $curVal = strval($this->Customer->CurrentValue);
-            if ($curVal != "") {
-                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-                if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                        $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                    } else {
-                        $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
-                    }
-                }
-            } else {
-                $this->Customer->ViewValue = null;
-            }
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
 
-            // Shipper
-            $curVal = strval($this->Shipper->CurrentValue);
-            if ($curVal != "") {
-                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-                if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                        $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                    } else {
-                        $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
-                    }
-                }
-            } else {
-                $this->Shipper->ViewValue = null;
-            }
-
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-
-            // Nomor
-            $this->Nomor->HrefValue = "";
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->HrefValue = "";
-
-            // Customer
-            $this->Customer->HrefValue = "";
-
-            // Shipper
-            $this->Shipper->HrefValue = "";
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
-            // Lokasi
-            $curVal = trim(strval($this->Lokasi->CurrentValue));
-            if ($curVal != "") {
-                $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-            } else {
-                $this->Lokasi->ViewValue = $this->Lokasi->Lookup !== null && is_array($this->Lokasi->lookupOptions()) && count($this->Lokasi->lookupOptions()) > 0 ? $curVal : null;
+            // Nama
+            $this->Nama->setupEditAttributes();
+            if (!$this->Nama->Raw) {
+                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
             }
-            if ($this->Lokasi->ViewValue !== null) { // Load from cache
-                $this->Lokasi->EditValue = array_values($this->Lokasi->lookupOptions());
-                if ($this->Lokasi->ViewValue == "") {
-                    $this->Lokasi->ViewValue = $Language->phrase("PleaseSelect");
-                }
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->Lokasi->CurrentValue, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                }
-                $sqlWrk = $this->Lokasi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                    $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                } else {
-                    $this->Lokasi->ViewValue = $Language->phrase("PleaseSelect");
-                }
-                $arwrk = $rswrk;
-                $this->Lokasi->EditValue = $arwrk;
-            }
-            $this->Lokasi->PlaceHolder = RemoveHtml($this->Lokasi->caption());
+            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
+            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
-            // Tanggal
-            $this->Tanggal->setupEditAttributes();
-            $this->Tanggal->EditValue = HtmlEncode(FormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern()));
-            $this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
+            // Nomor_Telepon
+            $this->Nomor_Telepon->setupEditAttributes();
+            if (!$this->Nomor_Telepon->Raw) {
+                $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
+            }
+            $this->Nomor_Telepon->EditValue = HtmlEncode($this->Nomor_Telepon->CurrentValue);
+            $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
 
-            // Nomor
-            $this->Nomor->setupEditAttributes();
-            if (!$this->Nomor->Raw) {
-                $this->Nomor->CurrentValue = HtmlDecode($this->Nomor->CurrentValue);
+            // Contact_Person
+            $this->Contact_Person->setupEditAttributes();
+            if (!$this->Contact_Person->Raw) {
+                $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
             }
-            $this->Nomor->EditValue = HtmlEncode($this->Nomor->CurrentValue);
-            $this->Nomor->PlaceHolder = RemoveHtml($this->Nomor->caption());
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->setupEditAttributes();
-            $this->Tanggal_Muat->EditValue = HtmlEncode(FormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern()));
-            $this->Tanggal_Muat->PlaceHolder = RemoveHtml($this->Tanggal_Muat->caption());
-
-            // Customer
-            $curVal = trim(strval($this->Customer->CurrentValue));
-            if ($curVal != "") {
-                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-            } else {
-                $this->Customer->ViewValue = $this->Customer->Lookup !== null && is_array($this->Customer->lookupOptions()) && count($this->Customer->lookupOptions()) > 0 ? $curVal : null;
-            }
-            if ($this->Customer->ViewValue !== null) { // Load from cache
-                $this->Customer->EditValue = array_values($this->Customer->lookupOptions());
-                if ($this->Customer->ViewValue == "") {
-                    $this->Customer->ViewValue = $Language->phrase("PleaseSelect");
-                }
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->Customer->CurrentValue, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                }
-                $sqlWrk = $this->Customer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                    $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                } else {
-                    $this->Customer->ViewValue = $Language->phrase("PleaseSelect");
-                }
-                $arwrk = $rswrk;
-                $this->Customer->EditValue = $arwrk;
-            }
-            $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
-
-            // Shipper
-            $curVal = trim(strval($this->Shipper->CurrentValue));
-            if ($curVal != "") {
-                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-            } else {
-                $this->Shipper->ViewValue = $this->Shipper->Lookup !== null && is_array($this->Shipper->lookupOptions()) && count($this->Shipper->lookupOptions()) > 0 ? $curVal : null;
-            }
-            if ($this->Shipper->ViewValue !== null) { // Load from cache
-                $this->Shipper->EditValue = array_values($this->Shipper->lookupOptions());
-                if ($this->Shipper->ViewValue == "") {
-                    $this->Shipper->ViewValue = $Language->phrase("PleaseSelect");
-                }
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->Shipper->CurrentValue, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                }
-                $sqlWrk = $this->Shipper->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                    $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                } else {
-                    $this->Shipper->ViewValue = $Language->phrase("PleaseSelect");
-                }
-                $arwrk = $rswrk;
-                $this->Shipper->EditValue = $arwrk;
-            }
-            $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
+            $this->Contact_Person->EditValue = HtmlEncode($this->Contact_Person->CurrentValue);
+            $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
 
             // Add refer script
 
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
+            // Nama
+            $this->Nama->HrefValue = "";
 
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
 
-            // Nomor
-            $this->Nomor->HrefValue = "";
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->HrefValue = "";
-
-            // Customer
-            $this->Customer->HrefValue = "";
-
-            // Shipper
-            $this->Shipper->HrefValue = "";
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1132,40 +884,19 @@ class JobAdd extends Job
             return true;
         }
         $validateForm = true;
-            if ($this->Lokasi->Visible && $this->Lokasi->Required) {
-                if (!$this->Lokasi->IsDetailKey && EmptyValue($this->Lokasi->FormValue)) {
-                    $this->Lokasi->addErrorMessage(str_replace("%s", $this->Lokasi->caption(), $this->Lokasi->RequiredErrorMessage));
+            if ($this->Nama->Visible && $this->Nama->Required) {
+                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
+                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
                 }
             }
-            if ($this->Tanggal->Visible && $this->Tanggal->Required) {
-                if (!$this->Tanggal->IsDetailKey && EmptyValue($this->Tanggal->FormValue)) {
-                    $this->Tanggal->addErrorMessage(str_replace("%s", $this->Tanggal->caption(), $this->Tanggal->RequiredErrorMessage));
+            if ($this->Nomor_Telepon->Visible && $this->Nomor_Telepon->Required) {
+                if (!$this->Nomor_Telepon->IsDetailKey && EmptyValue($this->Nomor_Telepon->FormValue)) {
+                    $this->Nomor_Telepon->addErrorMessage(str_replace("%s", $this->Nomor_Telepon->caption(), $this->Nomor_Telepon->RequiredErrorMessage));
                 }
             }
-            if (!CheckDate($this->Tanggal->FormValue, $this->Tanggal->formatPattern())) {
-                $this->Tanggal->addErrorMessage($this->Tanggal->getErrorMessage(false));
-            }
-            if ($this->Nomor->Visible && $this->Nomor->Required) {
-                if (!$this->Nomor->IsDetailKey && EmptyValue($this->Nomor->FormValue)) {
-                    $this->Nomor->addErrorMessage(str_replace("%s", $this->Nomor->caption(), $this->Nomor->RequiredErrorMessage));
-                }
-            }
-            if ($this->Tanggal_Muat->Visible && $this->Tanggal_Muat->Required) {
-                if (!$this->Tanggal_Muat->IsDetailKey && EmptyValue($this->Tanggal_Muat->FormValue)) {
-                    $this->Tanggal_Muat->addErrorMessage(str_replace("%s", $this->Tanggal_Muat->caption(), $this->Tanggal_Muat->RequiredErrorMessage));
-                }
-            }
-            if (!CheckDate($this->Tanggal_Muat->FormValue, $this->Tanggal_Muat->formatPattern())) {
-                $this->Tanggal_Muat->addErrorMessage($this->Tanggal_Muat->getErrorMessage(false));
-            }
-            if ($this->Customer->Visible && $this->Customer->Required) {
-                if (!$this->Customer->IsDetailKey && EmptyValue($this->Customer->FormValue)) {
-                    $this->Customer->addErrorMessage(str_replace("%s", $this->Customer->caption(), $this->Customer->RequiredErrorMessage));
-                }
-            }
-            if ($this->Shipper->Visible && $this->Shipper->Required) {
-                if (!$this->Shipper->IsDetailKey && EmptyValue($this->Shipper->FormValue)) {
-                    $this->Shipper->addErrorMessage(str_replace("%s", $this->Shipper->caption(), $this->Shipper->RequiredErrorMessage));
+            if ($this->Contact_Person->Visible && $this->Contact_Person->Required) {
+                if (!$this->Contact_Person->IsDetailKey && EmptyValue($this->Contact_Person->FormValue)) {
+                    $this->Contact_Person->addErrorMessage(str_replace("%s", $this->Contact_Person->caption(), $this->Contact_Person->RequiredErrorMessage));
                 }
             }
 
@@ -1239,23 +970,14 @@ class JobAdd extends Job
         global $Security;
         $rsnew = [];
 
-        // Lokasi
-        $this->Lokasi->setDbValueDef($rsnew, $this->Lokasi->CurrentValue, false);
+        // Nama
+        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
 
-        // Tanggal
-        $this->Tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern()), false);
+        // Nomor_Telepon
+        $this->Nomor_Telepon->setDbValueDef($rsnew, $this->Nomor_Telepon->CurrentValue, false);
 
-        // Nomor
-        $this->Nomor->setDbValueDef($rsnew, $this->Nomor->CurrentValue, false);
-
-        // Tanggal_Muat
-        $this->Tanggal_Muat->setDbValueDef($rsnew, UnFormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern()), false);
-
-        // Customer
-        $this->Customer->setDbValueDef($rsnew, $this->Customer->CurrentValue, false);
-
-        // Shipper
-        $this->Shipper->setDbValueDef($rsnew, $this->Shipper->CurrentValue, false);
+        // Contact_Person
+        $this->Contact_Person->setDbValueDef($rsnew, $this->Contact_Person->CurrentValue, false);
         return $rsnew;
     }
 
@@ -1265,23 +987,14 @@ class JobAdd extends Job
      */
     protected function restoreAddFormFromRow($row)
     {
-        if (isset($row['Lokasi'])) { // Lokasi
-            $this->Lokasi->setFormValue($row['Lokasi']);
+        if (isset($row['Nama'])) { // Nama
+            $this->Nama->setFormValue($row['Nama']);
         }
-        if (isset($row['Tanggal'])) { // Tanggal
-            $this->Tanggal->setFormValue($row['Tanggal']);
+        if (isset($row['Nomor_Telepon'])) { // Nomor_Telepon
+            $this->Nomor_Telepon->setFormValue($row['Nomor_Telepon']);
         }
-        if (isset($row['Nomor'])) { // Nomor
-            $this->Nomor->setFormValue($row['Nomor']);
-        }
-        if (isset($row['Tanggal_Muat'])) { // Tanggal_Muat
-            $this->Tanggal_Muat->setFormValue($row['Tanggal_Muat']);
-        }
-        if (isset($row['Customer'])) { // Customer
-            $this->Customer->setFormValue($row['Customer']);
-        }
-        if (isset($row['Shipper'])) { // Shipper
-            $this->Shipper->setFormValue($row['Shipper']);
+        if (isset($row['Contact_Person'])) { // Contact_Person
+            $this->Contact_Person->setFormValue($row['Contact_Person']);
         }
     }
 
@@ -1291,7 +1004,7 @@ class JobAdd extends Job
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }
@@ -1309,12 +1022,6 @@ class JobAdd extends Job
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Lokasi":
-                    break;
-                case "x_Customer":
-                    break;
-                case "x_Shipper":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

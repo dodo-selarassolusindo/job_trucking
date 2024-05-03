@@ -87,6 +87,7 @@ return [
     "job" => \DI\create(Job::class),
     "lokasi" => \DI\create(Lokasi::class),
     "customer" => \DI\create(Customer::class),
+    "shipper" => \DI\create(Shipper::class),
 
     // User table
     "usertable" => \DI\get("employees"),

@@ -15,18 +15,18 @@ use Closure;
 /**
  * Page class
  */
-class JobDelete extends Job
+class ShipperView extends Shipper
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "delete";
+    public $PageID = "view";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobDelete";
+    public $PageObjName = "ShipperView";
 
     // View file path
     public $View = null;
@@ -38,7 +38,25 @@ class JobDelete extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "jobdelete";
+    public $CurrentPageName = "shipperview";
+
+    // Page URLs
+    public $AddUrl;
+    public $EditUrl;
+    public $DeleteUrl;
+    public $ViewUrl;
+    public $CopyUrl;
+    public $ListUrl;
+
+    // Update URLs
+    public $InlineAddUrl;
+    public $InlineCopyUrl;
+    public $InlineEditUrl;
+    public $GridAddUrl;
+    public $GridEditUrl;
+    public $MultiEditUrl;
+    public $MultiDeleteUrl;
+    public $MultiUpdateUrl;
 
     // Page headings
     public $Heading = "";
@@ -121,13 +139,10 @@ class JobDelete extends Job
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
-        $this->Lokasi->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->Nomor->setVisibility();
-        $this->Tanggal_Muat->setVisibility();
-        $this->Customer->setVisibility();
-        $this->Shipper->setVisibility();
+        $this->id->setVisibility();
+        $this->Nama->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -135,11 +150,11 @@ class JobDelete extends Job
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'job';
-        $this->TableName = 'job';
+        $this->TableVar = 'shipper';
+        $this->TableName = 'shipper';
 
         // Table CSS class
-        $this->TableClass = "table table-bordered table-hover table-sm ew-table";
+        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-view-table";
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -147,14 +162,19 @@ class JobDelete extends Job
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job)
-        if (!isset($GLOBALS["job"]) || $GLOBALS["job"]::class == PROJECT_NAMESPACE . "job") {
-            $GLOBALS["job"] = &$this;
+        // Table object (shipper)
+        if (!isset($GLOBALS["shipper"]) || $GLOBALS["shipper"]::class == PROJECT_NAMESPACE . "shipper") {
+            $GLOBALS["shipper"] = &$this;
+        }
+
+        // Set up record key
+        if (($keyValue = Get("id") ?? Route("id")) !== null) {
+            $this->RecKey["id"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'shipper');
         }
 
         // Start timer
@@ -168,6 +188,17 @@ class JobDelete extends Job
 
         // User table object
         $UserTable = Container("usertable");
+
+        // Export options
+        $this->ExportOptions = new ListOptions(TagClassName: "ew-export-option");
+
+        // Other options
+        $this->OtherOptions = new ListOptionsArray();
+
+        // Detail tables
+        $this->OtherOptions["detail"] = new ListOptions(TagClassName: "ew-detail-option");
+        // Actions
+        $this->OtherOptions["action"] = new ListOptions(TagClassName: "ew-action-option");
     }
 
     // Get content from stream
@@ -256,8 +287,23 @@ class JobDelete extends Job
             if (!Config("DEBUG") && ob_get_length()) {
                 ob_end_clean();
             }
-            SaveDebugMessage();
-            Redirect(GetUrl($url));
+
+            // Handle modal response
+            if ($this->IsModal) { // Show as modal
+                $pageName = GetPageName($url);
+                $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
+                if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
+                    $result["caption"] = $this->getModalCaption($pageName);
+                    $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
+                } else { // List page
+                    $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
+                    $this->clearFailureMessage();
+                }
+                WriteJson($result);
+            } else {
+                SaveDebugMessage();
+                Redirect(GetUrl($url));
+            }
         }
         return; // Return to controller
     }
@@ -352,13 +398,90 @@ class JobDelete extends Job
             $this->id->Visible = false;
         }
     }
-    public $DbMasterFilter = "";
-    public $DbDetailFilter = "";
+
+    // Lookup data
+    public function lookup(array $req = [], bool $response = true)
+    {
+        global $Language, $Security;
+
+        // Get lookup object
+        $fieldName = $req["field"] ?? null;
+        if (!$fieldName) {
+            return [];
+        }
+        $fld = $this->Fields[$fieldName];
+        $lookup = $fld->Lookup;
+        $name = $req["name"] ?? "";
+        if (ContainsString($name, "query_builder_rule")) {
+            $lookup->FilterFields = []; // Skip parent fields if any
+        }
+
+        // Get lookup parameters
+        $lookupType = $req["ajax"] ?? "unknown";
+        $pageSize = -1;
+        $offset = -1;
+        $searchValue = "";
+        if (SameText($lookupType, "modal") || SameText($lookupType, "filter")) {
+            $searchValue = $req["q"] ?? $req["sv"] ?? "";
+            $pageSize = $req["n"] ?? $req["recperpage"] ?? 10;
+        } elseif (SameText($lookupType, "autosuggest")) {
+            $searchValue = $req["q"] ?? "";
+            $pageSize = $req["n"] ?? -1;
+            $pageSize = is_numeric($pageSize) ? (int)$pageSize : -1;
+            if ($pageSize <= 0) {
+                $pageSize = Config("AUTO_SUGGEST_MAX_ENTRIES");
+            }
+        }
+        $start = $req["start"] ?? -1;
+        $start = is_numeric($start) ? (int)$start : -1;
+        $page = $req["page"] ?? -1;
+        $page = is_numeric($page) ? (int)$page : -1;
+        $offset = $start >= 0 ? $start : ($page > 0 && $pageSize > 0 ? ($page - 1) * $pageSize : 0);
+        $userSelect = Decrypt($req["s"] ?? "");
+        $userFilter = Decrypt($req["f"] ?? "");
+        $userOrderBy = Decrypt($req["o"] ?? "");
+        $keys = $req["keys"] ?? null;
+        $lookup->LookupType = $lookupType; // Lookup type
+        $lookup->FilterValues = []; // Clear filter values first
+        if ($keys !== null) { // Selected records from modal
+            if (is_array($keys)) {
+                $keys = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $keys);
+            }
+            $lookup->FilterFields = []; // Skip parent fields if any
+            $lookup->FilterValues[] = $keys; // Lookup values
+            $pageSize = -1; // Show all records
+        } else { // Lookup values
+            $lookup->FilterValues[] = $req["v0"] ?? $req["lookupValue"] ?? "";
+        }
+        $cnt = is_array($lookup->FilterFields) ? count($lookup->FilterFields) : 0;
+        for ($i = 1; $i <= $cnt; $i++) {
+            $lookup->FilterValues[] = $req["v" . $i] ?? "";
+        }
+        $lookup->SearchValue = $searchValue;
+        $lookup->PageSize = $pageSize;
+        $lookup->Offset = $offset;
+        if ($userSelect != "") {
+            $lookup->UserSelect = $userSelect;
+        }
+        if ($userFilter != "") {
+            $lookup->UserFilter = $userFilter;
+        }
+        if ($userOrderBy != "") {
+            $lookup->UserOrderBy = $userOrderBy;
+        }
+        return $lookup->toJson($this, $response); // Use settings from current page
+    }
+    public $ExportOptions; // Export options
+    public $OtherOptions; // Other options
+    public $DisplayRecords = 1;
+    public $DbMasterFilter;
+    public $DbDetailFilter;
     public $StartRecord;
+    public $StopRecord;
     public $TotalRecords = 0;
-    public $RecordCount;
-    public $RecKeys = [];
-    public $StartRowCount = 1;
+    public $RecordRange = 10;
+    public $RecKey = [];
+    public $IsModal = false;
 
     /**
      * Page run
@@ -367,7 +490,11 @@ class JobDelete extends Job
      */
     public function run()
     {
-        global $ExportType, $Language, $Security, $CurrentForm;
+        global $ExportType, $Language, $Security, $CurrentForm, $SkipHeaderFooter;
+
+        // Is modal
+        $this->IsModal = ConvertToBool(Param("modal"));
+        $this->UseLayout = $this->UseLayout && !$this->IsModal;
 
         // Use layout
         $this->UseLayout = $this->UseLayout && ConvertToBool(Param(Config("PAGE_LAYOUT"), true));
@@ -404,75 +531,75 @@ class JobDelete extends Job
             $this->InlineDelete = true;
         }
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Lokasi);
-        $this->setupLookupOptions($this->Customer);
-        $this->setupLookupOptions($this->Shipper);
+        // Check modal
+        if ($this->IsModal) {
+            $SkipHeaderFooter = true;
+        }
 
-        // Set up Breadcrumb
-        $this->setupBreadcrumb();
+        // Load current record
+        $loadCurrentRecord = false;
+        $returnUrl = "";
+        $matchRecord = false;
+        if (($keyValue = Get("id") ?? Route("id")) !== null) {
+            $this->id->setQueryStringValue($keyValue);
+            $this->RecKey["id"] = $this->id->QueryStringValue;
+        } elseif (Post("id") !== null) {
+            $this->id->setFormValue(Post("id"));
+            $this->RecKey["id"] = $this->id->FormValue;
+        } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
+            $this->id->setQueryStringValue($keyValue);
+            $this->RecKey["id"] = $this->id->QueryStringValue;
+        } elseif (!$loadCurrentRecord) {
+            $returnUrl = "shipperlist"; // Return to list
+        }
 
-        // Load key parameters
-        $this->RecKeys = $this->getRecordKeys(); // Load record keys
-        $filter = $this->getFilterFromRecordKeys();
-        if ($filter == "") {
-            $this->terminate("joblist"); // Prevent SQL injection, return to list
+        // Get action
+        $this->CurrentAction = "show"; // Display
+        switch ($this->CurrentAction) {
+            case "show": // Get a record to display
+
+                    // Load record based on key
+                    if (IsApi()) {
+                        $filter = $this->getRecordFilter();
+                        $this->CurrentFilter = $filter;
+                        $sql = $this->getCurrentSql();
+                        $conn = $this->getConnection();
+                        $res = ($this->Recordset = ExecuteQuery($sql, $conn));
+                    } else {
+                        $res = $this->loadRow();
+                    }
+                    if (!$res) { // Load record based on key
+                        if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
+                            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                        }
+                        $returnUrl = "shipperlist"; // No matching record, return to list
+                    }
+                break;
+        }
+        if ($returnUrl != "") {
+            $this->terminate($returnUrl);
             return;
         }
 
-        // Set up filter (WHERE Clause)
-        $this->CurrentFilter = $filter;
+        // Set up Breadcrumb
+        if (!$this->isExport()) {
+            $this->setupBreadcrumb();
+        }
 
-        // Get action
+        // Render row
+        $this->RowType = RowType::VIEW;
+        $this->resetAttributes();
+        $this->renderRow();
+
+        // Normal return
         if (IsApi()) {
-            $this->CurrentAction = "delete"; // Delete record directly
-        } elseif (Param("action") !== null) {
-            $this->CurrentAction = Param("action") == "delete" ? "delete" : "show";
-        } else {
-            $this->CurrentAction = $this->InlineDelete ?
-                "delete" : // Delete record directly
-                "show"; // Display record
-        }
-        if ($this->isDelete()) {
-            $this->SendEmail = true; // Send email on delete success
-            if ($this->deleteRows()) { // Delete rows
-                if ($this->getSuccessMessage() == "") {
-                    $this->setSuccessMessage($Language->phrase("DeleteSuccess")); // Set up success message
-                }
-                if (IsJsonResponse()) {
-                    $this->terminate(true);
-                    return;
-                } else {
-                    $this->terminate($this->getReturnUrl()); // Return to caller
-                    return;
-                }
-            } else { // Delete failed
-                if (IsJsonResponse()) {
-                    $this->terminate();
-                    return;
-                }
-                // Return JSON error message if UseAjaxActions
-                if ($this->UseAjaxActions) {
-                    WriteJson(["success" => false, "error" => $this->getFailureMessage()]);
-                    $this->clearFailureMessage();
-                    $this->terminate();
-                    return;
-                }
-                if ($this->InlineDelete) {
-                    $this->terminate($this->getReturnUrl()); // Return to caller
-                    return;
-                } else {
-                    $this->CurrentAction = "show"; // Display record
-                }
-            }
-        }
-        if ($this->isShow()) { // Load records for display
-            $this->Recordset = $this->loadRecordset();
-            if ($this->TotalRecords <= 0) { // No record found, exit
+            if (!$this->isExport()) {
+                $row = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
                 $this->Recordset?->free();
-                $this->terminate("joblist"); // Return to list
-                return;
+                WriteJson(["success" => true, "action" => Config("API_VIEW_ACTION"), $this->TableVar => $row]);
+                $this->terminate(true);
             }
+            return;
         }
 
         // Set LoginStatus / Page_Rendering / Page_Render
@@ -498,59 +625,70 @@ class JobDelete extends Job
         }
     }
 
-    /**
-     * Load result set
-     *
-     * @param int $offset Offset
-     * @param int $rowcnt Maximum number of rows
-     * @return Doctrine\DBAL\Result Result
-     */
-    public function loadRecordset($offset = -1, $rowcnt = -1)
+    // Set up other options
+    protected function setupOtherOptions()
     {
-        // Load List page SQL (QueryBuilder)
-        $sql = $this->getListSql();
+        global $Language, $Security;
 
-        // Load result set
-        if ($offset > -1) {
-            $sql->setFirstResult($offset);
+        // Disable Add/Edit/Copy/Delete for Modal and UseAjaxActions
+        /*
+        if ($this->IsModal && $this->UseAjaxActions) {
+            $this->AddUrl = "";
+            $this->EditUrl = "";
+            $this->CopyUrl = "";
+            $this->DeleteUrl = "";
         }
-        if ($rowcnt > 0) {
-            $sql->setMaxResults($rowcnt);
-        }
-        $result = $sql->executeQuery();
-        if (property_exists($this, "TotalRecords") && $rowcnt < 0) {
-            $this->TotalRecords = $result->rowCount();
-            if ($this->TotalRecords <= 0) { // Handle database drivers that does not return rowCount()
-                $this->TotalRecords = $this->getRecordCount($this->getListSql());
-            }
-        }
+        */
+        $options = &$this->OtherOptions;
+        $option = $options["action"];
 
-        // Call Recordset Selected event
-        $this->recordsetSelected($result);
-        return $result;
-    }
-
-    /**
-     * Load records as associative array
-     *
-     * @param int $offset Offset
-     * @param int $rowcnt Maximum number of rows
-     * @return void
-     */
-    public function loadRows($offset = -1, $rowcnt = -1)
-    {
-        // Load List page SQL (QueryBuilder)
-        $sql = $this->getListSql();
-
-        // Load result set
-        if ($offset > -1) {
-            $sql->setFirstResult($offset);
+        // Add
+        $item = &$option->add("add");
+        $addcaption = HtmlTitle($Language->phrase("ViewPageAddLink"));
+        if ($this->IsModal) {
+            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
         }
-        if ($rowcnt > 0) {
-            $sql->setMaxResults($rowcnt);
+        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
+
+        // Edit
+        $item = &$option->add("edit");
+        $editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
+        if ($this->IsModal) {
+            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
         }
-        $result = $sql->executeQuery();
-        return $result->fetchAllAssociative();
+        $item->Visible = $this->EditUrl != "" && $Security->canEdit();
+
+        // Copy
+        $item = &$option->add("copy");
+        $copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
+        if ($this->IsModal) {
+            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
+        }
+        $item->Visible = $this->CopyUrl != "" && $Security->canAdd();
+
+        // Delete
+        $item = &$option->add("delete");
+        $url = GetUrl($this->DeleteUrl);
+        $item->Body = "<a class=\"ew-action ew-delete\"" .
+            ($this->InlineDelete || $this->IsModal ? " data-ew-action=\"inline-delete\"" : "") .
+            " title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) .
+            "\" href=\"" . HtmlEncode($url) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
+        $item->Visible = $this->DeleteUrl != "" && $Security->canDelete();
+
+        // Set up action default
+        $option = $options["action"];
+        $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
+        $option->UseDropDownButton = !IsJsonResponse() && false;
+        $option->UseButtonGroup = true;
+        $item = &$option->addGroupOption();
+        $item->Body = "";
+        $item->Visible = false;
     }
 
     /**
@@ -592,12 +730,9 @@ class JobDelete extends Job
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->Nomor->setDbValue($row['Nomor']);
-        $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
-        $this->Customer->setDbValue($row['Customer']);
-        $this->Shipper->setDbValue($row['Shipper']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -605,12 +740,9 @@ class JobDelete extends Job
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['Lokasi'] = $this->Lokasi->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['Nomor'] = $this->Nomor->DefaultValue;
-        $row['Tanggal_Muat'] = $this->Tanggal_Muat->DefaultValue;
-        $row['Customer'] = $this->Customer->DefaultValue;
-        $row['Shipper'] = $this->Shipper->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -620,6 +752,12 @@ class JobDelete extends Job
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
+        $this->AddUrl = $this->getAddUrl();
+        $this->EditUrl = $this->getEditUrl();
+        $this->CopyUrl = $this->getCopyUrl();
+        $this->DeleteUrl = $this->getDeleteUrl();
+        $this->ListUrl = $this->getListUrl();
+        $this->setupOtherOptions();
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -628,126 +766,41 @@ class JobDelete extends Job
 
         // id
 
-        // Lokasi
+        // Nama
 
-        // Tanggal
+        // Nomor_Telepon
 
-        // Nomor
-
-        // Tanggal_Muat
-
-        // Customer
-
-        // Shipper
+        // Contact_Person
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
-            // Lokasi
-            $curVal = strval($this->Lokasi->CurrentValue);
-            if ($curVal != "") {
-                $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-                if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                        $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                    } else {
-                        $this->Lokasi->ViewValue = FormatNumber($this->Lokasi->CurrentValue, $this->Lokasi->formatPattern());
-                    }
-                }
-            } else {
-                $this->Lokasi->ViewValue = null;
-            }
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
 
-            // Nomor
-            $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // Tanggal_Muat
-            $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-            $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
+            // id
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // Customer
-            $curVal = strval($this->Customer->CurrentValue);
-            if ($curVal != "") {
-                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-                if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                        $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                    } else {
-                        $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
-                    }
-                }
-            } else {
-                $this->Customer->ViewValue = null;
-            }
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
 
-            // Shipper
-            $curVal = strval($this->Shipper->CurrentValue);
-            if ($curVal != "") {
-                $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-                if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                        $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                    } else {
-                        $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
-                    }
-                }
-            } else {
-                $this->Shipper->ViewValue = null;
-            }
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+            $this->Nomor_Telepon->TooltipValue = "";
 
-            // Lokasi
-            $this->Lokasi->HrefValue = "";
-            $this->Lokasi->TooltipValue = "";
-
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-            $this->Tanggal->TooltipValue = "";
-
-            // Nomor
-            $this->Nomor->HrefValue = "";
-            $this->Nomor->TooltipValue = "";
-
-            // Tanggal_Muat
-            $this->Tanggal_Muat->HrefValue = "";
-            $this->Tanggal_Muat->TooltipValue = "";
-
-            // Customer
-            $this->Customer->HrefValue = "";
-            $this->Customer->TooltipValue = "";
-
-            // Shipper
-            $this->Shipper->HrefValue = "";
-            $this->Shipper->TooltipValue = "";
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+            $this->Contact_Person->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -756,114 +809,15 @@ class JobDelete extends Job
         }
     }
 
-    // Delete records based on current filter
-    protected function deleteRows()
-    {
-        global $Language, $Security;
-        if (!$Security->canDelete()) {
-            $this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
-            return false;
-        }
-        $sql = $this->getCurrentSql();
-        $conn = $this->getConnection();
-        $rows = $conn->fetchAllAssociative($sql);
-        if (count($rows) == 0) {
-            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
-            return false;
-        }
-        if ($this->UseTransaction) {
-            $conn->beginTransaction();
-        }
-
-        // Clone old rows
-        $rsold = $rows;
-        $successKeys = [];
-        $failKeys = [];
-        foreach ($rsold as $row) {
-            $thisKey = "";
-            if ($thisKey != "") {
-                $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
-            }
-            $thisKey .= $row['id'];
-
-            // Call row deleting event
-            $deleteRow = $this->rowDeleting($row);
-            if ($deleteRow) { // Delete
-                $deleteRow = $this->delete($row);
-                if (!$deleteRow && !EmptyValue($this->DbErrorMessage)) { // Show database error
-                    $this->setFailureMessage($this->DbErrorMessage);
-                }
-            }
-            if ($deleteRow === false) {
-                if ($this->UseTransaction) {
-                    $successKeys = []; // Reset success keys
-                    break;
-                }
-                $failKeys[] = $thisKey;
-            } else {
-                if (Config("DELETE_UPLOADED_FILES")) { // Delete old files
-                    $this->deleteUploadedFiles($row);
-                }
-
-                // Call Row Deleted event
-                $this->rowDeleted($row);
-                $successKeys[] = $thisKey;
-            }
-        }
-
-        // Any records deleted
-        $deleteRows = count($successKeys) > 0;
-        if (!$deleteRows) {
-            // Set up error message
-            if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
-                // Use the message, do nothing
-            } elseif ($this->CancelMessage != "") {
-                $this->setFailureMessage($this->CancelMessage);
-                $this->CancelMessage = "";
-            } else {
-                $this->setFailureMessage($Language->phrase("DeleteCancelled"));
-            }
-        }
-        if ($deleteRows) {
-            if ($this->UseTransaction) { // Commit transaction
-                if ($conn->isTransactionActive()) {
-                    $conn->commit();
-                }
-            }
-
-            // Set warning message if delete some records failed
-            if (count($failKeys) > 0) {
-                $this->setWarningMessage(str_replace("%k", explode(", ", $failKeys), $Language->phrase("DeleteRecordsFailed")));
-            }
-        } else {
-            if ($this->UseTransaction) { // Rollback transaction
-                if ($conn->isTransactionActive()) {
-                    $conn->rollback();
-                }
-            }
-        }
-
-        // Write JSON response
-        if ((IsJsonResponse() || ConvertToBool(Param("infinitescroll"))) && $deleteRows) {
-            $rows = $this->getRecordsFromRecordset($rsold);
-            $table = $this->TableVar;
-            if (Param("key_m") === null) { // Single delete
-                $rows = $rows[0]; // Return object
-            }
-            WriteJson(["success" => true, "action" => Config("API_DELETE_ACTION"), $table => $rows]);
-        }
-        return $deleteRows;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
-        $pageId = "delete";
-        $Breadcrumb->add("delete", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
+        $pageId = "view";
+        $Breadcrumb->add("view", $pageId, $url);
     }
 
     // Setup lookup options
@@ -879,12 +833,6 @@ class JobDelete extends Job
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Lokasi":
-                    break;
-                case "x_Customer":
-                    break;
-                case "x_Shipper":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -912,6 +860,40 @@ class JobDelete extends Job
                 $fld->Lookup->Options = $ar;
             }
         }
+    }
+
+    // Set up starting record parameters
+    public function setupStartRecord()
+    {
+        if ($this->DisplayRecords == 0) {
+            return;
+        }
+        $pageNo = Get(Config("TABLE_PAGE_NUMBER"));
+        $startRec = Get(Config("TABLE_START_REC"));
+        $infiniteScroll = false;
+        $recordNo = $pageNo ?? $startRec; // Record number = page number or start record
+        if ($recordNo !== null && is_numeric($recordNo)) {
+            $this->StartRecord = $recordNo;
+        } else {
+            $this->StartRecord = $this->getStartRecordNumber();
+        }
+
+        // Check if correct start record counter
+        if (!is_numeric($this->StartRecord) || intval($this->StartRecord) <= 0) { // Avoid invalid start record counter
+            $this->StartRecord = 1; // Reset start record counter
+        } elseif ($this->StartRecord > $this->TotalRecords) { // Avoid starting record > total records
+            $this->StartRecord = (int)(($this->TotalRecords - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to last page first record
+        } elseif (($this->StartRecord - 1) % $this->DisplayRecords != 0) {
+            $this->StartRecord = (int)(($this->StartRecord - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to page boundary
+        }
+        if (!$infiniteScroll) {
+            $this->setStartRecordNumber($this->StartRecord);
+        }
+    }
+
+    // Get page count
+    public function pageCount() {
+        return ceil($this->TotalRecords / $this->DisplayRecords);
     }
 
     // Page Load event
@@ -974,5 +956,29 @@ class JobDelete extends Job
         // Example:
         //$break = false; // Skip page break, or
         //$content = "<div style=\"break-after:page;\"></div>"; // Modify page break content
+    }
+
+    // Page Exporting event
+    // $doc = export object
+    public function pageExporting(&$doc)
+    {
+        //$doc->Text = "my header"; // Export header
+        //return false; // Return false to skip default export and use Row_Export event
+        return true; // Return true to use default export and skip Row_Export event
+    }
+
+    // Row Export event
+    // $doc = export document object
+    public function rowExport($doc, $rs)
+    {
+        //$doc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
+    }
+
+    // Page Exported event
+    // $doc = export document object
+    public function pageExported($doc)
+    {
+        //$doc->Text .= "my footer"; // Export footer
+        //Log($doc->Text);
     }
 }

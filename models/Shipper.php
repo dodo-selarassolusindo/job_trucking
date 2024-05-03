@@ -13,9 +13,9 @@ use Slim\App;
 use Closure;
 
 /**
- * Table class for job
+ * Table class for shipper
  */
-class Job extends DbTable
+class Shipper extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -47,12 +47,9 @@ class Job extends DbTable
 
     // Fields
     public $id;
-    public $Lokasi;
-    public $Tanggal;
-    public $Nomor;
-    public $Tanggal_Muat;
-    public $Customer;
-    public $Shipper;
+    public $Nama;
+    public $Nomor_Telepon;
+    public $Contact_Person;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -65,14 +62,14 @@ class Job extends DbTable
 
         // Language object
         $Language = Container("app.language");
-        $this->TableVar = "job";
-        $this->TableName = 'job';
+        $this->TableVar = "shipper";
+        $this->TableName = 'shipper';
         $this->TableType = "TABLE";
         $this->ImportUseTransaction = $this->supportsTransaction() && Config("IMPORT_USE_TRANSACTION");
         $this->UseTransaction = $this->supportsTransaction() && Config("USE_TRANSACTION");
 
         // Update Table
-        $this->UpdateTable = "job";
+        $this->UpdateTable = "shipper";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -126,171 +123,77 @@ class Job extends DbTable
         $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['id'] = &$this->id;
 
-        // Lokasi
-        $this->Lokasi = new DbField(
+        // Nama
+        $this->Nama = new DbField(
             $this, // Table
-            'x_Lokasi', // Variable name
-            'Lokasi', // Name
-            '`Lokasi`', // Expression
-            '`Lokasi`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Lokasi`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->Lokasi->InputTextType = "text";
-        $this->Lokasi->Raw = true;
-        $this->Lokasi->Nullable = false; // NOT NULL field
-        $this->Lokasi->Required = true; // Required field
-        $this->Lokasi->setSelectMultiple(false); // Select one
-        $this->Lokasi->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->Lokasi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Lokasi->Lookup = new Lookup($this->Lokasi, 'lokasi', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->Lokasi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Lokasi->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Lokasi'] = &$this->Lokasi;
-
-        // Tanggal
-        $this->Tanggal = new DbField(
-            $this, // Table
-            'x_Tanggal', // Variable name
-            'Tanggal', // Name
-            '`Tanggal`', // Expression
-            CastDateFieldForLike("`Tanggal`", 7, "DB"), // Basic search expression
-            133, // Type
-            10, // Size
-            7, // Date/Time format
-            false, // Is upload field
-            '`Tanggal`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->Tanggal->InputTextType = "text";
-        $this->Tanggal->Raw = true;
-        $this->Tanggal->Nullable = false; // NOT NULL field
-        $this->Tanggal->Required = true; // Required field
-        $this->Tanggal->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
-        $this->Tanggal->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Tanggal'] = &$this->Tanggal;
-
-        // Nomor
-        $this->Nomor = new DbField(
-            $this, // Table
-            'x_Nomor', // Variable name
-            'Nomor', // Name
-            '`Nomor`', // Expression
-            '`Nomor`', // Basic search expression
+            'x_Nama', // Variable name
+            'Nama', // Name
+            '`Nama`', // Expression
+            '`Nama`', // Basic search expression
             200, // Type
-            9, // Size
+            255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`Nomor`', // Virtual expression
+            '`Nama`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->Nomor->InputTextType = "text";
-        $this->Nomor->Nullable = false; // NOT NULL field
-        $this->Nomor->Required = true; // Required field
-        $this->Nomor->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
-        $this->Fields['Nomor'] = &$this->Nomor;
+        $this->Nama->InputTextType = "text";
+        $this->Nama->Nullable = false; // NOT NULL field
+        $this->Nama->Required = true; // Required field
+        $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Nama'] = &$this->Nama;
 
-        // Tanggal_Muat
-        $this->Tanggal_Muat = new DbField(
+        // Nomor_Telepon
+        $this->Nomor_Telepon = new DbField(
             $this, // Table
-            'x_Tanggal_Muat', // Variable name
-            'Tanggal_Muat', // Name
-            '`Tanggal_Muat`', // Expression
-            CastDateFieldForLike("`Tanggal_Muat`", 7, "DB"), // Basic search expression
-            133, // Type
-            10, // Size
-            7, // Date/Time format
+            'x_Nomor_Telepon', // Variable name
+            'Nomor_Telepon', // Name
+            '`Nomor_Telepon`', // Expression
+            '`Nomor_Telepon`', // Basic search expression
+            200, // Type
+            25, // Size
+            -1, // Date/Time format
             false, // Is upload field
-            '`Tanggal_Muat`', // Virtual expression
+            '`Nomor_Telepon`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->Tanggal_Muat->InputTextType = "text";
-        $this->Tanggal_Muat->Raw = true;
-        $this->Tanggal_Muat->Nullable = false; // NOT NULL field
-        $this->Tanggal_Muat->Required = true; // Required field
-        $this->Tanggal_Muat->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
-        $this->Tanggal_Muat->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Tanggal_Muat'] = &$this->Tanggal_Muat;
+        $this->Nomor_Telepon->InputTextType = "text";
+        $this->Nomor_Telepon->Nullable = false; // NOT NULL field
+        $this->Nomor_Telepon->Required = true; // Required field
+        $this->Nomor_Telepon->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Nomor_Telepon'] = &$this->Nomor_Telepon;
 
-        // Customer
-        $this->Customer = new DbField(
+        // Contact_Person
+        $this->Contact_Person = new DbField(
             $this, // Table
-            'x_Customer', // Variable name
-            'Customer', // Name
-            '`Customer`', // Expression
-            '`Customer`', // Basic search expression
-            3, // Type
-            11, // Size
+            'x_Contact_Person', // Variable name
+            'Contact_Person', // Name
+            '`Contact_Person`', // Expression
+            '`Contact_Person`', // Basic search expression
+            200, // Type
+            255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`Customer`', // Virtual expression
+            '`Contact_Person`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
+            'TEXT' // Edit Tag
         );
-        $this->Customer->InputTextType = "text";
-        $this->Customer->Raw = true;
-        $this->Customer->Nullable = false; // NOT NULL field
-        $this->Customer->Required = true; // Required field
-        $this->Customer->setSelectMultiple(false); // Select one
-        $this->Customer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->Customer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Customer->Lookup = new Lookup($this->Customer, 'customer', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->Customer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Customer->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Customer'] = &$this->Customer;
-
-        // Shipper
-        $this->Shipper = new DbField(
-            $this, // Table
-            'x_Shipper', // Variable name
-            'Shipper', // Name
-            '`Shipper`', // Expression
-            '`Shipper`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Shipper`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->Shipper->InputTextType = "text";
-        $this->Shipper->Raw = true;
-        $this->Shipper->Nullable = false; // NOT NULL field
-        $this->Shipper->Required = true; // Required field
-        $this->Shipper->setSelectMultiple(false); // Select one
-        $this->Shipper->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->Shipper->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Shipper->Lookup = new Lookup($this->Shipper, 'shipper', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->Shipper->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Shipper->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Shipper'] = &$this->Shipper;
+        $this->Contact_Person->InputTextType = "text";
+        $this->Contact_Person->Nullable = false; // NOT NULL field
+        $this->Contact_Person->Required = true; // Required field
+        $this->Contact_Person->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Contact_Person'] = &$this->Contact_Person;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -359,7 +262,7 @@ class Job extends DbTable
     // Get FROM clause
     public function getSqlFrom()
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "job";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "shipper";
     }
 
     // Get FROM clause (for backward compatibility)
@@ -811,12 +714,9 @@ class Job extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->Lokasi->DbValue = $row['Lokasi'];
-        $this->Tanggal->DbValue = $row['Tanggal'];
-        $this->Nomor->DbValue = $row['Nomor'];
-        $this->Tanggal_Muat->DbValue = $row['Tanggal_Muat'];
-        $this->Customer->DbValue = $row['Customer'];
-        $this->Shipper->DbValue = $row['Shipper'];
+        $this->Nama->DbValue = $row['Nama'];
+        $this->Nomor_Telepon->DbValue = $row['Nomor_Telepon'];
+        $this->Contact_Person->DbValue = $row['Contact_Person'];
     }
 
     // Delete uploaded files
@@ -890,7 +790,7 @@ class Job extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("joblist");
+        return $_SESSION[$name] ?? GetUrl("shipperlist");
     }
 
     // Set return page URL
@@ -904,9 +804,9 @@ class Job extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "jobview" => $Language->phrase("View"),
-            "jobedit" => $Language->phrase("Edit"),
-            "jobadd" => $Language->phrase("Add"),
+            "shipperview" => $Language->phrase("View"),
+            "shipperedit" => $Language->phrase("Edit"),
+            "shipperadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -914,18 +814,18 @@ class Job extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "joblist";
+        return "shipperlist";
     }
 
     // API page name
     public function getApiPageName($action)
     {
         return match (strtolower($action)) {
-            Config("API_VIEW_ACTION") => "JobView",
-            Config("API_ADD_ACTION") => "JobAdd",
-            Config("API_EDIT_ACTION") => "JobEdit",
-            Config("API_DELETE_ACTION") => "JobDelete",
-            Config("API_LIST_ACTION") => "JobList",
+            Config("API_VIEW_ACTION") => "ShipperView",
+            Config("API_ADD_ACTION") => "ShipperAdd",
+            Config("API_EDIT_ACTION") => "ShipperEdit",
+            Config("API_DELETE_ACTION") => "ShipperDelete",
+            Config("API_LIST_ACTION") => "ShipperList",
             default => ""
         };
     }
@@ -945,16 +845,16 @@ class Job extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "joblist";
+        return "shipperlist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("jobview", $parm);
+            $url = $this->keyUrl("shipperview", $parm);
         } else {
-            $url = $this->keyUrl("jobview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("shipperview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -963,9 +863,9 @@ class Job extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "jobadd?" . $parm;
+            $url = "shipperadd?" . $parm;
         } else {
-            $url = "jobadd";
+            $url = "shipperadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -973,28 +873,28 @@ class Job extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("jobedit", $parm);
+        $url = $this->keyUrl("shipperedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("joblist", "action=edit");
+        $url = $this->keyUrl("shipperlist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("jobadd", $parm);
+        $url = $this->keyUrl("shipperadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("joblist", "action=copy");
+        $url = $this->keyUrl("shipperlist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -1004,7 +904,7 @@ class Job extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("jobdelete", $parm);
+            return $this->keyUrl("shipperdelete", $parm);
         }
     }
 
@@ -1177,19 +1077,16 @@ class Job extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->Lokasi->setDbValue($row['Lokasi']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->Nomor->setDbValue($row['Nomor']);
-        $this->Tanggal_Muat->setDbValue($row['Tanggal_Muat']);
-        $this->Customer->setDbValue($row['Customer']);
-        $this->Shipper->setDbValue($row['Shipper']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Render list content
     public function renderListContent($filter)
     {
         global $Response;
-        $listPage = "JobList";
+        $listPage = "ShipperList";
         $listClass = PROJECT_NAMESPACE . $listPage;
         $page = new $listClass();
         $page->loadRecordsetFromFilter($filter);
@@ -1215,128 +1112,39 @@ class Job extends DbTable
 
         // id
 
-        // Lokasi
+        // Nama
 
-        // Tanggal
+        // Nomor_Telepon
 
-        // Nomor
-
-        // Tanggal_Muat
-
-        // Customer
-
-        // Shipper
+        // Contact_Person
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
 
-        // Lokasi
-        $curVal = strval($this->Lokasi->CurrentValue);
-        if ($curVal != "") {
-            $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
-            if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Lokasi->Lookup->renderViewRow($rswrk[0]);
-                    $this->Lokasi->ViewValue = $this->Lokasi->displayValue($arwrk);
-                } else {
-                    $this->Lokasi->ViewValue = FormatNumber($this->Lokasi->CurrentValue, $this->Lokasi->formatPattern());
-                }
-            }
-        } else {
-            $this->Lokasi->ViewValue = null;
-        }
+        // Nama
+        $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-        // Tanggal
-        $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-        $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
+        // Nomor_Telepon
+        $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
 
-        // Nomor
-        $this->Nomor->ViewValue = $this->Nomor->CurrentValue;
-
-        // Tanggal_Muat
-        $this->Tanggal_Muat->ViewValue = $this->Tanggal_Muat->CurrentValue;
-        $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
-
-        // Customer
-        $curVal = strval($this->Customer->CurrentValue);
-        if ($curVal != "") {
-            $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
-            if ($this->Customer->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
-                    $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
-                } else {
-                    $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
-                }
-            }
-        } else {
-            $this->Customer->ViewValue = null;
-        }
-
-        // Shipper
-        $curVal = strval($this->Shipper->CurrentValue);
-        if ($curVal != "") {
-            $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
-            if ($this->Shipper->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Shipper->Lookup->renderViewRow($rswrk[0]);
-                    $this->Shipper->ViewValue = $this->Shipper->displayValue($arwrk);
-                } else {
-                    $this->Shipper->ViewValue = FormatNumber($this->Shipper->CurrentValue, $this->Shipper->formatPattern());
-                }
-            }
-        } else {
-            $this->Shipper->ViewValue = null;
-        }
+        // Contact_Person
+        $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
         // id
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // Lokasi
-        $this->Lokasi->HrefValue = "";
-        $this->Lokasi->TooltipValue = "";
+        // Nama
+        $this->Nama->HrefValue = "";
+        $this->Nama->TooltipValue = "";
 
-        // Tanggal
-        $this->Tanggal->HrefValue = "";
-        $this->Tanggal->TooltipValue = "";
+        // Nomor_Telepon
+        $this->Nomor_Telepon->HrefValue = "";
+        $this->Nomor_Telepon->TooltipValue = "";
 
-        // Nomor
-        $this->Nomor->HrefValue = "";
-        $this->Nomor->TooltipValue = "";
-
-        // Tanggal_Muat
-        $this->Tanggal_Muat->HrefValue = "";
-        $this->Tanggal_Muat->TooltipValue = "";
-
-        // Customer
-        $this->Customer->HrefValue = "";
-        $this->Customer->TooltipValue = "";
-
-        // Shipper
-        $this->Shipper->HrefValue = "";
-        $this->Shipper->TooltipValue = "";
+        // Contact_Person
+        $this->Contact_Person->HrefValue = "";
+        $this->Contact_Person->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1357,35 +1165,29 @@ class Job extends DbTable
         $this->id->setupEditAttributes();
         $this->id->EditValue = $this->id->CurrentValue;
 
-        // Lokasi
-        $this->Lokasi->setupEditAttributes();
-        $this->Lokasi->PlaceHolder = RemoveHtml($this->Lokasi->caption());
-
-        // Tanggal
-        $this->Tanggal->setupEditAttributes();
-        $this->Tanggal->EditValue = FormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern());
-        $this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
-
-        // Nomor
-        $this->Nomor->setupEditAttributes();
-        if (!$this->Nomor->Raw) {
-            $this->Nomor->CurrentValue = HtmlDecode($this->Nomor->CurrentValue);
+        // Nama
+        $this->Nama->setupEditAttributes();
+        if (!$this->Nama->Raw) {
+            $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
         }
-        $this->Nomor->EditValue = $this->Nomor->CurrentValue;
-        $this->Nomor->PlaceHolder = RemoveHtml($this->Nomor->caption());
+        $this->Nama->EditValue = $this->Nama->CurrentValue;
+        $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
-        // Tanggal_Muat
-        $this->Tanggal_Muat->setupEditAttributes();
-        $this->Tanggal_Muat->EditValue = FormatDateTime($this->Tanggal_Muat->CurrentValue, $this->Tanggal_Muat->formatPattern());
-        $this->Tanggal_Muat->PlaceHolder = RemoveHtml($this->Tanggal_Muat->caption());
+        // Nomor_Telepon
+        $this->Nomor_Telepon->setupEditAttributes();
+        if (!$this->Nomor_Telepon->Raw) {
+            $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
+        }
+        $this->Nomor_Telepon->EditValue = $this->Nomor_Telepon->CurrentValue;
+        $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
 
-        // Customer
-        $this->Customer->setupEditAttributes();
-        $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
-
-        // Shipper
-        $this->Shipper->setupEditAttributes();
-        $this->Shipper->PlaceHolder = RemoveHtml($this->Shipper->caption());
+        // Contact_Person
+        $this->Contact_Person->setupEditAttributes();
+        if (!$this->Contact_Person->Raw) {
+            $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
+        }
+        $this->Contact_Person->EditValue = $this->Contact_Person->CurrentValue;
+        $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1415,20 +1217,15 @@ class Job extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->Lokasi);
-                    $doc->exportCaption($this->Tanggal);
-                    $doc->exportCaption($this->Nomor);
-                    $doc->exportCaption($this->Tanggal_Muat);
-                    $doc->exportCaption($this->Customer);
-                    $doc->exportCaption($this->Shipper);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->Nomor_Telepon);
+                    $doc->exportCaption($this->Contact_Person);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->Lokasi);
-                    $doc->exportCaption($this->Tanggal);
-                    $doc->exportCaption($this->Nomor);
-                    $doc->exportCaption($this->Tanggal_Muat);
-                    $doc->exportCaption($this->Customer);
-                    $doc->exportCaption($this->Shipper);
+                    $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->Nomor_Telepon);
+                    $doc->exportCaption($this->Contact_Person);
                 }
                 $doc->endExportRow();
             }
@@ -1455,20 +1252,15 @@ class Job extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->Lokasi);
-                        $doc->exportField($this->Tanggal);
-                        $doc->exportField($this->Nomor);
-                        $doc->exportField($this->Tanggal_Muat);
-                        $doc->exportField($this->Customer);
-                        $doc->exportField($this->Shipper);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->Nama);
+                        $doc->exportField($this->Nomor_Telepon);
+                        $doc->exportField($this->Contact_Person);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->Lokasi);
-                        $doc->exportField($this->Tanggal);
-                        $doc->exportField($this->Nomor);
-                        $doc->exportField($this->Tanggal_Muat);
-                        $doc->exportField($this->Customer);
-                        $doc->exportField($this->Shipper);
+                        $doc->exportField($this->Nama);
+                        $doc->exportField($this->Nomor_Telepon);
+                        $doc->exportField($this->Contact_Person);
                     }
                     $doc->endExportRow($rowCnt);
                 }
