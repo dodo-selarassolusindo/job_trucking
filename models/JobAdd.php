@@ -511,6 +511,7 @@ class JobAdd extends Job
 
         // Set up lookup cache
         $this->setupLookupOptions($this->Lokasi);
+        $this->setupLookupOptions($this->Customer);
 
         // Load default values for add
         $this->loadDefaultValues();
@@ -719,7 +720,7 @@ class JobAdd extends Job
             if (IsApi() && $val === null) {
                 $this->Customer->Visible = false; // Disable update for API request
             } else {
-                $this->Customer->setFormValue($val, true, $validate);
+                $this->Customer->setFormValue($val);
             }
         }
 
@@ -904,8 +905,27 @@ class JobAdd extends Job
             $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
 
             // Customer
-            $this->Customer->ViewValue = $this->Customer->CurrentValue;
-            $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+            $curVal = strval($this->Customer->CurrentValue);
+            if ($curVal != "") {
+                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
+                if ($this->Customer->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
+                        $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
+                    } else {
+                        $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
+                    }
+                }
+            } else {
+                $this->Customer->ViewValue = null;
+            }
 
             // Shipper
             $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -983,12 +1003,39 @@ class JobAdd extends Job
             $this->Tanggal_Muat->PlaceHolder = RemoveHtml($this->Tanggal_Muat->caption());
 
             // Customer
-            $this->Customer->setupEditAttributes();
-            $this->Customer->EditValue = $this->Customer->CurrentValue;
-            $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
-            if (strval($this->Customer->EditValue) != "" && is_numeric($this->Customer->EditValue)) {
-                $this->Customer->EditValue = FormatNumber($this->Customer->EditValue, null);
+            $curVal = trim(strval($this->Customer->CurrentValue));
+            if ($curVal != "") {
+                $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
+            } else {
+                $this->Customer->ViewValue = $this->Customer->Lookup !== null && is_array($this->Customer->lookupOptions()) && count($this->Customer->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->Customer->ViewValue !== null) { // Load from cache
+                $this->Customer->EditValue = array_values($this->Customer->lookupOptions());
+                if ($this->Customer->ViewValue == "") {
+                    $this->Customer->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->Customer->CurrentValue, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->Customer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
+                    $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
+                } else {
+                    $this->Customer->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->Customer->EditValue = $arwrk;
+            }
+            $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
 
             // Shipper
             $this->Shipper->setupEditAttributes();
@@ -1068,9 +1115,6 @@ class JobAdd extends Job
                 if (!$this->Customer->IsDetailKey && EmptyValue($this->Customer->FormValue)) {
                     $this->Customer->addErrorMessage(str_replace("%s", $this->Customer->caption(), $this->Customer->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->Customer->FormValue)) {
-                $this->Customer->addErrorMessage($this->Customer->getErrorMessage(false));
             }
             if ($this->Shipper->Visible && $this->Shipper->Required) {
                 if (!$this->Shipper->IsDetailKey && EmptyValue($this->Shipper->FormValue)) {
@@ -1222,6 +1266,8 @@ class JobAdd extends Job
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_Lokasi":
+                    break;
+                case "x_Customer":
                     break;
                 default:
                     $lookupFilter = "";

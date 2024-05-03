@@ -248,14 +248,18 @@ class Job extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->Customer->InputTextType = "text";
         $this->Customer->Raw = true;
         $this->Customer->Nullable = false; // NOT NULL field
         $this->Customer->Required = true; // Required field
+        $this->Customer->setSelectMultiple(false); // Select one
+        $this->Customer->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->Customer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->Customer->Lookup = new Lookup($this->Customer, 'customer', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Customer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Customer->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Customer->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Customer'] = &$this->Customer;
 
         // Shipper
@@ -1257,8 +1261,27 @@ class Job extends DbTable
         $this->Tanggal_Muat->ViewValue = FormatDateTime($this->Tanggal_Muat->ViewValue, $this->Tanggal_Muat->formatPattern());
 
         // Customer
-        $this->Customer->ViewValue = $this->Customer->CurrentValue;
-        $this->Customer->ViewValue = FormatNumber($this->Customer->ViewValue, $this->Customer->formatPattern());
+        $curVal = strval($this->Customer->CurrentValue);
+        if ($curVal != "") {
+            $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
+            if ($this->Customer->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->Customer->Lookup->renderViewRow($rswrk[0]);
+                    $this->Customer->ViewValue = $this->Customer->displayValue($arwrk);
+                } else {
+                    $this->Customer->ViewValue = FormatNumber($this->Customer->CurrentValue, $this->Customer->formatPattern());
+                }
+            }
+        } else {
+            $this->Customer->ViewValue = null;
+        }
 
         // Shipper
         $this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -1335,11 +1358,7 @@ class Job extends DbTable
 
         // Customer
         $this->Customer->setupEditAttributes();
-        $this->Customer->EditValue = $this->Customer->CurrentValue;
         $this->Customer->PlaceHolder = RemoveHtml($this->Customer->caption());
-        if (strval($this->Customer->EditValue) != "" && is_numeric($this->Customer->EditValue)) {
-            $this->Customer->EditValue = FormatNumber($this->Customer->EditValue, null);
-        }
 
         // Shipper
         $this->Shipper->setupEditAttributes();

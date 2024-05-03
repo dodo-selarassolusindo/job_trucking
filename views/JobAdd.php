@@ -26,7 +26,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["Tanggal", [fields.Tanggal.visible && fields.Tanggal.required ? ew.Validators.required(fields.Tanggal.caption) : null, ew.Validators.datetime(fields.Tanggal.clientFormatPattern)], fields.Tanggal.isInvalid],
             ["Nomor", [fields.Nomor.visible && fields.Nomor.required ? ew.Validators.required(fields.Nomor.caption) : null], fields.Nomor.isInvalid],
             ["Tanggal_Muat", [fields.Tanggal_Muat.visible && fields.Tanggal_Muat.required ? ew.Validators.required(fields.Tanggal_Muat.caption) : null, ew.Validators.datetime(fields.Tanggal_Muat.clientFormatPattern)], fields.Tanggal_Muat.isInvalid],
-            ["Customer", [fields.Customer.visible && fields.Customer.required ? ew.Validators.required(fields.Customer.caption) : null, ew.Validators.integer], fields.Customer.isInvalid],
+            ["Customer", [fields.Customer.visible && fields.Customer.required ? ew.Validators.required(fields.Customer.caption) : null], fields.Customer.isInvalid],
             ["Shipper", [fields.Shipper.visible && fields.Shipper.required ? ew.Validators.required(fields.Shipper.caption) : null, ew.Validators.integer], fields.Shipper.isInvalid]
         ])
 
@@ -44,6 +44,7 @@ loadjs.ready(["wrapper", "head"], function () {
         // Dynamic selection lists
         .setLists({
             "Lokasi": <?= $Page->Lokasi->toClientList($Page) ?>,
+            "Customer": <?= $Page->Customer->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -210,9 +211,35 @@ loadjs.ready(["fjobadd", "datetimepicker"], function () {
         <label id="elh_job_Customer" for="x_Customer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Customer->caption() ?><?= $Page->Customer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Customer->cellAttributes() ?>>
 <span id="el_job_Customer">
-<input type="<?= $Page->Customer->getInputTextType() ?>" name="x_Customer" id="x_Customer" data-table="job" data-field="x_Customer" value="<?= $Page->Customer->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Customer->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Customer->formatPattern()) ?>"<?= $Page->Customer->editAttributes() ?> aria-describedby="x_Customer_help">
-<?= $Page->Customer->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->Customer->getErrorMessage() ?></div>
+    <select
+        id="x_Customer"
+        name="x_Customer"
+        class="form-control ew-select<?= $Page->Customer->isInvalidClass() ?>"
+        data-select2-id="fjobadd_x_Customer"
+        data-table="job"
+        data-field="x_Customer"
+        data-caption="<?= HtmlEncode(RemoveHtml($Page->Customer->caption())) ?>"
+        data-modal-lookup="true"
+        data-value-separator="<?= $Page->Customer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->Customer->getPlaceHolder()) ?>"
+        <?= $Page->Customer->editAttributes() ?>>
+        <?= $Page->Customer->selectOptionListHtml("x_Customer") ?>
+    </select>
+    <?= $Page->Customer->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->Customer->getErrorMessage() ?></div>
+<?= $Page->Customer->Lookup->getParamTag($Page, "p_x_Customer") ?>
+<script>
+loadjs.ready("fjobadd", function() {
+    var options = { name: "x_Customer", selectId: "fjobadd_x_Customer" };
+    if (fjobadd.lists.Customer?.lookupOptions.length) {
+        options.data = { id: "x_Customer", form: "fjobadd" };
+    } else {
+        options.ajax = { id: "x_Customer", form: "fjobadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options = Object.assign({}, ew.modalLookupOptions, options, ew.vars.tables.job.fields.Customer.modalLookupOptions);
+    ew.createModalLookup(options);
+});
+</script>
 </span>
 </div></div>
     </div>
