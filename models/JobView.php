@@ -485,6 +485,7 @@ class JobView extends Job
     public $RecordRange = 10;
     public $RecKey = [];
     public $IsModal = false;
+    public $MultiPages; // Multi pages object
 
     /**
      * Page run
@@ -516,6 +517,9 @@ class JobView extends Job
         if (!in_array($this->PageID, Config("LOOKUP_CACHE_PAGE_IDS"))) {
             $this->setUseLookupCache(false);
         }
+
+        // Set up multi page object
+        $this->setupMultiPages();
 
         // Global Page Loading event (in userfn*.php)
         DispatchEvent(new PageLoadingEvent($this), PageLoadingEvent::NAME);
@@ -917,6 +921,20 @@ class JobView extends Job
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
+    }
+
+    // Set up multi pages
+    protected function setupMultiPages()
+    {
+        $pages = new SubPages();
+        $pages->Style = "tabs";
+        if ($pages->isAccordion()) {
+            $pages->Parent = "#accordion_" . $this->PageObjName;
+        }
+        $pages->add(0);
+        $pages->add(1);
+        $pages->add(2);
+        $this->MultiPages = $pages;
     }
 
     // Setup lookup options
