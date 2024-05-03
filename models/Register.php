@@ -1031,7 +1031,7 @@ class Register extends Employees
             $this->_Username->ViewValue = $this->_Username->CurrentValue;
 
             // Password
-            $this->_Password->ViewValue = $this->_Password->CurrentValue;
+            $this->_Password->ViewValue = $Language->phrase("PasswordMask");
 
             // Email
             $this->_Email->ViewValue = $this->_Email->CurrentValue;
@@ -1135,10 +1135,6 @@ class Register extends Employees
 
             // Password
             $this->_Password->setupEditAttributes();
-            if (!$this->_Password->Raw) {
-                $this->_Password->CurrentValue = HtmlDecode($this->_Password->CurrentValue);
-            }
-            $this->_Password->EditValue = HtmlEncode($this->_Password->CurrentValue);
             $this->_Password->PlaceHolder = RemoveHtml($this->_Password->caption());
 
             // Add refer script
@@ -1318,7 +1314,9 @@ class Register extends Employees
         $this->_Username->setDbValueDef($rsnew, $this->_Username->CurrentValue, false);
 
         // Password
-        $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, false);
+        if (!IsMaskedPassword($this->_Password->CurrentValue)) {
+            $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, false);
+        }
 
         // ReportsTo
         return $rsnew;

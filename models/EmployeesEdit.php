@@ -1309,7 +1309,7 @@ class EmployeesEdit extends Employees
             $this->_Username->ViewValue = $this->_Username->CurrentValue;
 
             // Password
-            $this->_Password->ViewValue = $this->_Password->CurrentValue;
+            $this->_Password->ViewValue = $Language->phrase("PasswordMask");
 
             // Email
             $this->_Email->ViewValue = $this->_Email->CurrentValue;
@@ -1590,10 +1590,7 @@ class EmployeesEdit extends Employees
 
             // Password
             $this->_Password->setupEditAttributes();
-            if (!$this->_Password->Raw) {
-                $this->_Password->CurrentValue = HtmlDecode($this->_Password->CurrentValue);
-            }
-            $this->_Password->EditValue = HtmlEncode($this->_Password->CurrentValue);
+            $this->_Password->EditValue = $Language->phrase("PasswordMask"); // Show as masked password
             $this->_Password->PlaceHolder = RemoveHtml($this->_Password->caption());
 
             // Email
@@ -2066,7 +2063,9 @@ class EmployeesEdit extends Employees
         $this->_Username->setDbValueDef($rsnew, $this->_Username->CurrentValue, $this->_Username->ReadOnly);
 
         // Password
-        $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, $this->_Password->ReadOnly || Config("ENCRYPTED_PASSWORD") && $rsold['Password'] == $this->_Password->CurrentValue);
+        if (!IsMaskedPassword($this->_Password->CurrentValue)) {
+            $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, $this->_Password->ReadOnly || Config("ENCRYPTED_PASSWORD") && $rsold['Password'] == $this->_Password->CurrentValue);
+        }
 
         // Email
         $this->_Email->setDbValueDef($rsnew, $this->_Email->CurrentValue, $this->_Email->ReadOnly);

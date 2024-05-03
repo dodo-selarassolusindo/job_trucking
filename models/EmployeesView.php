@@ -952,7 +952,7 @@ class EmployeesView extends Employees
             $this->_Username->ViewValue = $this->_Username->CurrentValue;
 
             // Password
-            $this->_Password->ViewValue = $this->_Password->CurrentValue;
+            $this->_Password->ViewValue = $Language->phrase("PasswordMask");
 
             // Email
             $this->_Email->ViewValue = $this->_Email->CurrentValue;
