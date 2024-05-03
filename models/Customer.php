@@ -48,7 +48,8 @@ class Customer extends DbTable
     // Fields
     public $id;
     public $Nama;
-    public $Nomor_Handphone;
+    public $Nomor_Telepon;
+    public $Contact_Person;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -146,29 +147,53 @@ class Customer extends DbTable
         $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
         $this->Fields['Nama'] = &$this->Nama;
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone = new DbField(
+        // Nomor_Telepon
+        $this->Nomor_Telepon = new DbField(
             $this, // Table
-            'x_Nomor_Handphone', // Variable name
-            'Nomor_Handphone', // Name
-            '`Nomor_Handphone`', // Expression
-            '`Nomor_Handphone`', // Basic search expression
+            'x_Nomor_Telepon', // Variable name
+            'Nomor_Telepon', // Name
+            '`Nomor_Telepon`', // Expression
+            '`Nomor_Telepon`', // Basic search expression
             200, // Type
             25, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`Nomor_Handphone`', // Virtual expression
+            '`Nomor_Telepon`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->Nomor_Handphone->InputTextType = "text";
-        $this->Nomor_Handphone->Nullable = false; // NOT NULL field
-        $this->Nomor_Handphone->Required = true; // Required field
-        $this->Nomor_Handphone->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
-        $this->Fields['Nomor_Handphone'] = &$this->Nomor_Handphone;
+        $this->Nomor_Telepon->InputTextType = "text";
+        $this->Nomor_Telepon->Nullable = false; // NOT NULL field
+        $this->Nomor_Telepon->Required = true; // Required field
+        $this->Nomor_Telepon->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Nomor_Telepon'] = &$this->Nomor_Telepon;
+
+        // Contact_Person
+        $this->Contact_Person = new DbField(
+            $this, // Table
+            'x_Contact_Person', // Variable name
+            'Contact_Person', // Name
+            '`Contact_Person`', // Expression
+            '`Contact_Person`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Contact_Person`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Contact_Person->InputTextType = "text";
+        $this->Contact_Person->Nullable = false; // NOT NULL field
+        $this->Contact_Person->Required = true; // Required field
+        $this->Contact_Person->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Contact_Person'] = &$this->Contact_Person;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -690,7 +715,8 @@ class Customer extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->Nama->DbValue = $row['Nama'];
-        $this->Nomor_Handphone->DbValue = $row['Nomor_Handphone'];
+        $this->Nomor_Telepon->DbValue = $row['Nomor_Telepon'];
+        $this->Contact_Person->DbValue = $row['Contact_Person'];
     }
 
     // Delete uploaded files
@@ -1052,7 +1078,8 @@ class Customer extends DbTable
         }
         $this->id->setDbValue($row['id']);
         $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Handphone->setDbValue($row['Nomor_Handphone']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Render list content
@@ -1087,7 +1114,9 @@ class Customer extends DbTable
 
         // Nama
 
-        // Nomor_Handphone
+        // Nomor_Telepon
+
+        // Contact_Person
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1095,8 +1124,11 @@ class Customer extends DbTable
         // Nama
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone->ViewValue = $this->Nomor_Handphone->CurrentValue;
+        // Nomor_Telepon
+        $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+
+        // Contact_Person
+        $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
         // id
         $this->id->HrefValue = "";
@@ -1106,9 +1138,13 @@ class Customer extends DbTable
         $this->Nama->HrefValue = "";
         $this->Nama->TooltipValue = "";
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone->HrefValue = "";
-        $this->Nomor_Handphone->TooltipValue = "";
+        // Nomor_Telepon
+        $this->Nomor_Telepon->HrefValue = "";
+        $this->Nomor_Telepon->TooltipValue = "";
+
+        // Contact_Person
+        $this->Contact_Person->HrefValue = "";
+        $this->Contact_Person->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1137,13 +1173,21 @@ class Customer extends DbTable
         $this->Nama->EditValue = $this->Nama->CurrentValue;
         $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone->setupEditAttributes();
-        if (!$this->Nomor_Handphone->Raw) {
-            $this->Nomor_Handphone->CurrentValue = HtmlDecode($this->Nomor_Handphone->CurrentValue);
+        // Nomor_Telepon
+        $this->Nomor_Telepon->setupEditAttributes();
+        if (!$this->Nomor_Telepon->Raw) {
+            $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
         }
-        $this->Nomor_Handphone->EditValue = $this->Nomor_Handphone->CurrentValue;
-        $this->Nomor_Handphone->PlaceHolder = RemoveHtml($this->Nomor_Handphone->caption());
+        $this->Nomor_Telepon->EditValue = $this->Nomor_Telepon->CurrentValue;
+        $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
+
+        // Contact_Person
+        $this->Contact_Person->setupEditAttributes();
+        if (!$this->Contact_Person->Raw) {
+            $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
+        }
+        $this->Contact_Person->EditValue = $this->Contact_Person->CurrentValue;
+        $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1175,11 +1219,13 @@ class Customer extends DbTable
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->Nama);
-                    $doc->exportCaption($this->Nomor_Handphone);
+                    $doc->exportCaption($this->Nomor_Telepon);
+                    $doc->exportCaption($this->Contact_Person);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->Nama);
-                    $doc->exportCaption($this->Nomor_Handphone);
+                    $doc->exportCaption($this->Nomor_Telepon);
+                    $doc->exportCaption($this->Contact_Person);
                 }
                 $doc->endExportRow();
             }
@@ -1208,11 +1254,13 @@ class Customer extends DbTable
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
                         $doc->exportField($this->Nama);
-                        $doc->exportField($this->Nomor_Handphone);
+                        $doc->exportField($this->Nomor_Telepon);
+                        $doc->exportField($this->Contact_Person);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->Nama);
-                        $doc->exportField($this->Nomor_Handphone);
+                        $doc->exportField($this->Nomor_Telepon);
+                        $doc->exportField($this->Contact_Person);
                     }
                     $doc->endExportRow($rowCnt);
                 }

@@ -2,29 +2,35 @@
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
-    <menu id="8">
-      <phrase id="menutext" value="Customer" />
-    </menu>
-    <menu id="5">
-      <phrase id="menutext" value="Beranda" />
-    </menu>
     <menu id="6">
       <phrase id="menutext" value="Job" />
+    </menu>
+    <menu id="16">
+      <phrase id="menutext" value="Master" />
     </menu>
     <menu id="7">
       <phrase id="menutext" value="Lokasi" />
     </menu>
-    <menu id="1">
-      <phrase id="menutext" value="audittrail" />
+    <menu id="8">
+      <phrase id="menutext" value="Customer" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="employees" />
     </menu>
-    <menu id="3">
-      <phrase id="menutext" value="userlevelpermissions" />
+    <menu id="17">
+      <phrase id="menutext" value="Setting" />
     </menu>
     <menu id="4">
       <phrase id="menutext" value="userlevels" />
+    </menu>
+    <menu id="1">
+      <phrase id="menutext" value="audittrail" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="userlevelpermissions" />
+    </menu>
+    <menu id="5">
+      <phrase id="menutext" value="Beranda" />
     </menu>
     <table id="audittrail">
       <phrase id="tblcaption" value="audittrail" />
@@ -216,8 +222,11 @@
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />
       </field>
-      <field id="nomor_handphone">
-        <phrase id="fldcaption" value="Nomor Handphone" />
+      <field id="nomor_telepon">
+        <phrase id="fldcaption" value="Nomor Telp/HP" />
+      </field>
+      <field id="contact_person">
+        <phrase id="fldcaption" value="Contact Person" />
       </field>
     </table>
   </project>

@@ -123,7 +123,8 @@ class CustomerEdit extends Customer
     {
         $this->id->setVisibility();
         $this->Nama->setVisibility();
-        $this->Nomor_Handphone->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -708,13 +709,23 @@ class CustomerEdit extends Customer
             }
         }
 
-        // Check field name 'Nomor_Handphone' first before field var 'x_Nomor_Handphone'
-        $val = $CurrentForm->hasValue("Nomor_Handphone") ? $CurrentForm->getValue("Nomor_Handphone") : $CurrentForm->getValue("x_Nomor_Handphone");
-        if (!$this->Nomor_Handphone->IsDetailKey) {
+        // Check field name 'Nomor_Telepon' first before field var 'x_Nomor_Telepon'
+        $val = $CurrentForm->hasValue("Nomor_Telepon") ? $CurrentForm->getValue("Nomor_Telepon") : $CurrentForm->getValue("x_Nomor_Telepon");
+        if (!$this->Nomor_Telepon->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Nomor_Handphone->Visible = false; // Disable update for API request
+                $this->Nomor_Telepon->Visible = false; // Disable update for API request
             } else {
-                $this->Nomor_Handphone->setFormValue($val);
+                $this->Nomor_Telepon->setFormValue($val);
+            }
+        }
+
+        // Check field name 'Contact_Person' first before field var 'x_Contact_Person'
+        $val = $CurrentForm->hasValue("Contact_Person") ? $CurrentForm->getValue("Contact_Person") : $CurrentForm->getValue("x_Contact_Person");
+        if (!$this->Contact_Person->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Contact_Person->Visible = false; // Disable update for API request
+            } else {
+                $this->Contact_Person->setFormValue($val);
             }
         }
     }
@@ -725,7 +736,8 @@ class CustomerEdit extends Customer
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
-        $this->Nomor_Handphone->CurrentValue = $this->Nomor_Handphone->FormValue;
+        $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
+        $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
     }
 
     /**
@@ -768,7 +780,8 @@ class CustomerEdit extends Customer
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Handphone->setDbValue($row['Nomor_Handphone']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -777,7 +790,8 @@ class CustomerEdit extends Customer
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Handphone'] = $this->Nomor_Handphone->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -818,8 +832,11 @@ class CustomerEdit extends Customer
         // Nama
         $this->Nama->RowCssClass = "row";
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone->RowCssClass = "row";
+        // Nomor_Telepon
+        $this->Nomor_Telepon->RowCssClass = "row";
+
+        // Contact_Person
+        $this->Contact_Person->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -829,8 +846,11 @@ class CustomerEdit extends Customer
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->ViewValue = $this->Nomor_Handphone->CurrentValue;
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
             // id
             $this->id->HrefValue = "";
@@ -838,8 +858,11 @@ class CustomerEdit extends Customer
             // Nama
             $this->Nama->HrefValue = "";
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->HrefValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
             // id
             $this->id->setupEditAttributes();
@@ -853,13 +876,21 @@ class CustomerEdit extends Customer
             $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
             $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->setupEditAttributes();
-            if (!$this->Nomor_Handphone->Raw) {
-                $this->Nomor_Handphone->CurrentValue = HtmlDecode($this->Nomor_Handphone->CurrentValue);
+            // Nomor_Telepon
+            $this->Nomor_Telepon->setupEditAttributes();
+            if (!$this->Nomor_Telepon->Raw) {
+                $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
             }
-            $this->Nomor_Handphone->EditValue = HtmlEncode($this->Nomor_Handphone->CurrentValue);
-            $this->Nomor_Handphone->PlaceHolder = RemoveHtml($this->Nomor_Handphone->caption());
+            $this->Nomor_Telepon->EditValue = HtmlEncode($this->Nomor_Telepon->CurrentValue);
+            $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
+
+            // Contact_Person
+            $this->Contact_Person->setupEditAttributes();
+            if (!$this->Contact_Person->Raw) {
+                $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
+            }
+            $this->Contact_Person->EditValue = HtmlEncode($this->Contact_Person->CurrentValue);
+            $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
 
             // Edit refer script
 
@@ -869,8 +900,11 @@ class CustomerEdit extends Customer
             // Nama
             $this->Nama->HrefValue = "";
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->HrefValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -902,9 +936,14 @@ class CustomerEdit extends Customer
                     $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
                 }
             }
-            if ($this->Nomor_Handphone->Visible && $this->Nomor_Handphone->Required) {
-                if (!$this->Nomor_Handphone->IsDetailKey && EmptyValue($this->Nomor_Handphone->FormValue)) {
-                    $this->Nomor_Handphone->addErrorMessage(str_replace("%s", $this->Nomor_Handphone->caption(), $this->Nomor_Handphone->RequiredErrorMessage));
+            if ($this->Nomor_Telepon->Visible && $this->Nomor_Telepon->Required) {
+                if (!$this->Nomor_Telepon->IsDetailKey && EmptyValue($this->Nomor_Telepon->FormValue)) {
+                    $this->Nomor_Telepon->addErrorMessage(str_replace("%s", $this->Nomor_Telepon->caption(), $this->Nomor_Telepon->RequiredErrorMessage));
+                }
+            }
+            if ($this->Contact_Person->Visible && $this->Contact_Person->Required) {
+                if (!$this->Contact_Person->IsDetailKey && EmptyValue($this->Contact_Person->FormValue)) {
+                    $this->Contact_Person->addErrorMessage(str_replace("%s", $this->Contact_Person->caption(), $this->Contact_Person->RequiredErrorMessage));
                 }
             }
 
@@ -999,8 +1038,11 @@ class CustomerEdit extends Customer
         // Nama
         $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, $this->Nama->ReadOnly);
 
-        // Nomor_Handphone
-        $this->Nomor_Handphone->setDbValueDef($rsnew, $this->Nomor_Handphone->CurrentValue, $this->Nomor_Handphone->ReadOnly);
+        // Nomor_Telepon
+        $this->Nomor_Telepon->setDbValueDef($rsnew, $this->Nomor_Telepon->CurrentValue, $this->Nomor_Telepon->ReadOnly);
+
+        // Contact_Person
+        $this->Contact_Person->setDbValueDef($rsnew, $this->Contact_Person->CurrentValue, $this->Contact_Person->ReadOnly);
         return $rsnew;
     }
 
@@ -1013,8 +1055,11 @@ class CustomerEdit extends Customer
         if (isset($row['Nama'])) { // Nama
             $this->Nama->CurrentValue = $row['Nama'];
         }
-        if (isset($row['Nomor_Handphone'])) { // Nomor_Handphone
-            $this->Nomor_Handphone->CurrentValue = $row['Nomor_Handphone'];
+        if (isset($row['Nomor_Telepon'])) { // Nomor_Telepon
+            $this->Nomor_Telepon->CurrentValue = $row['Nomor_Telepon'];
+        }
+        if (isset($row['Contact_Person'])) { // Contact_Person
+            $this->Contact_Person->CurrentValue = $row['Contact_Person'];
         }
     }
 

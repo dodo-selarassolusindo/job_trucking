@@ -30,7 +30,8 @@ loadjs.ready(["wrapper", "head"], function () {
         .setFields([
             ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid],
-            ["Nomor_Handphone", [fields.Nomor_Handphone.visible && fields.Nomor_Handphone.required ? ew.Validators.required(fields.Nomor_Handphone.caption) : null], fields.Nomor_Handphone.isInvalid]
+            ["Nomor_Telepon", [fields.Nomor_Telepon.visible && fields.Nomor_Telepon.required ? ew.Validators.required(fields.Nomor_Telepon.caption) : null], fields.Nomor_Telepon.isInvalid],
+            ["Contact_Person", [fields.Contact_Person.visible && fields.Contact_Person.required ? ew.Validators.required(fields.Contact_Person.caption) : null], fields.Contact_Person.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -94,14 +95,26 @@ loadjs.ready("head", function () {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-    <div id="r_Nomor_Handphone"<?= $Page->Nomor_Handphone->rowAttributes() ?>>
-        <label id="elh_customer_Nomor_Handphone" for="x_Nomor_Handphone" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Nomor_Handphone->caption() ?><?= $Page->Nomor_Handphone->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Nomor_Handphone->cellAttributes() ?>>
-<span id="el_customer_Nomor_Handphone">
-<input type="<?= $Page->Nomor_Handphone->getInputTextType() ?>" name="x_Nomor_Handphone" id="x_Nomor_Handphone" data-table="customer" data-field="x_Nomor_Handphone" value="<?= $Page->Nomor_Handphone->EditValue ?>" size="30" maxlength="25" placeholder="<?= HtmlEncode($Page->Nomor_Handphone->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Nomor_Handphone->formatPattern()) ?>"<?= $Page->Nomor_Handphone->editAttributes() ?> aria-describedby="x_Nomor_Handphone_help">
-<?= $Page->Nomor_Handphone->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->Nomor_Handphone->getErrorMessage() ?></div>
+<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+    <div id="r_Nomor_Telepon"<?= $Page->Nomor_Telepon->rowAttributes() ?>>
+        <label id="elh_customer_Nomor_Telepon" for="x_Nomor_Telepon" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Nomor_Telepon->caption() ?><?= $Page->Nomor_Telepon->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Nomor_Telepon->cellAttributes() ?>>
+<span id="el_customer_Nomor_Telepon">
+<input type="<?= $Page->Nomor_Telepon->getInputTextType() ?>" name="x_Nomor_Telepon" id="x_Nomor_Telepon" data-table="customer" data-field="x_Nomor_Telepon" value="<?= $Page->Nomor_Telepon->EditValue ?>" size="30" maxlength="25" placeholder="<?= HtmlEncode($Page->Nomor_Telepon->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Nomor_Telepon->formatPattern()) ?>"<?= $Page->Nomor_Telepon->editAttributes() ?> aria-describedby="x_Nomor_Telepon_help">
+<?= $Page->Nomor_Telepon->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->Nomor_Telepon->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+    <div id="r_Contact_Person"<?= $Page->Contact_Person->rowAttributes() ?>>
+        <label id="elh_customer_Contact_Person" for="x_Contact_Person" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Contact_Person->caption() ?><?= $Page->Contact_Person->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Contact_Person->cellAttributes() ?>>
+<span id="el_customer_Contact_Person">
+<input type="<?= $Page->Contact_Person->getInputTextType() ?>" name="x_Contact_Person" id="x_Contact_Person" data-table="customer" data-field="x_Contact_Person" value="<?= $Page->Contact_Person->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->Contact_Person->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Contact_Person->formatPattern()) ?>"<?= $Page->Contact_Person->editAttributes() ?> aria-describedby="x_Contact_Person_help">
+<?= $Page->Contact_Person->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->Contact_Person->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

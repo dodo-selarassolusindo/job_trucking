@@ -36,8 +36,11 @@ class Customer extends AbstractEntity
     #[Column(name: "Nama", type: "string")]
     private string $nama;
 
-    #[Column(name: "Nomor_Handphone", type: "string")]
-    private string $nomorHandphone;
+    #[Column(name: "Nomor_Telepon", type: "string")]
+    private string $nomorTelepon;
+
+    #[Column(name: "Contact_Person", type: "string")]
+    private string $contactPerson;
 
     public function getId(): int
     {
@@ -61,14 +64,25 @@ class Customer extends AbstractEntity
         return $this;
     }
 
-    public function getNomorHandphone(): string
+    public function getNomorTelepon(): string
     {
-        return HtmlDecode($this->nomorHandphone);
+        return HtmlDecode($this->nomorTelepon);
     }
 
-    public function setNomorHandphone(string $value): static
+    public function setNomorTelepon(string $value): static
     {
-        $this->nomorHandphone = RemoveXss($value);
+        $this->nomorTelepon = RemoveXss($value);
+        return $this;
+    }
+
+    public function getContactPerson(): string
+    {
+        return HtmlDecode($this->contactPerson);
+    }
+
+    public function setContactPerson(string $value): static
+    {
+        $this->contactPerson = RemoveXss($value);
         return $this;
     }
 }

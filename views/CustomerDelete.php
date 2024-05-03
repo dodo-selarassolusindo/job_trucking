@@ -56,8 +56,11 @@ $Page->showMessage();
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_customer_Nama" class="customer_Nama"><?= $Page->Nama->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-        <th class="<?= $Page->Nomor_Handphone->headerCellClass() ?>"><span id="elh_customer_Nomor_Handphone" class="customer_Nomor_Handphone"><?= $Page->Nomor_Handphone->caption() ?></span></th>
+<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+        <th class="<?= $Page->Nomor_Telepon->headerCellClass() ?>"><span id="elh_customer_Nomor_Telepon" class="customer_Nomor_Telepon"><?= $Page->Nomor_Telepon->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+        <th class="<?= $Page->Contact_Person->headerCellClass() ?>"><span id="elh_customer_Contact_Person" class="customer_Contact_Person"><?= $Page->Contact_Person->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -96,11 +99,19 @@ while ($Page->fetch()) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-        <td<?= $Page->Nomor_Handphone->cellAttributes() ?>>
+<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+        <td<?= $Page->Nomor_Telepon->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->Nomor_Handphone->viewAttributes() ?>>
-<?= $Page->Nomor_Handphone->getViewValue() ?></span>
+<span<?= $Page->Nomor_Telepon->viewAttributes() ?>>
+<?= $Page->Nomor_Telepon->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+        <td<?= $Page->Contact_Person->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->Contact_Person->viewAttributes() ?>>
+<?= $Page->Contact_Person->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

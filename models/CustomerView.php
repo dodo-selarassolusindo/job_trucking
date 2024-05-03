@@ -141,7 +141,8 @@ class CustomerView extends Customer
     {
         $this->id->setVisibility();
         $this->Nama->setVisibility();
-        $this->Nomor_Handphone->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -730,7 +731,8 @@ class CustomerView extends Customer
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Handphone->setDbValue($row['Nomor_Handphone']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -739,7 +741,8 @@ class CustomerView extends Customer
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Handphone'] = $this->Nomor_Handphone->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -765,7 +768,9 @@ class CustomerView extends Customer
 
         // Nama
 
-        // Nomor_Handphone
+        // Nomor_Telepon
+
+        // Contact_Person
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -775,8 +780,11 @@ class CustomerView extends Customer
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->ViewValue = $this->Nomor_Handphone->CurrentValue;
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
             // id
             $this->id->HrefValue = "";
@@ -786,9 +794,13 @@ class CustomerView extends Customer
             $this->Nama->HrefValue = "";
             $this->Nama->TooltipValue = "";
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->HrefValue = "";
-            $this->Nomor_Handphone->TooltipValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+            $this->Nomor_Telepon->TooltipValue = "";
+
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+            $this->Contact_Person->TooltipValue = "";
         }
 
         // Call Row Rendered event

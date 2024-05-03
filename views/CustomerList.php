@@ -153,8 +153,11 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_customer_Nama" class="customer_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
 <?php } ?>
-<?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-        <th data-name="Nomor_Handphone" class="<?= $Page->Nomor_Handphone->headerCellClass() ?>"><div id="elh_customer_Nomor_Handphone" class="customer_Nomor_Handphone"><?= $Page->renderFieldHeader($Page->Nomor_Handphone) ?></div></th>
+<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+        <th data-name="Nomor_Telepon" class="<?= $Page->Nomor_Telepon->headerCellClass() ?>"><div id="elh_customer_Nomor_Telepon" class="customer_Nomor_Telepon"><?= $Page->renderFieldHeader($Page->Nomor_Telepon) ?></div></th>
+<?php } ?>
+<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+        <th data-name="Contact_Person" class="<?= $Page->Contact_Person->headerCellClass() ?>"><div id="elh_customer_Contact_Person" class="customer_Contact_Person"><?= $Page->renderFieldHeader($Page->Contact_Person) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -199,11 +202,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-        <td data-name="Nomor_Handphone"<?= $Page->Nomor_Handphone->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_customer_Nomor_Handphone" class="el_customer_Nomor_Handphone">
-<span<?= $Page->Nomor_Handphone->viewAttributes() ?>>
-<?= $Page->Nomor_Handphone->getViewValue() ?></span>
+    <?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+        <td data-name="Nomor_Telepon"<?= $Page->Nomor_Telepon->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_customer_Nomor_Telepon" class="el_customer_Nomor_Telepon">
+<span<?= $Page->Nomor_Telepon->viewAttributes() ?>>
+<?= $Page->Nomor_Telepon->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+        <td data-name="Contact_Person"<?= $Page->Contact_Person->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_customer_Contact_Person" class="el_customer_Contact_Person">
+<span<?= $Page->Contact_Person->viewAttributes() ?>>
+<?= $Page->Contact_Person->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

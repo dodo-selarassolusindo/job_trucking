@@ -147,7 +147,8 @@ class CustomerList extends Customer
     {
         $this->id->setVisibility();
         $this->Nama->setVisibility();
-        $this->Nomor_Handphone->setVisibility();
+        $this->Nomor_Telepon->setVisibility();
+        $this->Contact_Person->setVisibility();
     }
 
     // Constructor
@@ -1026,7 +1027,8 @@ class CustomerList extends Customer
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
-        $filterList = Concat($filterList, $this->Nomor_Handphone->AdvancedSearch->toJson(), ","); // Field Nomor_Handphone
+        $filterList = Concat($filterList, $this->Nomor_Telepon->AdvancedSearch->toJson(), ","); // Field Nomor_Telepon
+        $filterList = Concat($filterList, $this->Contact_Person->AdvancedSearch->toJson(), ","); // Field Contact_Person
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1082,13 +1084,21 @@ class CustomerList extends Customer
         $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
         $this->Nama->AdvancedSearch->save();
 
-        // Field Nomor_Handphone
-        $this->Nomor_Handphone->AdvancedSearch->SearchValue = @$filter["x_Nomor_Handphone"];
-        $this->Nomor_Handphone->AdvancedSearch->SearchOperator = @$filter["z_Nomor_Handphone"];
-        $this->Nomor_Handphone->AdvancedSearch->SearchCondition = @$filter["v_Nomor_Handphone"];
-        $this->Nomor_Handphone->AdvancedSearch->SearchValue2 = @$filter["y_Nomor_Handphone"];
-        $this->Nomor_Handphone->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor_Handphone"];
-        $this->Nomor_Handphone->AdvancedSearch->save();
+        // Field Nomor_Telepon
+        $this->Nomor_Telepon->AdvancedSearch->SearchValue = @$filter["x_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchOperator = @$filter["z_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchCondition = @$filter["v_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchValue2 = @$filter["y_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor_Telepon"];
+        $this->Nomor_Telepon->AdvancedSearch->save();
+
+        // Field Contact_Person
+        $this->Contact_Person->AdvancedSearch->SearchValue = @$filter["x_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchOperator = @$filter["z_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchCondition = @$filter["v_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchValue2 = @$filter["y_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->SearchOperator2 = @$filter["w_Contact_Person"];
+        $this->Contact_Person->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1129,7 +1139,8 @@ class CustomerList extends Customer
         // Fields to search
         $searchFlds = [];
         $searchFlds[] = &$this->Nama;
-        $searchFlds[] = &$this->Nomor_Handphone;
+        $searchFlds[] = &$this->Nomor_Telepon;
+        $searchFlds[] = &$this->Contact_Person;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1210,7 +1221,8 @@ class CustomerList extends Customer
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id); // id
             $this->updateSort($this->Nama); // Nama
-            $this->updateSort($this->Nomor_Handphone); // Nomor_Handphone
+            $this->updateSort($this->Nomor_Telepon); // Nomor_Telepon
+            $this->updateSort($this->Contact_Person); // Contact_Person
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1237,7 +1249,8 @@ class CustomerList extends Customer
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->Nama->setSort("");
-                $this->Nomor_Handphone->setSort("");
+                $this->Nomor_Telepon->setSort("");
+                $this->Contact_Person->setSort("");
             }
 
             // Reset start position
@@ -1477,7 +1490,8 @@ class CustomerList extends Customer
             $item->Visible = $this->UseColumnVisibility;
             $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "Nama");
-            $this->createColumnOption($option, "Nomor_Handphone");
+            $this->createColumnOption($option, "Nomor_Telepon");
+            $this->createColumnOption($option, "Contact_Person");
         }
 
         // Set up custom actions
@@ -1918,7 +1932,8 @@ class CustomerList extends Customer
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
         $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Handphone->setDbValue($row['Nomor_Handphone']);
+        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
+        $this->Contact_Person->setDbValue($row['Contact_Person']);
     }
 
     // Return a row with default values
@@ -1927,7 +1942,8 @@ class CustomerList extends Customer
         $row = [];
         $row['id'] = $this->id->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Handphone'] = $this->Nomor_Handphone->DefaultValue;
+        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
+        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
         return $row;
     }
 
@@ -1972,7 +1988,9 @@ class CustomerList extends Customer
 
         // Nama
 
-        // Nomor_Handphone
+        // Nomor_Telepon
+
+        // Contact_Person
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -1982,8 +2000,11 @@ class CustomerList extends Customer
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->ViewValue = $this->Nomor_Handphone->CurrentValue;
+            // Nomor_Telepon
+            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+
+            // Contact_Person
+            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
             // id
             $this->id->HrefValue = "";
@@ -1993,9 +2014,13 @@ class CustomerList extends Customer
             $this->Nama->HrefValue = "";
             $this->Nama->TooltipValue = "";
 
-            // Nomor_Handphone
-            $this->Nomor_Handphone->HrefValue = "";
-            $this->Nomor_Handphone->TooltipValue = "";
+            // Nomor_Telepon
+            $this->Nomor_Telepon->HrefValue = "";
+            $this->Nomor_Telepon->TooltipValue = "";
+
+            // Contact_Person
+            $this->Contact_Person->HrefValue = "";
+            $this->Contact_Person->TooltipValue = "";
         }
 
         // Call Row Rendered event

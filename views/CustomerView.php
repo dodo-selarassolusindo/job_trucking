@@ -73,13 +73,24 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->Nomor_Handphone->Visible) { // Nomor_Handphone ?>
-    <tr id="r_Nomor_Handphone"<?= $Page->Nomor_Handphone->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_Nomor_Handphone"><?= $Page->Nomor_Handphone->caption() ?></span></td>
-        <td data-name="Nomor_Handphone"<?= $Page->Nomor_Handphone->cellAttributes() ?>>
-<span id="el_customer_Nomor_Handphone">
-<span<?= $Page->Nomor_Handphone->viewAttributes() ?>>
-<?= $Page->Nomor_Handphone->getViewValue() ?></span>
+<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
+    <tr id="r_Nomor_Telepon"<?= $Page->Nomor_Telepon->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_Nomor_Telepon"><?= $Page->Nomor_Telepon->caption() ?></span></td>
+        <td data-name="Nomor_Telepon"<?= $Page->Nomor_Telepon->cellAttributes() ?>>
+<span id="el_customer_Nomor_Telepon">
+<span<?= $Page->Nomor_Telepon->viewAttributes() ?>>
+<?= $Page->Nomor_Telepon->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
+    <tr id="r_Contact_Person"<?= $Page->Contact_Person->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_Contact_Person"><?= $Page->Contact_Person->caption() ?></span></td>
+        <td data-name="Contact_Person"<?= $Page->Contact_Person->cellAttributes() ?>>
+<span id="el_customer_Contact_Person">
+<span<?= $Page->Contact_Person->viewAttributes() ?>>
+<?= $Page->Contact_Person->getViewValue() ?></span>
 </span>
 </td>
     </tr>
