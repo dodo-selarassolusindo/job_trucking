@@ -2406,7 +2406,20 @@ class JobList extends Job
     // Page Load event
     public function pageLoad()
     {
-        //Log("Page Load");
+        // Method 1 - Use callable handler
+        $this->CustomActions["star"] = new ListAction(
+            "star",
+            "Add Star",
+            IsLoggedIn(),
+            ACTION_AJAX,
+            ACTION_SINGLE,
+            "Add Star to the selected record?",
+            "fa-solid fa-star ew-icon",
+            "",
+            fn($row) => $this->update(["Starred" => "Y"], ["ID" => $row["ID"]]), // Update the current record only (the second argument is WHERE clause for UPDATE statement)
+            "Star added successfully",
+            "Failed to add star"
+        );
     }
 
     // Page Unload event
