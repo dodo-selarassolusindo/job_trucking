@@ -1,5 +1,5 @@
 /*!
- * JavaScript for PHPMaker v2024.10.0
+ * JavaScript for PHPMaker v2024.11.0
  * Copyright (c) e.World Technology Limited. All rights reserved.
  */
 (function (ew$1, $$1, luxon) {
@@ -4341,9 +4341,9 @@
   function initExportLinks(e) {
     var _e$target3;
     let $el = $$1((_e$target3 = e == null ? void 0 : e.target) != null ? _e$target3 : document);
-    if (!$el.find("a.ew-export-link[href]")[0])
+    if (e != null && e.target && !$el.find("a.ew-export-link[href]")[0])
       // Export links not found
-      $el = $$1(document);
+      $el = $el.closest(".content"); // For refresh
     $el.find("a.ew-export-link[href]:not(.ew-email):not(.ew-print):not(.ew-xml)").off("click").on("click", function (e) {
       let href = this.href;
       if (href && href != "#") fileDownload(href, getchartParams());
