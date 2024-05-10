@@ -57,7 +57,7 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","audittrail",true,"{DB904388-BB
     ["userlevelpermissions","userlevelpermissions","userlevelpermissions",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelpermissionslist"],
     ["userlevels","userlevels","Hak Akses",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelslist"],
     ["beranda.php","beranda","Beranda",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda"],
-    ["job","job","Job",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","joblist"],
+    ["job","job","Job.",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","joblist"],
     ["lokasi","lokasi","Lokasi",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","lokasilist"],
     ["customer","customer","Customer",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","customerlist"],
     ["shipper","shipper","Shipper",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","shipperlist"]];
