@@ -1,0 +1,11 @@
+{
+    "name": "prj-job-trucking",
+    "version": "24.6.2",
+    "description": "prj job trucking",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "private": true,
+    "dependencies": {},
+    "engines": {
+        "node": ">=18"
+    }
+}
