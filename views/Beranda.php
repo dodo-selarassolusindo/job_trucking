@@ -8,46 +8,20 @@ $Beranda = &$Page;
 <?php
 $Page->showMessage();
 ?>
-<!--
-<div class="card">
-    <div class="card-header">
-        <h5 class="m-0">Latest News</h5>
-    </div>
-    <div class="card-body">
-        <h6 class="card-title">2023/09/05 - PHPMaker 2024 Released</h6>
-        <p class="card-text">For more information, please visit PHPMaker website.</p>
-        <a href="https://phpmaker.dev" class="btn btn-primary">Go to PHPMaker website</a>
-    </div>
-</div>
--->
+<div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-info">
+        <div class="inner">
+        <h3>150</h3>
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Daftar Job</h3>
-    </div>
-    <div class="card-body p-0">
-<?php
-    $q = '
-        select
-            date_format(job.tanggal, "%d-%m-%Y") as tanggal,
-            job.nomor,
-            job.customer,
-            job.shipper,
-            concat("<a href=\"jobview/",job.id,"?showdetail=\">",lokasi.nama,"</a>") as Lokasi
-        from
-            job
-            left join lokasi on job.lokasi = lokasi.id
-    ';
-    Write(ExecuteHtml($q, ['fieldcaption' => true, 'tablename' => ['job'],]));
-    // $sql = "SELECT DISTINCT " .
-    //     "`categories`.`CategoryName` AS `CategoryName`," .
-    //     "`products`.`ProductName` AS `ProductName`," .
-    //     "`products`.`QuantityPerUnit` AS `QuantityPerUnit`" .
-    //     " FROM `categories` JOIN `products` ON (`categories`.`CategoryID` = `products`.`CategoryID`)" .
-    //     " WHERE " .
-    //     "`products`.`UnitsInStock` <= 0";
-    // Write(ExecuteHtml($sql, ["fieldcaption" => true, "tablename" => ["products", "categories"]]));
-?>
+        <p>New Orders</p>
+        </div>
+        <div class="icon">
+        <i class="ion ion-bag"></i>
+        </div>
+        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
     </div>
 </div>
+
+
 <?= GetDebugMessage() ?>

@@ -4,6 +4,7 @@ namespace PHPMaker2024\prj_job_trucking;
 
 // Navbar menu
 $topMenu = new Menu("navbar", true, true);
+$topMenu->addMenuItem(5, "mi_beranda", $Language->menuPhrase("5", "MenuText"), "beranda", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda.php'), false, false, "", "", true, false);
 $topMenu->addMenuItem(6, "mi_job", $Language->menuPhrase("6", "MenuText"), "joblist", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}job'), false, false, "", "", true, false);
 $topMenu->addMenuItem(16, "mci_Master", $Language->menuPhrase("16", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_lokasi", $Language->menuPhrase("7", "MenuText"), "lokasilist", 16, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}lokasi'), false, false, "", "", true, false);
@@ -17,6 +18,7 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
+$sideMenu->addMenuItem(5, "mi_beranda", $Language->menuPhrase("5", "MenuText"), "beranda", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda.php'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_job", $Language->menuPhrase("6", "MenuText"), "joblist", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}job'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(16, "mci_Master", $Language->menuPhrase("16", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_lokasi", $Language->menuPhrase("7", "MenuText"), "lokasilist", 16, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}lokasi'), false, false, "", "", true, true);

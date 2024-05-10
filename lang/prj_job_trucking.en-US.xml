@@ -2,6 +2,9 @@
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
+    <menu id="5">
+      <phrase id="menutext" value="Beranda" />
+    </menu>
     <menu id="6">
       <phrase id="menutext" value="Job" />
     </menu>
@@ -32,8 +35,8 @@
     <menu id="3">
       <phrase id="menutext" value="userlevelpermissions" />
     </menu>
-    <menu id="5">
-      <phrase id="menutext" value="Beranda" />
+    <menu id="19">
+      <phrase id="menutext" value="Beranda 0" />
     </menu>
     <table id="audittrail">
       <phrase id="tblcaption" value="audittrail" />
@@ -248,6 +251,9 @@
       <field id="contact_person">
         <phrase id="fldcaption" value="Contact Person" />
       </field>
+    </table>
+    <table id="beranda_0">
+      <phrase id="tblcaption" value="Beranda 0" />
     </table>
   </project>
 </ew-language>
