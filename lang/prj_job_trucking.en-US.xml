@@ -3,7 +3,7 @@
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
     <menu id="6">
-      <phrase id="menutext" value="Job." />
+      <phrase id="menutext" value="Job" />
     </menu>
     <menu id="16">
       <phrase id="menutext" value="Master" />
@@ -185,7 +185,7 @@
       <phrase id="tblcaption" value="Beranda" />
     </table>
     <table id="job">
-      <phrase id="tblcaption" value="Job." />
+      <phrase id="tblcaption" value="Job" />
       <phrase id="tblpagecaption1" value="Umum" />
       <phrase id="tblpagecaption2" value="Detail" />
       <field id="id">
