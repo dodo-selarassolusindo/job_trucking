@@ -5,6 +5,9 @@
     <menu id="10">
       <phrase id="menutext" value="Beranda" />
     </menu>
+    <menu id="13">
+      <phrase id="menutext" value="Daftar Size" />
+    </menu>
     <menu id="11">
       <phrase id="menutext" value="Master" />
     </menu>
@@ -258,6 +261,9 @@
     </table>
     <table id="beranda">
       <phrase id="tblcaption" value="Beranda" />
+    </table>
+    <table id="list_size">
+      <phrase id="tblcaption" value="Daftar Size" />
     </table>
   </project>
 </ew-language>

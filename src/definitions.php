@@ -89,6 +89,7 @@ return [
     "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
     "userlevels" => \DI\create(Userlevels::class),
     "beranda" => \DI\create(Beranda::class),
+    "list_size" => \DI\create(ListSize::class),
 
     // User table
     "usertable" => \DI\get("employees"),
