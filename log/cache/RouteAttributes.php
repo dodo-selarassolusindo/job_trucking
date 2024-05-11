@@ -35,6 +35,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_job_trucking\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
@@ -79,6 +84,31 @@
     [
         'PHPMaker2024\\prj_job_trucking\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -467,6 +497,11 @@
                 '/employeesdelete[/{EmployeeID}]',
                 '/exportloglist[/{FileId:.*}]',
                 '/exportlogview[/{FileId:.*}]',
+                '/job2list[/{Job2ID}]',
+                '/job2add[/{Job2ID}]',
+                '/job2view[/{Job2ID}]',
+                '/job2edit[/{Job2ID}]',
+                '/job2delete[/{Job2ID}]',
                 '/joblist[/{JobID}]',
                 '/jobadd[/{JobID}]',
                 '/jobview[/{JobID}]',
@@ -543,6 +578,11 @@
                 'PHPMaker2024\\prj_job_trucking\\EmployeesController:delete',
                 'PHPMaker2024\\prj_job_trucking\\ExportlogController:list',
                 'PHPMaker2024\\prj_job_trucking\\ExportlogController:view',
+                'PHPMaker2024\\prj_job_trucking\\Job2Controller:list',
+                'PHPMaker2024\\prj_job_trucking\\Job2Controller:add',
+                'PHPMaker2024\\prj_job_trucking\\Job2Controller:view',
+                'PHPMaker2024\\prj_job_trucking\\Job2Controller:edit',
+                'PHPMaker2024\\prj_job_trucking\\Job2Controller:delete',
                 'PHPMaker2024\\prj_job_trucking\\JobController:list',
                 'PHPMaker2024\\prj_job_trucking\\JobController:add',
                 'PHPMaker2024\\prj_job_trucking\\JobController:view',
@@ -599,6 +639,21 @@
                 'PHPMaker2024\\prj_job_trucking\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
@@ -841,6 +896,11 @@
                 'delete.employees',
                 'list.exportlog',
                 'view.exportlog',
+                'list.job2',
+                'add.job2',
+                'view.job2',
+                'edit.job2',
+                'delete.job2',
                 'list.job',
                 'add.job',
                 'view.job',
@@ -897,6 +957,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -1049,6 +1114,11 @@
         $o[71],
         $o[72],
         $o[73],
+        $o[74],
+        $o[75],
+        $o[76],
+        $o[77],
+        $o[78],
     ],
     []
 );

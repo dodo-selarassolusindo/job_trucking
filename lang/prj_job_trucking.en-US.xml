@@ -14,6 +14,9 @@
     <menu id="12">
       <phrase id="menutext" value="Master" />
     </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Job" />
+    </menu>
     <menu id="7">
       <phrase id="menutext" value="Size" />
     </menu>
@@ -266,6 +269,15 @@
       </field>
       <field id="lokasi">
         <phrase id="fldcaption" value="Lokasi" />
+      </field>
+    </table>
+    <table id="job2">
+      <phrase id="tblcaption" value="Job" />
+      <field id="job2id">
+        <phrase id="fldcaption" value="Job 2ID" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
       </field>
     </table>
     <table id="lokasi">
