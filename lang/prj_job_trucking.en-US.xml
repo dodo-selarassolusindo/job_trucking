@@ -17,6 +17,9 @@
     <menu id="7">
       <phrase id="menutext" value="Size" />
     </menu>
+    <menu id="18">
+      <phrase id="menutext" value="Type" />
+    </menu>
     <menu id="5">
       <phrase id="menutext" value="Lokasi" />
     </menu>
@@ -82,6 +85,9 @@
       <field id="newvalue">
         <phrase id="fldcaption" value="New Value" />
       </field>
+    </table>
+    <table id="beranda">
+      <phrase id="tblcaption" value="Beranda" />
     </table>
     <table id="customer">
       <phrase id="tblcaption" value="Customer" />
@@ -190,6 +196,33 @@
         <phrase id="fldcaption" value="Created At" />
       </field>
     </table>
+    <table id="exportlog">
+      <phrase id="tblcaption" value="Log Export" />
+      <field id="fileid">
+        <phrase id="fldcaption" value="File Id" />
+      </field>
+      <field id="datetime">
+        <phrase id="fldcaption" value="Date Time" />
+      </field>
+      <field id="user">
+        <phrase id="fldcaption" value="User" />
+      </field>
+      <field id="_exporttype">
+        <phrase id="fldcaption" value="Export Type" />
+      </field>
+      <field id="_table">
+        <phrase id="fldcaption" value="Table" />
+      </field>
+      <field id="keyvalue">
+        <phrase id="fldcaption" value="Key Value" />
+      </field>
+      <field id="filename">
+        <phrase id="fldcaption" value="Filename" />
+      </field>
+      <field id="__request">
+        <phrase id="fldcaption" value="Request" />
+      </field>
+    </table>
     <table id="job">
       <phrase id="tblcaption" value="Job" />
       <field id="jobid">
@@ -247,6 +280,21 @@
         <phrase id="fldcaption" value="Ukuran" />
       </field>
     </table>
+    <table id="size2">
+      <phrase id="tblcaption" value="Size" />
+    </table>
+    <table id="size3">
+      <phrase id="tblcaption" value="Cargo Size" />
+    </table>
+    <table id="type">
+      <phrase id="tblcaption" value="Type" />
+      <field id="typeid">
+        <phrase id="fldcaption" value="Type ID" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+    </table>
     <table id="userlevelpermissions">
       <phrase id="tblcaption" value="Hak Akses (Detail)" />
       <field id="userlevelid">
@@ -267,42 +315,6 @@
       <field id="userlevelname">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
-    </table>
-    <table id="exportlog">
-      <phrase id="tblcaption" value="Log Export" />
-      <field id="fileid">
-        <phrase id="fldcaption" value="File Id" />
-      </field>
-      <field id="datetime">
-        <phrase id="fldcaption" value="Date Time" />
-      </field>
-      <field id="user">
-        <phrase id="fldcaption" value="User" />
-      </field>
-      <field id="_exporttype">
-        <phrase id="fldcaption" value="Export Type" />
-      </field>
-      <field id="_table">
-        <phrase id="fldcaption" value="Table" />
-      </field>
-      <field id="keyvalue">
-        <phrase id="fldcaption" value="Key Value" />
-      </field>
-      <field id="filename">
-        <phrase id="fldcaption" value="Filename" />
-      </field>
-      <field id="__request">
-        <phrase id="fldcaption" value="Request" />
-      </field>
-    </table>
-    <table id="beranda">
-      <phrase id="tblcaption" value="Beranda" />
-    </table>
-    <table id="size2">
-      <phrase id="tblcaption" value="Size" />
-    </table>
-    <table id="size3">
-      <phrase id="tblcaption" value="Cargo Size" />
     </table>
   </project>
 </ew-language>

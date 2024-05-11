@@ -16,6 +16,7 @@ C:\xampp\htdocs\job_trucking\controllers\ShipperController.php
 C:\xampp\htdocs\job_trucking\controllers\Size2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\Size3Controller.php
 C:\xampp\htdocs\job_trucking\controllers\SizeController.php
+C:\xampp\htdocs\job_trucking\controllers\TypeController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelsController.php
 C:\xampp\htdocs\job_trucking\css\ewpdf.scss
@@ -78,6 +79,12 @@ C:\xampp\htdocs\job_trucking\models\SizeDelete.php
 C:\xampp\htdocs\job_trucking\models\SizeEdit.php
 C:\xampp\htdocs\job_trucking\models\SizeList.php
 C:\xampp\htdocs\job_trucking\models\SizeView.php
+C:\xampp\htdocs\job_trucking\models\Type.php
+C:\xampp\htdocs\job_trucking\models\TypeAdd.php
+C:\xampp\htdocs\job_trucking\models\TypeDelete.php
+C:\xampp\htdocs\job_trucking\models\TypeEdit.php
+C:\xampp\htdocs\job_trucking\models\TypeList.php
+C:\xampp\htdocs\job_trucking\models\TypeView.php
 C:\xampp\htdocs\job_trucking\models\Userlevelpermissions.php
 C:\xampp\htdocs\job_trucking\models\UserlevelpermissionsAdd.php
 C:\xampp\htdocs\job_trucking\models\UserlevelpermissionsDelete.php
@@ -147,6 +154,7 @@ C:\xampp\htdocs\job_trucking\src\Entity\Job.php
 C:\xampp\htdocs\job_trucking\src\Entity\Lokasi.php
 C:\xampp\htdocs\job_trucking\src\Entity\Shipper.php
 C:\xampp\htdocs\job_trucking\src\Entity\Size.php
+C:\xampp\htdocs\job_trucking\src\Entity\Type.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevel.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevelpermission.php
 C:\xampp\htdocs\job_trucking\src\ExportCsv.php
@@ -277,6 +285,11 @@ C:\xampp\htdocs\job_trucking\views\SizeDelete.php
 C:\xampp\htdocs\job_trucking\views\SizeEdit.php
 C:\xampp\htdocs\job_trucking\views\SizeList.php
 C:\xampp\htdocs\job_trucking\views\SizeView.php
+C:\xampp\htdocs\job_trucking\views\TypeAdd.php
+C:\xampp\htdocs\job_trucking\views\TypeDelete.php
+C:\xampp\htdocs\job_trucking\views\TypeEdit.php
+C:\xampp\htdocs\job_trucking\views\TypeList.php
+C:\xampp\htdocs\job_trucking\views\TypeView.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsAdd.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsDelete.php
 C:\xampp\htdocs\job_trucking\views\UserlevelpermissionsEdit.php

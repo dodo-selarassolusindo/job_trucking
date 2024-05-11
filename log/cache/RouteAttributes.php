@@ -54,6 +54,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -325,6 +330,31 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -371,6 +401,11 @@
                 '/sizeview[/{SizeID}]',
                 '/sizeedit[/{SizeID}]',
                 '/sizedelete[/{SizeID}]',
+                '/typelist[/{TypeID}]',
+                '/typeadd[/{TypeID}]',
+                '/typeview[/{TypeID}]',
+                '/typeedit[/{TypeID}]',
+                '/typedelete[/{TypeID}]',
                 '/userlevelpermissionslist[/{keys:.*}]',
                 '/userlevelpermissionsadd[/{keys:.*}]',
                 '/userlevelpermissionsview[/{keys:.*}]',
@@ -427,6 +462,11 @@
                 'PHPMaker2024\\prj_job_trucking\\SizeController:view',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:edit',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:delete',
+                'PHPMaker2024\\prj_job_trucking\\TypeController:list',
+                'PHPMaker2024\\prj_job_trucking\\TypeController:add',
+                'PHPMaker2024\\prj_job_trucking\\TypeController:view',
+                'PHPMaker2024\\prj_job_trucking\\TypeController:edit',
+                'PHPMaker2024\\prj_job_trucking\\TypeController:delete',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:list',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:add',
                 'PHPMaker2024\\prj_job_trucking\\UserlevelpermissionsController:view',
@@ -599,6 +639,21 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -645,6 +700,11 @@
                 'view.size',
                 'edit.size',
                 'delete.size',
+                'list.type',
+                'add.type',
+                'view.type',
+                'edit.type',
+                'delete.type',
                 'list.userlevelpermissions',
                 'add.userlevelpermissions',
                 'view.userlevelpermissions',
@@ -657,6 +717,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -769,6 +834,11 @@
         $o[51],
         $o[52],
         $o[53],
+        $o[54],
+        $o[55],
+        $o[56],
+        $o[57],
+        $o[58],
     ],
     []
 );

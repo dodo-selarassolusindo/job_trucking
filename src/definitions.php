@@ -80,18 +80,19 @@ return [
 
     // Tables
     "audittrail" => \DI\create(Audittrail::class),
+    "beranda" => \DI\create(Beranda::class),
     "customer" => \DI\create(Customer::class),
     "employees" => \DI\create(Employees::class),
+    "exportlog" => \DI\create(Exportlog::class),
     "job" => \DI\create(Job::class),
     "lokasi" => \DI\create(Lokasi::class),
     "shipper" => \DI\create(Shipper::class),
     "size" => \DI\create(Size::class),
-    "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
-    "userlevels" => \DI\create(Userlevels::class),
-    "exportlog" => \DI\create(Exportlog::class),
-    "beranda" => \DI\create(Beranda::class),
     "size2" => \DI\create(Size2::class),
     "size3" => \DI\create(Size3::class),
+    "type" => \DI\create(Type::class),
+    "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
+    "userlevels" => \DI\create(Userlevels::class),
 
     // User table
     "usertable" => \DI\get("employees"),
