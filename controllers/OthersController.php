@@ -82,7 +82,7 @@ class OthersController extends ControllerBase
         global $Security, $USER_LEVEL_TABLES;
         $url = "";
         foreach ($USER_LEVEL_TABLES as $t) {
-            if ($t[0] == "tanpaunderscore.php") { // Check default table
+            if ($t[0] == "beranda.php") { // Check default table
                 if ($Security->allowList($t[4] . $t[0])) {
                     $url = $t[5];
                     break;
