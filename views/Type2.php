@@ -9,7 +9,14 @@ $Type2 = &$Page;
 $Page->showMessage();
 ?>
 <?php
-$q = 'select * from size_type';
+$q = '
+    select
+        *
+    from
+        size_type st
+    where
+        st.SizeID = '.Get['size'].'
+    ';
 $r = ExecuteRows($q);
 ?>
 

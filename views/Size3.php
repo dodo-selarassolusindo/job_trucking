@@ -25,7 +25,7 @@ $r = ExecuteRows($q);
         <div class="icon">
             <i class="ion ion-bag"></i>
         </div>
-        <a href="type2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="type2?size=<?= $row['SizeID'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <?php $rec_num++ ?>
 
