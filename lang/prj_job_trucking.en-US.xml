@@ -5,11 +5,17 @@
     <menu id="5">
       <phrase id="menutext" value="Beranda" />
     </menu>
+    <menu id="21">
+      <phrase id="menutext" value="List Size" />
+    </menu>
     <menu id="6">
       <phrase id="menutext" value="Job" />
     </menu>
     <menu id="16">
       <phrase id="menutext" value="Master" />
+    </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Size" />
     </menu>
     <menu id="7">
       <phrase id="menutext" value="Lokasi" />
@@ -254,6 +260,18 @@
     </table>
     <table id="beranda_0">
       <phrase id="tblcaption" value="Beranda 0" />
+    </table>
+    <table id="size">
+      <phrase id="tblcaption" value="Size" />
+      <field id="sizeid">
+        <phrase id="fldcaption" value="Size ID" />
+      </field>
+      <field id="ukuran">
+        <phrase id="fldcaption" value="Ukuran" />
+      </field>
+    </table>
+    <table id="daftar_size">
+      <phrase id="tblcaption" value="List Size" />
     </table>
   </project>
 </ew-language>
