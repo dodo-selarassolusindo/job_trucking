@@ -16,7 +16,7 @@ $r = ExecuteRows($q);
 <table>
 <?php foreach($r as $row) { ?>
     <tr>
-        <td><?= $row->Ukuran ?></td>
+        <td><?= $row['Ukuran'] ?></td>
     </tr>
 <?php } ?>
 </table>
