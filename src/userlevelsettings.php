@@ -81,10 +81,10 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["lokasi","lokasi","Destination",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
     ["pelabuhan","pelabuhan","Pelabuhan",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","pelabuhanlist"],
     ["shipper","shipper","Shipper",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","shipperlist"],
-    ["size","size","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizelist"],
+    ["size","size","Container Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizelist"],
     ["size_type","size_type","Container",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizetypelist"],
     ["size2.php","size2","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size2"],
     ["size3.php","size3","Cargo Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size3"],
-    ["type","type","Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","typelist"],
+    ["type","type","Container Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","typelist"],
     ["userlevelpermissions","userlevelpermissions","Hak Akses (Detail)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelpermissionslist"],
     ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"]];
