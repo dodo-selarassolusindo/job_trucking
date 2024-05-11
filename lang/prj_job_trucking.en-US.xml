@@ -29,6 +29,9 @@
     <menu id="20">
       <phrase id="menutext" value="Pelabuhan" />
     </menu>
+    <menu id="21">
+      <phrase id="menutext" value="Depo" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Customer" />
     </menu>
@@ -108,6 +111,15 @@
       </field>
       <field id="contact_person">
         <phrase id="fldcaption" value="Contact Person" />
+      </field>
+    </table>
+    <table id="depo">
+      <phrase id="tblcaption" value="Depo" />
+      <field id="depoid">
+        <phrase id="fldcaption" value="Depo ID" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
       </field>
     </table>
     <table id="employees">

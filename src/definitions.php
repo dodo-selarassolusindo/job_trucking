@@ -82,6 +82,7 @@ return [
     "audittrail" => \DI\create(Audittrail::class),
     "beranda" => \DI\create(Beranda::class),
     "customer" => \DI\create(Customer::class),
+    "depo" => \DI\create(Depo::class),
     "employees" => \DI\create(Employees::class),
     "exportlog" => \DI\create(Exportlog::class),
     "job" => \DI\create(Job::class),

@@ -7,6 +7,7 @@ C:\xampp\htdocs\job_trucking\controllers\AudittrailController.php
 C:\xampp\htdocs\job_trucking\controllers\BerandaController.php
 C:\xampp\htdocs\job_trucking\controllers\ControllerBase.php
 C:\xampp\htdocs\job_trucking\controllers\CustomerController.php
+C:\xampp\htdocs\job_trucking\controllers\DepoController.php
 C:\xampp\htdocs\job_trucking\controllers\EmployeesController.php
 C:\xampp\htdocs\job_trucking\controllers\ExportlogController.php
 C:\xampp\htdocs\job_trucking\controllers\JobController.php
@@ -43,6 +44,12 @@ C:\xampp\htdocs\job_trucking\models\CustomerDelete.php
 C:\xampp\htdocs\job_trucking\models\CustomerEdit.php
 C:\xampp\htdocs\job_trucking\models\CustomerList.php
 C:\xampp\htdocs\job_trucking\models\CustomerView.php
+C:\xampp\htdocs\job_trucking\models\Depo.php
+C:\xampp\htdocs\job_trucking\models\DepoAdd.php
+C:\xampp\htdocs\job_trucking\models\DepoDelete.php
+C:\xampp\htdocs\job_trucking\models\DepoEdit.php
+C:\xampp\htdocs\job_trucking\models\DepoList.php
+C:\xampp\htdocs\job_trucking\models\DepoView.php
 C:\xampp\htdocs\job_trucking\models\Employees.php
 C:\xampp\htdocs\job_trucking\models\EmployeesAdd.php
 C:\xampp\htdocs\job_trucking\models\EmployeesDelete.php
@@ -162,6 +169,7 @@ C:\xampp\htdocs\job_trucking\src\EmailTwoFactorAuthentication.php
 C:\xampp\htdocs\job_trucking\src\EntityDescriptor.php
 C:\xampp\htdocs\job_trucking\src\Entity\Audittrail.php
 C:\xampp\htdocs\job_trucking\src\Entity\Customer.php
+C:\xampp\htdocs\job_trucking\src\Entity\Depo.php
 C:\xampp\htdocs\job_trucking\src\Entity\Employee.php
 C:\xampp\htdocs\job_trucking\src\Entity\Exportlog.php
 C:\xampp\htdocs\job_trucking\src\Entity\Job.php
@@ -269,6 +277,11 @@ C:\xampp\htdocs\job_trucking\views\CustomerDelete.php
 C:\xampp\htdocs\job_trucking\views\CustomerEdit.php
 C:\xampp\htdocs\job_trucking\views\CustomerList.php
 C:\xampp\htdocs\job_trucking\views\CustomerView.php
+C:\xampp\htdocs\job_trucking\views\DepoAdd.php
+C:\xampp\htdocs\job_trucking\views\DepoDelete.php
+C:\xampp\htdocs\job_trucking\views\DepoEdit.php
+C:\xampp\htdocs\job_trucking\views\DepoList.php
+C:\xampp\htdocs\job_trucking\views\DepoView.php
 C:\xampp\htdocs\job_trucking\views\EmployeesAdd.php
 C:\xampp\htdocs\job_trucking\views\EmployeesDelete.php
 C:\xampp\htdocs\job_trucking\views\EmployeesEdit.php
