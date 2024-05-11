@@ -17,14 +17,17 @@
     <menu id="22">
       <phrase id="menutext" value="Job" />
     </menu>
+    <menu id="39">
+      <phrase id="menutext" value="Container" />
+    </menu>
     <menu id="7">
-      <phrase id="menutext" value="Container Size" />
+      <phrase id="menutext" value="Size" />
     </menu>
     <menu id="18">
-      <phrase id="menutext" value="Container Type" />
+      <phrase id="menutext" value="Type" />
     </menu>
     <menu id="19">
-      <phrase id="menutext" value="Container" />
+      <phrase id="menutext" value="Size &amp; Type" />
     </menu>
     <menu id="5">
       <phrase id="menutext" value="Destination" />
@@ -317,7 +320,7 @@
       </field>
     </table>
     <table id="size">
-      <phrase id="tblcaption" value="Container Size" />
+      <phrase id="tblcaption" value="Size" />
       <field id="sizeid">
         <phrase id="fldcaption" value="Size ID" />
       </field>
@@ -326,7 +329,7 @@
       </field>
     </table>
     <table id="size_type">
-      <phrase id="tblcaption" value="Container" />
+      <phrase id="tblcaption" value="Size &amp; Type" />
       <field id="size_type_id">
         <phrase id="fldcaption" value="Size Type ID" />
       </field>
@@ -344,7 +347,7 @@
       <phrase id="tblcaption" value="Cargo Size" />
     </table>
     <table id="type">
-      <phrase id="tblcaption" value="Container Type" />
+      <phrase id="tblcaption" value="Type" />
       <field id="typeid">
         <phrase id="fldcaption" value="Type ID" />
       </field>
