@@ -13,11 +13,18 @@ $q = 'select * from size';
 $r = ExecuteRows($q);
 ?>
 
-<table>
 <?php foreach($r as $row) { ?>
-    <tr>
-        <td><?= $row['Ukuran'] ?></td>
-    </tr>
+
+<div class="small-box bg-warning">
+    <div class="inner">
+        <h3><?= $row['Ukuran'] ?></h3>
+        <p>&nbsp;</p>
+    </div>
+    <div class="icon">
+        <i class="ion ion-bag"></i>
+    </div>
+    <a href="size2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+</div>
+
 <?php } ?>
-</table>
 <?= GetDebugMessage() ?>
