@@ -5,6 +5,9 @@
     <menu id="5">
       <phrase id="menutext" value="Beranda" />
     </menu>
+    <menu id="23">
+      <phrase id="menutext" value="Size" />
+    </menu>
     <menu id="21">
       <phrase id="menutext" value="Size" />
     </menu>
@@ -264,7 +267,7 @@
     <table id="beranda_0">
       <phrase id="tblcaption" value="Beranda 0" />
     </table>
-    <table id="size2">
+    <table id="size22">
       <phrase id="tblcaption" value="Size" />
       <field id="sizeid">
         <phrase id="fldcaption" value="Size ID" />
@@ -278,6 +281,9 @@
     </table>
     <table id="size_">
       <phrase id="tblcaption" value="Daftar Size" />
+    </table>
+    <table id="size2">
+      <phrase id="tblcaption" value="Size" />
     </table>
   </project>
 </ew-language>

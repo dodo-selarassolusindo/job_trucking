@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "sizecontroller";
+    public $CurrentPageName = "size2controller";
 
     // Page headings
     public $Heading = "";
