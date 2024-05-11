@@ -45,7 +45,9 @@ $USER_LEVEL_PRIVS = [["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}audittrail","-2","0
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size","-2","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size","0","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size.php","-2","72"],
-    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size.php","0","0"]];
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size.php","0","0"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size_.php","-2","72"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size_.php","0","0"]];
 
 /**
  * Tables
@@ -69,4 +71,5 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{DB904388-
     ["shipper","shipper","Shipper",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","shipperlist"],
     ["beranda_0.php","beranda_0","Beranda 0",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda0"],
     ["size","size2","Size",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","size2list"],
-    ["size.php","size","Size",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","size"]];
+    ["size.php","size3","Size",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","size3"],
+    ["size_.php","size_","Daftar Size",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","size"]];

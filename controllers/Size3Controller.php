@@ -13,14 +13,14 @@ use PHPMaker2024\prj_job_trucking\Attributes\Post;
 use PHPMaker2024\prj_job_trucking\Attributes\Put;
 
 /**
- * size_ controller
+ * size3 controller
  */
-class SizeController extends ControllerBase
+class Size3Controller extends ControllerBase
 {
     // custom
-    #[Map(["GET", "POST", "OPTIONS"], "/size[/{params:.*}]", [PermissionMiddleware::class], "custom.size_")]
+    #[Map(["GET", "POST", "OPTIONS"], "/size3[/{params:.*}]", [PermissionMiddleware::class], "custom.size3")]
     public function custom(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "Size");
+        return $this->runPage($request, $response, $args, "Size3");
     }
 }

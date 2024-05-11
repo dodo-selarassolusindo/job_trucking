@@ -8,6 +8,9 @@
     <menu id="21">
       <phrase id="menutext" value="Size" />
     </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Daftar Size" />
+    </menu>
     <menu id="6">
       <phrase id="menutext" value="Job" />
     </menu>
@@ -270,8 +273,11 @@
         <phrase id="fldcaption" value="Ukuran" />
       </field>
     </table>
-    <table id="size">
+    <table id="size3">
       <phrase id="tblcaption" value="Size" />
+    </table>
+    <table id="size_">
+      <phrase id="tblcaption" value="Daftar Size" />
     </table>
   </project>
 </ew-language>

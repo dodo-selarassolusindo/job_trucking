@@ -90,7 +90,8 @@ return [
     "shipper" => \DI\create(Shipper::class),
     "beranda_0" => \DI\create(Beranda0::class),
     "size2" => \DI\create(Size2::class),
-    "size" => \DI\create(Size::class),
+    "size3" => \DI\create(Size3::class),
+    "size_" => \DI\create(Size::class),
 
     // User table
     "usertable" => \DI\get("employees"),

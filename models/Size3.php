@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class Size
+class Size3
 {
     use MessagesTrait;
 
@@ -32,7 +32,7 @@ class Size
     public $TableVar;
 
     // Page object name
-    public $PageObjName = "Size";
+    public $PageObjName = "Size3";
 
     // View file path
     public $View = null;
@@ -45,7 +45,7 @@ class Size
 
     // CSS class/style
     public $ReportContainerClass = "ew-grid";
-    public $CurrentPageName = "sizecontroller";
+    public $CurrentPageName = "size3controller";
 
     // Page headings
     public $Heading = "";
@@ -113,7 +113,7 @@ class Size
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size_.php');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size.php');
         }
 
         // Start timer
@@ -279,8 +279,8 @@ class Size
     protected function setupBreadcrumb()
     {
         global $Breadcrumb, $Language;
-        $Breadcrumb = Breadcrumb::create("index")->add("custom", "size_", CurrentUrl(), "", "size_", true);
-        $this->Heading = $Language->tablePhrase("size_", "TblCaption");
+        $Breadcrumb = Breadcrumb::create("index")->add("custom", "size3", CurrentUrl(), "", "size3", true);
+        $this->Heading = $Language->tablePhrase("size3", "TblCaption");
     }
 
     // Page Load event
