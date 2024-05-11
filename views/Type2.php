@@ -19,7 +19,7 @@ $r = ExecuteRows($q);
     
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
         <div class="inner">
-            <h3 class="text-center"><?= $row['Type_ID'] ?></h3>
+            <h3 class="text-center"><?= $row['TypeID'] ?></h3>
             <p>&nbsp;</p>
         </div>
         <div class="icon">
