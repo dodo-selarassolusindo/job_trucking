@@ -513,6 +513,10 @@ class SizeTypeAdd extends SizeType
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->SizeID);
+        $this->setupLookupOptions($this->TypeID);
+
         // Load default values for add
         $this->loadDefaultValues();
 
@@ -678,7 +682,7 @@ class SizeTypeAdd extends SizeType
             if (IsApi() && $val === null) {
                 $this->SizeID->Visible = false; // Disable update for API request
             } else {
-                $this->SizeID->setFormValue($val, true, $validate);
+                $this->SizeID->setFormValue($val);
             }
         }
 
@@ -688,7 +692,7 @@ class SizeTypeAdd extends SizeType
             if (IsApi() && $val === null) {
                 $this->TypeID->Visible = false; // Disable update for API request
             } else {
-                $this->TypeID->setFormValue($val, true, $validate);
+                $this->TypeID->setFormValue($val);
             }
         }
 
@@ -803,12 +807,50 @@ class SizeTypeAdd extends SizeType
             $this->Size_Type_ID->ViewValue = $this->Size_Type_ID->CurrentValue;
 
             // SizeID
-            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
-            $this->SizeID->ViewValue = FormatNumber($this->SizeID->ViewValue, $this->SizeID->formatPattern());
+            $curVal = strval($this->SizeID->CurrentValue);
+            if ($curVal != "") {
+                $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
+                if ($this->SizeID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
+                    $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
+                        $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
+                    } else {
+                        $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
+                    }
+                }
+            } else {
+                $this->SizeID->ViewValue = null;
+            }
 
             // TypeID
-            $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-            $this->TypeID->ViewValue = FormatNumber($this->TypeID->ViewValue, $this->TypeID->formatPattern());
+            $curVal = strval($this->TypeID->CurrentValue);
+            if ($curVal != "") {
+                $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
+                if ($this->TypeID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
+                    $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
+                        $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
+                    } else {
+                        $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
+                    }
+                }
+            } else {
+                $this->TypeID->ViewValue = null;
+            }
 
             // SizeID
             $this->SizeID->HrefValue = "";
@@ -817,20 +859,74 @@ class SizeTypeAdd extends SizeType
             $this->TypeID->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
             // SizeID
-            $this->SizeID->setupEditAttributes();
-            $this->SizeID->EditValue = $this->SizeID->CurrentValue;
-            $this->SizeID->PlaceHolder = RemoveHtml($this->SizeID->caption());
-            if (strval($this->SizeID->EditValue) != "" && is_numeric($this->SizeID->EditValue)) {
-                $this->SizeID->EditValue = FormatNumber($this->SizeID->EditValue, null);
+            $curVal = trim(strval($this->SizeID->CurrentValue));
+            if ($curVal != "") {
+                $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
+            } else {
+                $this->SizeID->ViewValue = $this->SizeID->Lookup !== null && is_array($this->SizeID->lookupOptions()) && count($this->SizeID->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->SizeID->ViewValue !== null) { // Load from cache
+                $this->SizeID->EditValue = array_values($this->SizeID->lookupOptions());
+                if ($this->SizeID->ViewValue == "") {
+                    $this->SizeID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $this->SizeID->CurrentValue, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->SizeID->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
+                    $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
+                } else {
+                    $this->SizeID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->SizeID->EditValue = $arwrk;
+            }
+            $this->SizeID->PlaceHolder = RemoveHtml($this->SizeID->caption());
 
             // TypeID
-            $this->TypeID->setupEditAttributes();
-            $this->TypeID->EditValue = $this->TypeID->CurrentValue;
-            $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
-            if (strval($this->TypeID->EditValue) != "" && is_numeric($this->TypeID->EditValue)) {
-                $this->TypeID->EditValue = FormatNumber($this->TypeID->EditValue, null);
+            $curVal = trim(strval($this->TypeID->CurrentValue));
+            if ($curVal != "") {
+                $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
+            } else {
+                $this->TypeID->ViewValue = $this->TypeID->Lookup !== null && is_array($this->TypeID->lookupOptions()) && count($this->TypeID->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->TypeID->ViewValue !== null) { // Load from cache
+                $this->TypeID->EditValue = array_values($this->TypeID->lookupOptions());
+                if ($this->TypeID->ViewValue == "") {
+                    $this->TypeID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $this->TypeID->CurrentValue, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->TypeID->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
+                    $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
+                } else {
+                    $this->TypeID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->TypeID->EditValue = $arwrk;
+            }
+            $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
 
             // Add refer script
 
@@ -865,16 +961,10 @@ class SizeTypeAdd extends SizeType
                     $this->SizeID->addErrorMessage(str_replace("%s", $this->SizeID->caption(), $this->SizeID->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->SizeID->FormValue)) {
-                $this->SizeID->addErrorMessage($this->SizeID->getErrorMessage(false));
-            }
             if ($this->TypeID->Visible && $this->TypeID->Required) {
                 if (!$this->TypeID->IsDetailKey && EmptyValue($this->TypeID->FormValue)) {
                     $this->TypeID->addErrorMessage(str_replace("%s", $this->TypeID->caption(), $this->TypeID->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->TypeID->FormValue)) {
-                $this->TypeID->addErrorMessage($this->TypeID->getErrorMessage(false));
             }
 
         // Return validate result
@@ -993,6 +1083,10 @@ class SizeTypeAdd extends SizeType
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_SizeID":
+                    break;
+                case "x_TypeID":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -408,6 +408,10 @@ class SizeTypeDelete extends SizeType
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->SizeID);
+        $this->setupLookupOptions($this->TypeID);
+
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
@@ -629,12 +633,50 @@ class SizeTypeDelete extends SizeType
             $this->Size_Type_ID->ViewValue = $this->Size_Type_ID->CurrentValue;
 
             // SizeID
-            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
-            $this->SizeID->ViewValue = FormatNumber($this->SizeID->ViewValue, $this->SizeID->formatPattern());
+            $curVal = strval($this->SizeID->CurrentValue);
+            if ($curVal != "") {
+                $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
+                if ($this->SizeID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
+                    $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
+                        $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
+                    } else {
+                        $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
+                    }
+                }
+            } else {
+                $this->SizeID->ViewValue = null;
+            }
 
             // TypeID
-            $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-            $this->TypeID->ViewValue = FormatNumber($this->TypeID->ViewValue, $this->TypeID->formatPattern());
+            $curVal = strval($this->TypeID->CurrentValue);
+            if ($curVal != "") {
+                $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
+                if ($this->TypeID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
+                    $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
+                        $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
+                    } else {
+                        $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
+                    }
+                }
+            } else {
+                $this->TypeID->ViewValue = null;
+            }
 
             // Size_Type_ID
             $this->Size_Type_ID->HrefValue = "";
@@ -783,6 +825,10 @@ class SizeTypeDelete extends SizeType
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_SizeID":
+                    break;
+                case "x_TypeID":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

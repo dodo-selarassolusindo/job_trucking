@@ -147,14 +147,18 @@ class SizeType extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->SizeID->InputTextType = "text";
         $this->SizeID->Raw = true;
         $this->SizeID->Nullable = false; // NOT NULL field
         $this->SizeID->Required = true; // Required field
+        $this->SizeID->setSelectMultiple(false); // Select one
+        $this->SizeID->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->SizeID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', false, 'SizeID', ["Ukuran","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Ukuran`");
         $this->SizeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->SizeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->SizeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['SizeID'] = &$this->SizeID;
 
         // TypeID
@@ -173,14 +177,18 @@ class SizeType extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->TypeID->InputTextType = "text";
         $this->TypeID->Raw = true;
         $this->TypeID->Nullable = false; // NOT NULL field
         $this->TypeID->Required = true; // Required field
+        $this->TypeID->setSelectMultiple(false); // Select one
+        $this->TypeID->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->TypeID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->TypeID->Lookup = new Lookup($this->TypeID, 'type', false, 'TypeID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->TypeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->TypeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->TypeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TypeID'] = &$this->TypeID;
 
         // Add Doctrine Cache
@@ -1120,12 +1128,50 @@ class SizeType extends DbTable
         $this->Size_Type_ID->ViewValue = $this->Size_Type_ID->CurrentValue;
 
         // SizeID
-        $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
-        $this->SizeID->ViewValue = FormatNumber($this->SizeID->ViewValue, $this->SizeID->formatPattern());
+        $curVal = strval($this->SizeID->CurrentValue);
+        if ($curVal != "") {
+            $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
+            if ($this->SizeID->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
+                $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
+                    $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
+                } else {
+                    $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
+                }
+            }
+        } else {
+            $this->SizeID->ViewValue = null;
+        }
 
         // TypeID
-        $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-        $this->TypeID->ViewValue = FormatNumber($this->TypeID->ViewValue, $this->TypeID->formatPattern());
+        $curVal = strval($this->TypeID->CurrentValue);
+        if ($curVal != "") {
+            $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
+            if ($this->TypeID->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
+                $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
+                    $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
+                } else {
+                    $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
+                }
+            }
+        } else {
+            $this->TypeID->ViewValue = null;
+        }
 
         // Size_Type_ID
         $this->Size_Type_ID->HrefValue = "";
@@ -1160,19 +1206,11 @@ class SizeType extends DbTable
 
         // SizeID
         $this->SizeID->setupEditAttributes();
-        $this->SizeID->EditValue = $this->SizeID->CurrentValue;
         $this->SizeID->PlaceHolder = RemoveHtml($this->SizeID->caption());
-        if (strval($this->SizeID->EditValue) != "" && is_numeric($this->SizeID->EditValue)) {
-            $this->SizeID->EditValue = FormatNumber($this->SizeID->EditValue, null);
-        }
 
         // TypeID
         $this->TypeID->setupEditAttributes();
-        $this->TypeID->EditValue = $this->TypeID->CurrentValue;
         $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
-        if (strval($this->TypeID->EditValue) != "" && is_numeric($this->TypeID->EditValue)) {
-            $this->TypeID->EditValue = FormatNumber($this->TypeID->EditValue, null);
-        }
 
         // Call Row Rendered event
         $this->rowRendered();
