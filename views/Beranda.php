@@ -10,7 +10,7 @@ $Page->showMessage();
 ?>
 <div class="small-box bg-info">
     <div class="inner">
-        <h3>EXPORT</h3>
+        <h3 class="text-center">EXPORT</h3>
         <p>&nbsp;</p>
     </div>
     <div class="icon">
@@ -21,7 +21,7 @@ $Page->showMessage();
 
 <div class="small-box bg-success">
     <div class="inner">
-        <h3>IMPORT</h3>
+        <h3 class="text-center">IMPORT</h3>
         <p>&nbsp;</p>
     </div>
     <div class="icon">

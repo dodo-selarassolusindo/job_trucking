@@ -16,10 +16,10 @@ $r = ExecuteRows($q);
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>
-    <?php // $warna = $rec_num % 2 == 0 ? 'bg-warning' : 'bg-danger' ?>
+    
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-warning' : 'bg-danger' ?>">
         <div class="inner">
-            <h3><?= $row['Ukuran'] ?></h3>
+            <h3 class="text-center"><?= $row['Ukuran'] ?></h3>
             <p>&nbsp;</p>
         </div>
         <div class="icon">
@@ -28,6 +28,7 @@ $r = ExecuteRows($q);
         <a href="size2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <?php $rec_num++ ?>
+
 <?php } ?>
 
 <div class="small-box bg-info">
