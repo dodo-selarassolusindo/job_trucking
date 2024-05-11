@@ -13,6 +13,7 @@ C:\xampp\htdocs\job_trucking\controllers\JobController.php
 C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
 C:\xampp\htdocs\job_trucking\controllers\OthersController.php
 C:\xampp\htdocs\job_trucking\controllers\ShipperController.php
+C:\xampp\htdocs\job_trucking\controllers\Size2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\SizeController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelsController.php
@@ -69,6 +70,7 @@ C:\xampp\htdocs\job_trucking\models\ShipperEdit.php
 C:\xampp\htdocs\job_trucking\models\ShipperList.php
 C:\xampp\htdocs\job_trucking\models\ShipperView.php
 C:\xampp\htdocs\job_trucking\models\Size.php
+C:\xampp\htdocs\job_trucking\models\Size2.php
 C:\xampp\htdocs\job_trucking\models\SizeAdd.php
 C:\xampp\htdocs\job_trucking\models\SizeDelete.php
 C:\xampp\htdocs\job_trucking\models\SizeEdit.php
@@ -266,6 +268,7 @@ C:\xampp\htdocs\job_trucking\views\ShipperDelete.php
 C:\xampp\htdocs\job_trucking\views\ShipperEdit.php
 C:\xampp\htdocs\job_trucking\views\ShipperList.php
 C:\xampp\htdocs\job_trucking\views\ShipperView.php
+C:\xampp\htdocs\job_trucking\views\Size2.php
 C:\xampp\htdocs\job_trucking\views\SizeAdd.php
 C:\xampp\htdocs\job_trucking\views\SizeDelete.php
 C:\xampp\htdocs\job_trucking\views\SizeEdit.php

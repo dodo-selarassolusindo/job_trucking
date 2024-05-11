@@ -52,6 +52,7 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -313,6 +314,11 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -352,6 +358,7 @@
                 '/shipperview[/{ShipperID}]',
                 '/shipperedit[/{ShipperID}]',
                 '/shipperdelete[/{ShipperID}]',
+                '/size2[/{params:.*}]',
                 '/sizelist[/{SizeID}]',
                 '/sizeadd[/{SizeID}]',
                 '/sizeview[/{SizeID}]',
@@ -406,6 +413,7 @@
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:view',
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:edit',
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:delete',
+                'PHPMaker2024\\prj_job_trucking\\Size2Controller:custom',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:list',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:add',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:view',
@@ -577,6 +585,9 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -616,6 +627,7 @@
                 'view.shipper',
                 'edit.shipper',
                 'delete.shipper',
+                'custom.size2',
                 'list.size',
                 'add.size',
                 'view.size',
@@ -633,6 +645,7 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
                 [],
                 [],
                 [],
@@ -741,6 +754,7 @@
         $o[49],
         $o[50],
         $o[51],
+        $o[52],
     ],
     []
 );

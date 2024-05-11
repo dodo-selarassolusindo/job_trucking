@@ -90,6 +90,7 @@ return [
     "userlevels" => \DI\create(Userlevels::class),
     "exportlog" => \DI\create(Exportlog::class),
     "beranda" => \DI\create(Beranda::class),
+    "size2" => \DI\create(Size2::class),
 
     // User table
     "usertable" => \DI\get("employees"),
