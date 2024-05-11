@@ -56,6 +56,7 @@ class Depo extends DbTable
     // Fields
     public $DepoID;
     public $Nama;
+    public $Kode;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -153,6 +154,30 @@ class Depo extends DbTable
         $this->Nama->Required = true; // Required field
         $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
         $this->Fields['Nama'] = &$this->Nama;
+
+        // Kode
+        $this->Kode = new DbField(
+            $this, // Table
+            'x_Kode', // Variable name
+            'Kode', // Name
+            '`Kode`', // Expression
+            '`Kode`', // Basic search expression
+            200, // Type
+            25, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Kode`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Kode->InputTextType = "text";
+        $this->Kode->Nullable = false; // NOT NULL field
+        $this->Kode->Required = true; // Required field
+        $this->Kode->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Kode'] = &$this->Kode;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -688,6 +713,7 @@ class Depo extends DbTable
         }
         $this->DepoID->DbValue = $row['DepoID'];
         $this->Nama->DbValue = $row['Nama'];
+        $this->Kode->DbValue = $row['Kode'];
     }
 
     // Delete uploaded files
@@ -1049,6 +1075,7 @@ class Depo extends DbTable
         }
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Nama->setDbValue($row['Nama']);
+        $this->Kode->setDbValue($row['Kode']);
     }
 
     // Render list content
@@ -1083,11 +1110,16 @@ class Depo extends DbTable
 
         // Nama
 
+        // Kode
+
         // DepoID
         $this->DepoID->ViewValue = $this->DepoID->CurrentValue;
 
         // Nama
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
+
+        // Kode
+        $this->Kode->ViewValue = $this->Kode->CurrentValue;
 
         // DepoID
         $this->DepoID->HrefValue = "";
@@ -1096,6 +1128,10 @@ class Depo extends DbTable
         // Nama
         $this->Nama->HrefValue = "";
         $this->Nama->TooltipValue = "";
+
+        // Kode
+        $this->Kode->HrefValue = "";
+        $this->Kode->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1123,6 +1159,14 @@ class Depo extends DbTable
         }
         $this->Nama->EditValue = $this->Nama->CurrentValue;
         $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
+
+        // Kode
+        $this->Kode->setupEditAttributes();
+        if (!$this->Kode->Raw) {
+            $this->Kode->CurrentValue = HtmlDecode($this->Kode->CurrentValue);
+        }
+        $this->Kode->EditValue = $this->Kode->CurrentValue;
+        $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1154,9 +1198,11 @@ class Depo extends DbTable
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->DepoID);
                     $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->Kode);
                 } else {
                     $doc->exportCaption($this->DepoID);
                     $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->Kode);
                 }
                 $doc->endExportRow();
             }
@@ -1185,9 +1231,11 @@ class Depo extends DbTable
                     if ($exportPageType == "view") {
                         $doc->exportField($this->DepoID);
                         $doc->exportField($this->Nama);
+                        $doc->exportField($this->Kode);
                     } else {
                         $doc->exportField($this->DepoID);
                         $doc->exportField($this->Nama);
+                        $doc->exportField($this->Kode);
                     }
                     $doc->endExportRow($rowCnt);
                 }

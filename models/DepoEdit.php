@@ -131,6 +131,7 @@ class DepoEdit extends Depo
     {
         $this->DepoID->setVisibility();
         $this->Nama->setVisibility();
+        $this->Kode->setVisibility();
     }
 
     // Constructor
@@ -714,6 +715,16 @@ class DepoEdit extends Depo
                 $this->Nama->setFormValue($val);
             }
         }
+
+        // Check field name 'Kode' first before field var 'x_Kode'
+        $val = $CurrentForm->hasValue("Kode") ? $CurrentForm->getValue("Kode") : $CurrentForm->getValue("x_Kode");
+        if (!$this->Kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Kode->Visible = false; // Disable update for API request
+            } else {
+                $this->Kode->setFormValue($val);
+            }
+        }
     }
 
     // Restore form values
@@ -722,6 +733,7 @@ class DepoEdit extends Depo
         global $CurrentForm;
         $this->DepoID->CurrentValue = $this->DepoID->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
+        $this->Kode->CurrentValue = $this->Kode->FormValue;
     }
 
     /**
@@ -764,6 +776,7 @@ class DepoEdit extends Depo
         $this->rowSelected($row);
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Nama->setDbValue($row['Nama']);
+        $this->Kode->setDbValue($row['Kode']);
     }
 
     // Return a row with default values
@@ -772,6 +785,7 @@ class DepoEdit extends Depo
         $row = [];
         $row['DepoID'] = $this->DepoID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         return $row;
     }
 
@@ -812,6 +826,9 @@ class DepoEdit extends Depo
         // Nama
         $this->Nama->RowCssClass = "row";
 
+        // Kode
+        $this->Kode->RowCssClass = "row";
+
         // View row
         if ($this->RowType == RowType::VIEW) {
             // DepoID
@@ -820,11 +837,17 @@ class DepoEdit extends Depo
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // DepoID
             $this->DepoID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
             // DepoID
             $this->DepoID->setupEditAttributes();
@@ -838,6 +861,14 @@ class DepoEdit extends Depo
             $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
             $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
+            // Kode
+            $this->Kode->setupEditAttributes();
+            if (!$this->Kode->Raw) {
+                $this->Kode->CurrentValue = HtmlDecode($this->Kode->CurrentValue);
+            }
+            $this->Kode->EditValue = HtmlEncode($this->Kode->CurrentValue);
+            $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
+
             // Edit refer script
 
             // DepoID
@@ -845,6 +876,9 @@ class DepoEdit extends Depo
 
             // Nama
             $this->Nama->HrefValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -874,6 +908,11 @@ class DepoEdit extends Depo
             if ($this->Nama->Visible && $this->Nama->Required) {
                 if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
                     $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
+                }
+            }
+            if ($this->Kode->Visible && $this->Kode->Required) {
+                if (!$this->Kode->IsDetailKey && EmptyValue($this->Kode->FormValue)) {
+                    $this->Kode->addErrorMessage(str_replace("%s", $this->Kode->caption(), $this->Kode->RequiredErrorMessage));
                 }
             }
 
@@ -967,6 +1006,9 @@ class DepoEdit extends Depo
 
         // Nama
         $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, $this->Nama->ReadOnly);
+
+        // Kode
+        $this->Kode->setDbValueDef($rsnew, $this->Kode->CurrentValue, $this->Kode->ReadOnly);
         return $rsnew;
     }
 
@@ -978,6 +1020,9 @@ class DepoEdit extends Depo
     {
         if (isset($row['Nama'])) { // Nama
             $this->Nama->CurrentValue = $row['Nama'];
+        }
+        if (isset($row['Kode'])) { // Kode
+            $this->Kode->CurrentValue = $row['Kode'];
         }
     }
 

@@ -121,6 +121,9 @@
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />
       </field>
+      <field id="kode">
+        <phrase id="fldcaption" value="Kode" />
+      </field>
     </table>
     <table id="employees">
       <phrase id="tblcaption" value="Users" />

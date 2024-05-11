@@ -155,6 +155,7 @@ class DepoList extends Depo
     {
         $this->DepoID->setVisibility();
         $this->Nama->setVisibility();
+        $this->Kode->setVisibility();
     }
 
     // Constructor
@@ -1043,6 +1044,7 @@ class DepoList extends Depo
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->DepoID->AdvancedSearch->toJson(), ","); // Field DepoID
         $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
+        $filterList = Concat($filterList, $this->Kode->AdvancedSearch->toJson(), ","); // Field Kode
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1097,6 +1099,14 @@ class DepoList extends Depo
         $this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
         $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
         $this->Nama->AdvancedSearch->save();
+
+        // Field Kode
+        $this->Kode->AdvancedSearch->SearchValue = @$filter["x_Kode"];
+        $this->Kode->AdvancedSearch->SearchOperator = @$filter["z_Kode"];
+        $this->Kode->AdvancedSearch->SearchCondition = @$filter["v_Kode"];
+        $this->Kode->AdvancedSearch->SearchValue2 = @$filter["y_Kode"];
+        $this->Kode->AdvancedSearch->SearchOperator2 = @$filter["w_Kode"];
+        $this->Kode->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1137,6 +1147,7 @@ class DepoList extends Depo
         // Fields to search
         $searchFlds = [];
         $searchFlds[] = &$this->Nama;
+        $searchFlds[] = &$this->Kode;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1217,6 +1228,7 @@ class DepoList extends Depo
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->DepoID); // DepoID
             $this->updateSort($this->Nama); // Nama
+            $this->updateSort($this->Kode); // Kode
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1243,6 +1255,7 @@ class DepoList extends Depo
                 $this->setSessionOrderBy($orderBy);
                 $this->DepoID->setSort("");
                 $this->Nama->setSort("");
+                $this->Kode->setSort("");
             }
 
             // Reset start position
@@ -1494,6 +1507,7 @@ class DepoList extends Depo
             $item->Visible = $this->UseColumnVisibility;
             $this->createColumnOption($option, "DepoID");
             $this->createColumnOption($option, "Nama");
+            $this->createColumnOption($option, "Kode");
         }
 
         // Set up custom actions
@@ -1930,6 +1944,7 @@ class DepoList extends Depo
         $this->rowSelected($row);
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Nama->setDbValue($row['Nama']);
+        $this->Kode->setDbValue($row['Kode']);
     }
 
     // Return a row with default values
@@ -1938,6 +1953,7 @@ class DepoList extends Depo
         $row = [];
         $row['DepoID'] = $this->DepoID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         return $row;
     }
 
@@ -1982,6 +1998,8 @@ class DepoList extends Depo
 
         // Nama
 
+        // Kode
+
         // View row
         if ($this->RowType == RowType::VIEW) {
             // DepoID
@@ -1990,6 +2008,9 @@ class DepoList extends Depo
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // DepoID
             $this->DepoID->HrefValue = "";
             $this->DepoID->TooltipValue = "";
@@ -1997,6 +2018,10 @@ class DepoList extends Depo
             // Nama
             $this->Nama->HrefValue = "";
             $this->Nama->TooltipValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
+            $this->Kode->TooltipValue = "";
         }
 
         // Call Row Rendered event

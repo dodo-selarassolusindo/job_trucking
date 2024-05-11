@@ -153,6 +153,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_depo_Nama" class="depo_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
 <?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+        <th data-name="Kode" class="<?= $Page->Kode->headerCellClass() ?>"><div id="elh_depo_Kode" class="depo_Kode"><?= $Page->renderFieldHeader($Page->Kode) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -193,6 +196,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_depo_Nama" class="el_depo_Nama">
 <span<?= $Page->Nama->viewAttributes() ?>>
 <?= $Page->Nama->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->Kode->Visible) { // Kode ?>
+        <td data-name="Kode"<?= $Page->Kode->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_depo_Kode" class="el_depo_Kode">
+<span<?= $Page->Kode->viewAttributes() ?>>
+<?= $Page->Kode->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

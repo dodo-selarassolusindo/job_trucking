@@ -73,6 +73,17 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+    <tr id="r_Kode"<?= $Page->Kode->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_depo_Kode"><?= $Page->Kode->caption() ?></span></td>
+        <td data-name="Kode"<?= $Page->Kode->cellAttributes() ?>>
+<span id="el_depo_Kode">
+<span<?= $Page->Kode->viewAttributes() ?>>
+<?= $Page->Kode->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 </main>
