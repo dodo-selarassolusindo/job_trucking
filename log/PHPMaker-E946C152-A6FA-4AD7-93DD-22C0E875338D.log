@@ -20,6 +20,7 @@ C:\xampp\htdocs\job_trucking\controllers\Size2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\Size3Controller.php
 C:\xampp\htdocs\job_trucking\controllers\SizeController.php
 C:\xampp\htdocs\job_trucking\controllers\SizeTypeController.php
+C:\xampp\htdocs\job_trucking\controllers\Type2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\TypeController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelsController.php
@@ -108,6 +109,7 @@ C:\xampp\htdocs\job_trucking\models\SizeTypeList.php
 C:\xampp\htdocs\job_trucking\models\SizeTypeView.php
 C:\xampp\htdocs\job_trucking\models\SizeView.php
 C:\xampp\htdocs\job_trucking\models\Type.php
+C:\xampp\htdocs\job_trucking\models\Type2.php
 C:\xampp\htdocs\job_trucking\models\TypeAdd.php
 C:\xampp\htdocs\job_trucking\models\TypeDelete.php
 C:\xampp\htdocs\job_trucking\models\TypeEdit.php
@@ -337,6 +339,7 @@ C:\xampp\htdocs\job_trucking\views\SizeTypeEdit.php
 C:\xampp\htdocs\job_trucking\views\SizeTypeList.php
 C:\xampp\htdocs\job_trucking\views\SizeTypeView.php
 C:\xampp\htdocs\job_trucking\views\SizeView.php
+C:\xampp\htdocs\job_trucking\views\Type2.php
 C:\xampp\htdocs\job_trucking\views\TypeAdd.php
 C:\xampp\htdocs\job_trucking\views\TypeDelete.php
 C:\xampp\htdocs\job_trucking\views\TypeEdit.php

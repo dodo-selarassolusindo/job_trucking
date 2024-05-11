@@ -79,6 +79,7 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -475,6 +476,11 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -541,6 +547,7 @@
                 '/sizetypeview[/{Size_Type_ID}]',
                 '/sizetypeedit[/{Size_Type_ID}]',
                 '/sizetypedelete[/{Size_Type_ID}]',
+                '/type2[/{params:.*}]',
                 '/typelist[/{TypeID}]',
                 '/typeadd[/{TypeID}]',
                 '/typeview[/{TypeID}]',
@@ -622,6 +629,7 @@
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:view',
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:edit',
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:delete',
+                'PHPMaker2024\\prj_job_trucking\\Type2Controller:custom',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:list',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:add',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:view',
@@ -874,6 +882,9 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -940,6 +951,7 @@
                 'view.size_type',
                 'edit.size_type',
                 'delete.size_type',
+                'custom.type2',
                 'list.type',
                 'add.type',
                 'view.type',
@@ -957,6 +969,7 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
                 [],
                 [],
                 [],
@@ -1119,6 +1132,7 @@
         $o[76],
         $o[77],
         $o[78],
+        $o[79],
     ],
     []
 );

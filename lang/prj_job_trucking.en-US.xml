@@ -1,15 +1,18 @@
-<ew-language date="2024/5/11" id="en-US" desc="English" author="e.World Technology Limited">
+<ew-language date="2024/5/12" id="en-US" desc="English" author="e.World Technology Limited">
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
     <menu id="11">
-      <phrase id="menutext" value="Beranda" />
+      <phrase id="menutext" value="Daftar Job" />
     </menu>
     <menu id="16">
       <phrase id="menutext" value="Size" />
     </menu>
     <menu id="17">
-      <phrase id="menutext" value="Cargo Size" />
+      <phrase id="menutext" value="Container Size" />
+    </menu>
+    <menu id="40">
+      <phrase id="menutext" value="Container Type" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Master" />
@@ -102,7 +105,7 @@
       </field>
     </table>
     <table id="beranda">
-      <phrase id="tblcaption" value="Beranda" />
+      <phrase id="tblcaption" value="Daftar Job" />
     </table>
     <table id="customer">
       <phrase id="tblcaption" value="Customer" />
@@ -344,7 +347,7 @@
       <phrase id="tblcaption" value="Size" />
     </table>
     <table id="size3">
-      <phrase id="tblcaption" value="Cargo Size" />
+      <phrase id="tblcaption" value="Container Size" />
     </table>
     <table id="type">
       <phrase id="tblcaption" value="Type" />
@@ -375,6 +378,9 @@
       <field id="userlevelname">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
+    </table>
+    <table id="type2">
+      <phrase id="tblcaption" value="Container Type" />
     </table>
   </project>
 </ew-language>

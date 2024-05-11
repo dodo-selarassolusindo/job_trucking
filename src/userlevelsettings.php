@@ -57,7 +57,9 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","-2","0"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"]];
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","-2","72"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","0","0"]];
 
 /**
  * Tables
@@ -71,7 +73,7 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
  * [5] string URL (for OthersController::index)
  */
 $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","audittraillist"],
-    ["beranda.php","beranda","Beranda",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","beranda"],
+    ["beranda.php","beranda","Daftar Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","beranda"],
     ["customer","customer","Customer",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","customerlist"],
     ["depo","depo","Depo",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","depolist"],
     ["employees","employees","Users",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","employeeslist"],
@@ -84,7 +86,8 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["size","size","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizelist"],
     ["size_type","size_type","Size & Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizetypelist"],
     ["size2.php","size2","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size2"],
-    ["size3.php","size3","Cargo Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size3"],
+    ["size3.php","size3","Container Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size3"],
     ["type","type","Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","typelist"],
     ["userlevelpermissions","userlevelpermissions","Hak Akses (Detail)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelpermissionslist"],
-    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"]];
+    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"],
+    ["type2.php","type2","Container Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","type2"]];

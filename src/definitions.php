@@ -97,6 +97,7 @@ return [
     "type" => \DI\create(Type::class),
     "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
     "userlevels" => \DI\create(Userlevels::class),
+    "type2" => \DI\create(Type2::class),
 
     // User table
     "usertable" => \DI\get("employees"),
