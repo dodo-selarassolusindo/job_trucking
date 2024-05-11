@@ -15,7 +15,7 @@ $q = '
     from
         size_type st
     where
-        st.SizeID = '.Get['size'].'
+        st.SizeID = '.$_GET['size'].'
     ';
 $r = ExecuteRows($q);
 ?>
