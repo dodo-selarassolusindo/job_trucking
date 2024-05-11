@@ -130,6 +130,7 @@ class PelabuhanAdd extends Pelabuhan
     public function setVisibility()
     {
         $this->PelabuhanID->Visible = false;
+        $this->Kode->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -671,6 +672,16 @@ class PelabuhanAdd extends Pelabuhan
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
+        // Check field name 'Kode' first before field var 'x_Kode'
+        $val = $CurrentForm->hasValue("Kode") ? $CurrentForm->getValue("Kode") : $CurrentForm->getValue("x_Kode");
+        if (!$this->Kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Kode->Visible = false; // Disable update for API request
+            } else {
+                $this->Kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'Nama' first before field var 'x_Nama'
         $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
         if (!$this->Nama->IsDetailKey) {
@@ -689,6 +700,7 @@ class PelabuhanAdd extends Pelabuhan
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->Kode->CurrentValue = $this->Kode->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
     }
 
@@ -731,6 +743,7 @@ class PelabuhanAdd extends Pelabuhan
         // Call Row Selected event
         $this->rowSelected($row);
         $this->PelabuhanID->setDbValue($row['PelabuhanID']);
+        $this->Kode->setDbValue($row['Kode']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -739,6 +752,7 @@ class PelabuhanAdd extends Pelabuhan
     {
         $row = [];
         $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -777,6 +791,9 @@ class PelabuhanAdd extends Pelabuhan
         // PelabuhanID
         $this->PelabuhanID->RowCssClass = "row";
 
+        // Kode
+        $this->Kode->RowCssClass = "row";
+
         // Nama
         $this->Nama->RowCssClass = "row";
 
@@ -785,12 +802,26 @@ class PelabuhanAdd extends Pelabuhan
             // PelabuhanID
             $this->PelabuhanID->ViewValue = $this->PelabuhanID->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
+
+            // Kode
+            $this->Kode->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
+            // Kode
+            $this->Kode->setupEditAttributes();
+            if (!$this->Kode->Raw) {
+                $this->Kode->CurrentValue = HtmlDecode($this->Kode->CurrentValue);
+            }
+            $this->Kode->EditValue = HtmlEncode($this->Kode->CurrentValue);
+            $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
+
             // Nama
             $this->Nama->setupEditAttributes();
             if (!$this->Nama->Raw) {
@@ -800,6 +831,9 @@ class PelabuhanAdd extends Pelabuhan
             $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
             // Add refer script
+
+            // Kode
+            $this->Kode->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -824,6 +858,11 @@ class PelabuhanAdd extends Pelabuhan
             return true;
         }
         $validateForm = true;
+            if ($this->Kode->Visible && $this->Kode->Required) {
+                if (!$this->Kode->IsDetailKey && EmptyValue($this->Kode->FormValue)) {
+                    $this->Kode->addErrorMessage(str_replace("%s", $this->Kode->caption(), $this->Kode->RequiredErrorMessage));
+                }
+            }
             if ($this->Nama->Visible && $this->Nama->Required) {
                 if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
                     $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
@@ -900,6 +939,9 @@ class PelabuhanAdd extends Pelabuhan
         global $Security;
         $rsnew = [];
 
+        // Kode
+        $this->Kode->setDbValueDef($rsnew, $this->Kode->CurrentValue, false);
+
         // Nama
         $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
         return $rsnew;
@@ -911,6 +953,9 @@ class PelabuhanAdd extends Pelabuhan
      */
     protected function restoreAddFormFromRow($row)
     {
+        if (isset($row['Kode'])) { // Kode
+            $this->Kode->setFormValue($row['Kode']);
+        }
         if (isset($row['Nama'])) { // Nama
             $this->Nama->setFormValue($row['Nama']);
         }

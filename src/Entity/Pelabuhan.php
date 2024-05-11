@@ -30,6 +30,7 @@ class Pelabuhan extends AbstractEntity
 {
     public static array $propertyNames = [
         'PelabuhanID' => 'pelabuhanId',
+        'Kode' => 'kode',
         'Nama' => 'nama',
     ];
 
@@ -37,6 +38,9 @@ class Pelabuhan extends AbstractEntity
     #[Column(name: "PelabuhanID", type: "integer", unique: true)]
     #[GeneratedValue]
     private int $pelabuhanId;
+
+    #[Column(name: "Kode", type: "string")]
+    private string $kode;
 
     #[Column(name: "Nama", type: "string")]
     private string $nama;
@@ -49,6 +53,17 @@ class Pelabuhan extends AbstractEntity
     public function setPelabuhanId(int $value): static
     {
         $this->pelabuhanId = $value;
+        return $this;
+    }
+
+    public function getKode(): string
+    {
+        return HtmlDecode($this->kode);
+    }
+
+    public function setKode(string $value): static
+    {
+        $this->kode = RemoveXss($value);
         return $this;
     }
 

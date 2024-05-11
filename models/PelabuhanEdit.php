@@ -130,6 +130,7 @@ class PelabuhanEdit extends Pelabuhan
     public function setVisibility()
     {
         $this->PelabuhanID->setVisibility();
+        $this->Kode->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -705,6 +706,16 @@ class PelabuhanEdit extends Pelabuhan
             $this->PelabuhanID->setFormValue($val);
         }
 
+        // Check field name 'Kode' first before field var 'x_Kode'
+        $val = $CurrentForm->hasValue("Kode") ? $CurrentForm->getValue("Kode") : $CurrentForm->getValue("x_Kode");
+        if (!$this->Kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Kode->Visible = false; // Disable update for API request
+            } else {
+                $this->Kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'Nama' first before field var 'x_Nama'
         $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
         if (!$this->Nama->IsDetailKey) {
@@ -721,6 +732,7 @@ class PelabuhanEdit extends Pelabuhan
     {
         global $CurrentForm;
         $this->PelabuhanID->CurrentValue = $this->PelabuhanID->FormValue;
+        $this->Kode->CurrentValue = $this->Kode->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
     }
 
@@ -763,6 +775,7 @@ class PelabuhanEdit extends Pelabuhan
         // Call Row Selected event
         $this->rowSelected($row);
         $this->PelabuhanID->setDbValue($row['PelabuhanID']);
+        $this->Kode->setDbValue($row['Kode']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -771,6 +784,7 @@ class PelabuhanEdit extends Pelabuhan
     {
         $row = [];
         $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -809,6 +823,9 @@ class PelabuhanEdit extends Pelabuhan
         // PelabuhanID
         $this->PelabuhanID->RowCssClass = "row";
 
+        // Kode
+        $this->Kode->RowCssClass = "row";
+
         // Nama
         $this->Nama->RowCssClass = "row";
 
@@ -817,11 +834,17 @@ class PelabuhanEdit extends Pelabuhan
             // PelabuhanID
             $this->PelabuhanID->ViewValue = $this->PelabuhanID->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // PelabuhanID
             $this->PelabuhanID->HrefValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -829,6 +852,14 @@ class PelabuhanEdit extends Pelabuhan
             // PelabuhanID
             $this->PelabuhanID->setupEditAttributes();
             $this->PelabuhanID->EditValue = $this->PelabuhanID->CurrentValue;
+
+            // Kode
+            $this->Kode->setupEditAttributes();
+            if (!$this->Kode->Raw) {
+                $this->Kode->CurrentValue = HtmlDecode($this->Kode->CurrentValue);
+            }
+            $this->Kode->EditValue = HtmlEncode($this->Kode->CurrentValue);
+            $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
 
             // Nama
             $this->Nama->setupEditAttributes();
@@ -842,6 +873,9 @@ class PelabuhanEdit extends Pelabuhan
 
             // PelabuhanID
             $this->PelabuhanID->HrefValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -869,6 +903,11 @@ class PelabuhanEdit extends Pelabuhan
             if ($this->PelabuhanID->Visible && $this->PelabuhanID->Required) {
                 if (!$this->PelabuhanID->IsDetailKey && EmptyValue($this->PelabuhanID->FormValue)) {
                     $this->PelabuhanID->addErrorMessage(str_replace("%s", $this->PelabuhanID->caption(), $this->PelabuhanID->RequiredErrorMessage));
+                }
+            }
+            if ($this->Kode->Visible && $this->Kode->Required) {
+                if (!$this->Kode->IsDetailKey && EmptyValue($this->Kode->FormValue)) {
+                    $this->Kode->addErrorMessage(str_replace("%s", $this->Kode->caption(), $this->Kode->RequiredErrorMessage));
                 }
             }
             if ($this->Nama->Visible && $this->Nama->Required) {
@@ -965,6 +1004,9 @@ class PelabuhanEdit extends Pelabuhan
         global $Security;
         $rsnew = [];
 
+        // Kode
+        $this->Kode->setDbValueDef($rsnew, $this->Kode->CurrentValue, $this->Kode->ReadOnly);
+
         // Nama
         $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, $this->Nama->ReadOnly);
         return $rsnew;
@@ -976,6 +1018,9 @@ class PelabuhanEdit extends Pelabuhan
      */
     protected function restoreEditFormFromRow($row)
     {
+        if (isset($row['Kode'])) { // Kode
+            $this->Kode->CurrentValue = $row['Kode'];
+        }
         if (isset($row['Nama'])) { // Nama
             $this->Nama->CurrentValue = $row['Nama'];
         }

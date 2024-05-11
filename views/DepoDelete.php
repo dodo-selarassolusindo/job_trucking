@@ -53,11 +53,11 @@ $Page->showMessage();
 <?php if ($Page->DepoID->Visible) { // DepoID ?>
         <th class="<?= $Page->DepoID->headerCellClass() ?>"><span id="elh_depo_DepoID" class="depo_DepoID"><?= $Page->DepoID->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-        <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_depo_Nama" class="depo_Nama"><?= $Page->Nama->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->Kode->Visible) { // Kode ?>
         <th class="<?= $Page->Kode->headerCellClass() ?>"><span id="elh_depo_Kode" class="depo_Kode"><?= $Page->Kode->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->Nama->Visible) { // Nama ?>
+        <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_depo_Nama" class="depo_Nama"><?= $Page->Nama->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -88,19 +88,19 @@ while ($Page->fetch()) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-        <td<?= $Page->Nama->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->Nama->viewAttributes() ?>>
-<?= $Page->Nama->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->Kode->Visible) { // Kode ?>
         <td<?= $Page->Kode->cellAttributes() ?>>
 <span id="">
 <span<?= $Page->Kode->viewAttributes() ?>>
 <?= $Page->Kode->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->Nama->Visible) { // Nama ?>
+        <td<?= $Page->Nama->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->Nama->viewAttributes() ?>>
+<?= $Page->Nama->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

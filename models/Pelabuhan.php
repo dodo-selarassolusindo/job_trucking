@@ -55,6 +55,7 @@ class Pelabuhan extends DbTable
 
     // Fields
     public $PelabuhanID;
+    public $Kode;
     public $Nama;
 
     // Page ID
@@ -129,6 +130,30 @@ class Pelabuhan extends DbTable
         $this->PelabuhanID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->PelabuhanID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['PelabuhanID'] = &$this->PelabuhanID;
+
+        // Kode
+        $this->Kode = new DbField(
+            $this, // Table
+            'x_Kode', // Variable name
+            'Kode', // Name
+            '`Kode`', // Expression
+            '`Kode`', // Basic search expression
+            200, // Type
+            25, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Kode`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Kode->InputTextType = "text";
+        $this->Kode->Nullable = false; // NOT NULL field
+        $this->Kode->Required = true; // Required field
+        $this->Kode->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Kode'] = &$this->Kode;
 
         // Nama
         $this->Nama = new DbField(
@@ -687,6 +712,7 @@ class Pelabuhan extends DbTable
             return;
         }
         $this->PelabuhanID->DbValue = $row['PelabuhanID'];
+        $this->Kode->DbValue = $row['Kode'];
         $this->Nama->DbValue = $row['Nama'];
     }
 
@@ -1048,6 +1074,7 @@ class Pelabuhan extends DbTable
             return;
         }
         $this->PelabuhanID->setDbValue($row['PelabuhanID']);
+        $this->Kode->setDbValue($row['Kode']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -1081,10 +1108,15 @@ class Pelabuhan extends DbTable
 
         // PelabuhanID
 
+        // Kode
+
         // Nama
 
         // PelabuhanID
         $this->PelabuhanID->ViewValue = $this->PelabuhanID->CurrentValue;
+
+        // Kode
+        $this->Kode->ViewValue = $this->Kode->CurrentValue;
 
         // Nama
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -1092,6 +1124,10 @@ class Pelabuhan extends DbTable
         // PelabuhanID
         $this->PelabuhanID->HrefValue = "";
         $this->PelabuhanID->TooltipValue = "";
+
+        // Kode
+        $this->Kode->HrefValue = "";
+        $this->Kode->TooltipValue = "";
 
         // Nama
         $this->Nama->HrefValue = "";
@@ -1115,6 +1151,14 @@ class Pelabuhan extends DbTable
         // PelabuhanID
         $this->PelabuhanID->setupEditAttributes();
         $this->PelabuhanID->EditValue = $this->PelabuhanID->CurrentValue;
+
+        // Kode
+        $this->Kode->setupEditAttributes();
+        if (!$this->Kode->Raw) {
+            $this->Kode->CurrentValue = HtmlDecode($this->Kode->CurrentValue);
+        }
+        $this->Kode->EditValue = $this->Kode->CurrentValue;
+        $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
 
         // Nama
         $this->Nama->setupEditAttributes();
@@ -1153,9 +1197,11 @@ class Pelabuhan extends DbTable
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->PelabuhanID);
+                    $doc->exportCaption($this->Kode);
                     $doc->exportCaption($this->Nama);
                 } else {
                     $doc->exportCaption($this->PelabuhanID);
+                    $doc->exportCaption($this->Kode);
                     $doc->exportCaption($this->Nama);
                 }
                 $doc->endExportRow();
@@ -1184,9 +1230,11 @@ class Pelabuhan extends DbTable
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->PelabuhanID);
+                        $doc->exportField($this->Kode);
                         $doc->exportField($this->Nama);
                     } else {
                         $doc->exportField($this->PelabuhanID);
+                        $doc->exportField($this->Kode);
                         $doc->exportField($this->Nama);
                     }
                     $doc->endExportRow($rowCnt);

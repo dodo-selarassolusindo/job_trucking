@@ -150,6 +150,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->PelabuhanID->Visible) { // PelabuhanID ?>
         <th data-name="PelabuhanID" class="<?= $Page->PelabuhanID->headerCellClass() ?>"><div id="elh_pelabuhan_PelabuhanID" class="pelabuhan_PelabuhanID"><?= $Page->renderFieldHeader($Page->PelabuhanID) ?></div></th>
 <?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+        <th data-name="Kode" class="<?= $Page->Kode->headerCellClass() ?>"><div id="elh_pelabuhan_Kode" class="pelabuhan_Kode"><?= $Page->renderFieldHeader($Page->Kode) ?></div></th>
+<?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_pelabuhan_Nama" class="pelabuhan_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
 <?php } ?>
@@ -185,6 +188,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_pelabuhan_PelabuhanID" class="el_pelabuhan_PelabuhanID">
 <span<?= $Page->PelabuhanID->viewAttributes() ?>>
 <?= $Page->PelabuhanID->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->Kode->Visible) { // Kode ?>
+        <td data-name="Kode"<?= $Page->Kode->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_pelabuhan_Kode" class="el_pelabuhan_Kode">
+<span<?= $Page->Kode->viewAttributes() ?>>
+<?= $Page->Kode->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

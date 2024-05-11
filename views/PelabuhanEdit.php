@@ -29,6 +29,7 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
             ["PelabuhanID", [fields.PelabuhanID.visible && fields.PelabuhanID.required ? ew.Validators.required(fields.PelabuhanID.caption) : null], fields.PelabuhanID.isInvalid],
+            ["Kode", [fields.Kode.visible && fields.Kode.required ? ew.Validators.required(fields.Kode.caption) : null], fields.Kode.isInvalid],
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid]
         ])
 
@@ -77,6 +78,18 @@ loadjs.ready("head", function () {
 <span<?= $Page->PelabuhanID->viewAttributes() ?>>
 <input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->PelabuhanID->getDisplayValue($Page->PelabuhanID->EditValue))) ?>"></span>
 <input type="hidden" data-table="pelabuhan" data-field="x_PelabuhanID" data-hidden="1" name="x_PelabuhanID" id="x_PelabuhanID" value="<?= HtmlEncode($Page->PelabuhanID->CurrentValue) ?>">
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+    <div id="r_Kode"<?= $Page->Kode->rowAttributes() ?>>
+        <label id="elh_pelabuhan_Kode" for="x_Kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->Kode->caption() ?><?= $Page->Kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->Kode->cellAttributes() ?>>
+<span id="el_pelabuhan_Kode">
+<input type="<?= $Page->Kode->getInputTextType() ?>" name="x_Kode" id="x_Kode" data-table="pelabuhan" data-field="x_Kode" value="<?= $Page->Kode->EditValue ?>" size="30" maxlength="25" placeholder="<?= HtmlEncode($Page->Kode->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Kode->formatPattern()) ?>"<?= $Page->Kode->editAttributes() ?> aria-describedby="x_Kode_help">
+<?= $Page->Kode->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->Kode->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

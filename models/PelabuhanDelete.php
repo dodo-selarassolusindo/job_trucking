@@ -130,6 +130,7 @@ class PelabuhanDelete extends Pelabuhan
     public function setVisibility()
     {
         $this->PelabuhanID->setVisibility();
+        $this->Kode->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -590,6 +591,7 @@ class PelabuhanDelete extends Pelabuhan
         // Call Row Selected event
         $this->rowSelected($row);
         $this->PelabuhanID->setDbValue($row['PelabuhanID']);
+        $this->Kode->setDbValue($row['Kode']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -598,6 +600,7 @@ class PelabuhanDelete extends Pelabuhan
     {
         $row = [];
         $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -616,6 +619,8 @@ class PelabuhanDelete extends Pelabuhan
 
         // PelabuhanID
 
+        // Kode
+
         // Nama
 
         // View row
@@ -623,12 +628,19 @@ class PelabuhanDelete extends Pelabuhan
             // PelabuhanID
             $this->PelabuhanID->ViewValue = $this->PelabuhanID->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // PelabuhanID
             $this->PelabuhanID->HrefValue = "";
             $this->PelabuhanID->TooltipValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
+            $this->Kode->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

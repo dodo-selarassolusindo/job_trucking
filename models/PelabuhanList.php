@@ -154,6 +154,7 @@ class PelabuhanList extends Pelabuhan
     public function setVisibility()
     {
         $this->PelabuhanID->setVisibility();
+        $this->Kode->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -1042,6 +1043,7 @@ class PelabuhanList extends Pelabuhan
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->PelabuhanID->AdvancedSearch->toJson(), ","); // Field PelabuhanID
+        $filterList = Concat($filterList, $this->Kode->AdvancedSearch->toJson(), ","); // Field Kode
         $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1090,6 +1092,14 @@ class PelabuhanList extends Pelabuhan
         $this->PelabuhanID->AdvancedSearch->SearchOperator2 = @$filter["w_PelabuhanID"];
         $this->PelabuhanID->AdvancedSearch->save();
 
+        // Field Kode
+        $this->Kode->AdvancedSearch->SearchValue = @$filter["x_Kode"];
+        $this->Kode->AdvancedSearch->SearchOperator = @$filter["z_Kode"];
+        $this->Kode->AdvancedSearch->SearchCondition = @$filter["v_Kode"];
+        $this->Kode->AdvancedSearch->SearchValue2 = @$filter["y_Kode"];
+        $this->Kode->AdvancedSearch->SearchOperator2 = @$filter["w_Kode"];
+        $this->Kode->AdvancedSearch->save();
+
         // Field Nama
         $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
         $this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
@@ -1136,6 +1146,7 @@ class PelabuhanList extends Pelabuhan
 
         // Fields to search
         $searchFlds = [];
+        $searchFlds[] = &$this->Kode;
         $searchFlds[] = &$this->Nama;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
@@ -1216,6 +1227,7 @@ class PelabuhanList extends Pelabuhan
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->PelabuhanID); // PelabuhanID
+            $this->updateSort($this->Kode); // Kode
             $this->updateSort($this->Nama); // Nama
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1242,6 +1254,7 @@ class PelabuhanList extends Pelabuhan
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->PelabuhanID->setSort("");
+                $this->Kode->setSort("");
                 $this->Nama->setSort("");
             }
 
@@ -1493,6 +1506,7 @@ class PelabuhanList extends Pelabuhan
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
             $this->createColumnOption($option, "PelabuhanID");
+            $this->createColumnOption($option, "Kode");
             $this->createColumnOption($option, "Nama");
         }
 
@@ -1929,6 +1943,7 @@ class PelabuhanList extends Pelabuhan
         // Call Row Selected event
         $this->rowSelected($row);
         $this->PelabuhanID->setDbValue($row['PelabuhanID']);
+        $this->Kode->setDbValue($row['Kode']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -1937,6 +1952,7 @@ class PelabuhanList extends Pelabuhan
     {
         $row = [];
         $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
+        $row['Kode'] = $this->Kode->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -1980,6 +1996,8 @@ class PelabuhanList extends Pelabuhan
 
         // PelabuhanID
 
+        // Kode
+
         // Nama
 
         // View row
@@ -1987,12 +2005,19 @@ class PelabuhanList extends Pelabuhan
             // PelabuhanID
             $this->PelabuhanID->ViewValue = $this->PelabuhanID->CurrentValue;
 
+            // Kode
+            $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // PelabuhanID
             $this->PelabuhanID->HrefValue = "";
             $this->PelabuhanID->TooltipValue = "";
+
+            // Kode
+            $this->Kode->HrefValue = "";
+            $this->Kode->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

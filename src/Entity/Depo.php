@@ -30,8 +30,8 @@ class Depo extends AbstractEntity
 {
     public static array $propertyNames = [
         'DepoID' => 'depoId',
-        'Nama' => 'nama',
         'Kode' => 'kode',
+        'Nama' => 'nama',
     ];
 
     #[Id]
@@ -39,11 +39,11 @@ class Depo extends AbstractEntity
     #[GeneratedValue]
     private int $depoId;
 
-    #[Column(name: "Nama", type: "string")]
-    private string $nama;
-
     #[Column(name: "Kode", type: "string")]
     private string $kode;
+
+    #[Column(name: "Nama", type: "string")]
+    private string $nama;
 
     public function getDepoId(): int
     {
@@ -56,17 +56,6 @@ class Depo extends AbstractEntity
         return $this;
     }
 
-    public function getNama(): string
-    {
-        return HtmlDecode($this->nama);
-    }
-
-    public function setNama(string $value): static
-    {
-        $this->nama = RemoveXss($value);
-        return $this;
-    }
-
     public function getKode(): string
     {
         return HtmlDecode($this->kode);
@@ -75,6 +64,17 @@ class Depo extends AbstractEntity
     public function setKode(string $value): static
     {
         $this->kode = RemoveXss($value);
+        return $this;
+    }
+
+    public function getNama(): string
+    {
+        return HtmlDecode($this->nama);
+    }
+
+    public function setNama(string $value): static
+    {
+        $this->nama = RemoveXss($value);
         return $this;
     }
 }

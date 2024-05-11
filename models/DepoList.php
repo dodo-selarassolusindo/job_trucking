@@ -154,8 +154,8 @@ class DepoList extends Depo
     public function setVisibility()
     {
         $this->DepoID->setVisibility();
-        $this->Nama->setVisibility();
         $this->Kode->setVisibility();
+        $this->Nama->setVisibility();
     }
 
     // Constructor
@@ -1043,8 +1043,8 @@ class DepoList extends Depo
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->DepoID->AdvancedSearch->toJson(), ","); // Field DepoID
-        $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
         $filterList = Concat($filterList, $this->Kode->AdvancedSearch->toJson(), ","); // Field Kode
+        $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1092,14 +1092,6 @@ class DepoList extends Depo
         $this->DepoID->AdvancedSearch->SearchOperator2 = @$filter["w_DepoID"];
         $this->DepoID->AdvancedSearch->save();
 
-        // Field Nama
-        $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
-        $this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
-        $this->Nama->AdvancedSearch->SearchCondition = @$filter["v_Nama"];
-        $this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
-        $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
-        $this->Nama->AdvancedSearch->save();
-
         // Field Kode
         $this->Kode->AdvancedSearch->SearchValue = @$filter["x_Kode"];
         $this->Kode->AdvancedSearch->SearchOperator = @$filter["z_Kode"];
@@ -1107,6 +1099,14 @@ class DepoList extends Depo
         $this->Kode->AdvancedSearch->SearchValue2 = @$filter["y_Kode"];
         $this->Kode->AdvancedSearch->SearchOperator2 = @$filter["w_Kode"];
         $this->Kode->AdvancedSearch->save();
+
+        // Field Nama
+        $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
+        $this->Nama->AdvancedSearch->SearchCondition = @$filter["v_Nama"];
+        $this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
+        $this->Nama->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1146,8 +1146,8 @@ class DepoList extends Depo
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->Nama;
         $searchFlds[] = &$this->Kode;
+        $searchFlds[] = &$this->Nama;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1227,8 +1227,8 @@ class DepoList extends Depo
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->DepoID); // DepoID
-            $this->updateSort($this->Nama); // Nama
             $this->updateSort($this->Kode); // Kode
+            $this->updateSort($this->Nama); // Nama
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1254,8 +1254,8 @@ class DepoList extends Depo
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->DepoID->setSort("");
-                $this->Nama->setSort("");
                 $this->Kode->setSort("");
+                $this->Nama->setSort("");
             }
 
             // Reset start position
@@ -1506,8 +1506,8 @@ class DepoList extends Depo
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
             $this->createColumnOption($option, "DepoID");
-            $this->createColumnOption($option, "Nama");
             $this->createColumnOption($option, "Kode");
+            $this->createColumnOption($option, "Nama");
         }
 
         // Set up custom actions
@@ -1943,8 +1943,8 @@ class DepoList extends Depo
         // Call Row Selected event
         $this->rowSelected($row);
         $this->DepoID->setDbValue($row['DepoID']);
-        $this->Nama->setDbValue($row['Nama']);
         $this->Kode->setDbValue($row['Kode']);
+        $this->Nama->setDbValue($row['Nama']);
     }
 
     // Return a row with default values
@@ -1952,8 +1952,8 @@ class DepoList extends Depo
     {
         $row = [];
         $row['DepoID'] = $this->DepoID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
         $row['Kode'] = $this->Kode->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
 
@@ -1996,32 +1996,32 @@ class DepoList extends Depo
 
         // DepoID
 
-        // Nama
-
         // Kode
+
+        // Nama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // DepoID
             $this->DepoID->ViewValue = $this->DepoID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
-
             // Kode
             $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // DepoID
             $this->DepoID->HrefValue = "";
             $this->DepoID->TooltipValue = "";
 
-            // Nama
-            $this->Nama->HrefValue = "";
-            $this->Nama->TooltipValue = "";
-
             // Kode
             $this->Kode->HrefValue = "";
             $this->Kode->TooltipValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
         }
 
         // Call Row Rendered event

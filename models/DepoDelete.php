@@ -130,8 +130,8 @@ class DepoDelete extends Depo
     public function setVisibility()
     {
         $this->DepoID->setVisibility();
-        $this->Nama->setVisibility();
         $this->Kode->setVisibility();
+        $this->Nama->setVisibility();
     }
 
     // Constructor
@@ -591,8 +591,8 @@ class DepoDelete extends Depo
         // Call Row Selected event
         $this->rowSelected($row);
         $this->DepoID->setDbValue($row['DepoID']);
-        $this->Nama->setDbValue($row['Nama']);
         $this->Kode->setDbValue($row['Kode']);
+        $this->Nama->setDbValue($row['Nama']);
     }
 
     // Return a row with default values
@@ -600,8 +600,8 @@ class DepoDelete extends Depo
     {
         $row = [];
         $row['DepoID'] = $this->DepoID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
         $row['Kode'] = $this->Kode->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
 
@@ -619,32 +619,32 @@ class DepoDelete extends Depo
 
         // DepoID
 
-        // Nama
-
         // Kode
+
+        // Nama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // DepoID
             $this->DepoID->ViewValue = $this->DepoID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
-
             // Kode
             $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // DepoID
             $this->DepoID->HrefValue = "";
             $this->DepoID->TooltipValue = "";
 
-            // Nama
-            $this->Nama->HrefValue = "";
-            $this->Nama->TooltipValue = "";
-
             // Kode
             $this->Kode->HrefValue = "";
             $this->Kode->TooltipValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
         }
 
         // Call Row Rendered event

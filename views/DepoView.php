@@ -62,17 +62,6 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-    <tr id="r_Nama"<?= $Page->Nama->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_depo_Nama"><?= $Page->Nama->caption() ?></span></td>
-        <td data-name="Nama"<?= $Page->Nama->cellAttributes() ?>>
-<span id="el_depo_Nama">
-<span<?= $Page->Nama->viewAttributes() ?>>
-<?= $Page->Nama->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->Kode->Visible) { // Kode ?>
     <tr id="r_Kode"<?= $Page->Kode->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_depo_Kode"><?= $Page->Kode->caption() ?></span></td>
@@ -80,6 +69,17 @@ loadjs.ready("head", function () {
 <span id="el_depo_Kode">
 <span<?= $Page->Kode->viewAttributes() ?>>
 <?= $Page->Kode->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->Nama->Visible) { // Nama ?>
+    <tr id="r_Nama"<?= $Page->Nama->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_depo_Nama"><?= $Page->Nama->caption() ?></span></td>
+        <td data-name="Nama"<?= $Page->Nama->cellAttributes() ?>>
+<span id="el_depo_Nama">
+<span<?= $Page->Nama->viewAttributes() ?>>
+<?= $Page->Nama->getViewValue() ?></span>
 </span>
 </td>
     </tr>

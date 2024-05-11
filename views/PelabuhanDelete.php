@@ -53,6 +53,9 @@ $Page->showMessage();
 <?php if ($Page->PelabuhanID->Visible) { // PelabuhanID ?>
         <th class="<?= $Page->PelabuhanID->headerCellClass() ?>"><span id="elh_pelabuhan_PelabuhanID" class="pelabuhan_PelabuhanID"><?= $Page->PelabuhanID->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+        <th class="<?= $Page->Kode->headerCellClass() ?>"><span id="elh_pelabuhan_Kode" class="pelabuhan_Kode"><?= $Page->Kode->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_pelabuhan_Nama" class="pelabuhan_Nama"><?= $Page->Nama->caption() ?></span></th>
 <?php } ?>
@@ -82,6 +85,14 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->PelabuhanID->viewAttributes() ?>>
 <?= $Page->PelabuhanID->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+        <td<?= $Page->Kode->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->Kode->viewAttributes() ?>>
+<?= $Page->Kode->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

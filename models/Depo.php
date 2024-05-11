@@ -55,8 +55,8 @@ class Depo extends DbTable
 
     // Fields
     public $DepoID;
-    public $Nama;
     public $Kode;
+    public $Nama;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -131,30 +131,6 @@ class Depo extends DbTable
         $this->DepoID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['DepoID'] = &$this->DepoID;
 
-        // Nama
-        $this->Nama = new DbField(
-            $this, // Table
-            'x_Nama', // Variable name
-            'Nama', // Name
-            '`Nama`', // Expression
-            '`Nama`', // Basic search expression
-            200, // Type
-            255, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Nama`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->Nama->InputTextType = "text";
-        $this->Nama->Nullable = false; // NOT NULL field
-        $this->Nama->Required = true; // Required field
-        $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
-        $this->Fields['Nama'] = &$this->Nama;
-
         // Kode
         $this->Kode = new DbField(
             $this, // Table
@@ -178,6 +154,30 @@ class Depo extends DbTable
         $this->Kode->Required = true; // Required field
         $this->Kode->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
         $this->Fields['Kode'] = &$this->Kode;
+
+        // Nama
+        $this->Nama = new DbField(
+            $this, // Table
+            'x_Nama', // Variable name
+            'Nama', // Name
+            '`Nama`', // Expression
+            '`Nama`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Nama`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Nama->InputTextType = "text";
+        $this->Nama->Nullable = false; // NOT NULL field
+        $this->Nama->Required = true; // Required field
+        $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Nama'] = &$this->Nama;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -712,8 +712,8 @@ class Depo extends DbTable
             return;
         }
         $this->DepoID->DbValue = $row['DepoID'];
-        $this->Nama->DbValue = $row['Nama'];
         $this->Kode->DbValue = $row['Kode'];
+        $this->Nama->DbValue = $row['Nama'];
     }
 
     // Delete uploaded files
@@ -1074,8 +1074,8 @@ class Depo extends DbTable
             return;
         }
         $this->DepoID->setDbValue($row['DepoID']);
-        $this->Nama->setDbValue($row['Nama']);
         $this->Kode->setDbValue($row['Kode']);
+        $this->Nama->setDbValue($row['Nama']);
     }
 
     // Render list content
@@ -1108,30 +1108,30 @@ class Depo extends DbTable
 
         // DepoID
 
-        // Nama
-
         // Kode
+
+        // Nama
 
         // DepoID
         $this->DepoID->ViewValue = $this->DepoID->CurrentValue;
 
-        // Nama
-        $this->Nama->ViewValue = $this->Nama->CurrentValue;
-
         // Kode
         $this->Kode->ViewValue = $this->Kode->CurrentValue;
+
+        // Nama
+        $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
         // DepoID
         $this->DepoID->HrefValue = "";
         $this->DepoID->TooltipValue = "";
 
-        // Nama
-        $this->Nama->HrefValue = "";
-        $this->Nama->TooltipValue = "";
-
         // Kode
         $this->Kode->HrefValue = "";
         $this->Kode->TooltipValue = "";
+
+        // Nama
+        $this->Nama->HrefValue = "";
+        $this->Nama->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1152,14 +1152,6 @@ class Depo extends DbTable
         $this->DepoID->setupEditAttributes();
         $this->DepoID->EditValue = $this->DepoID->CurrentValue;
 
-        // Nama
-        $this->Nama->setupEditAttributes();
-        if (!$this->Nama->Raw) {
-            $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
-        }
-        $this->Nama->EditValue = $this->Nama->CurrentValue;
-        $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
-
         // Kode
         $this->Kode->setupEditAttributes();
         if (!$this->Kode->Raw) {
@@ -1167,6 +1159,14 @@ class Depo extends DbTable
         }
         $this->Kode->EditValue = $this->Kode->CurrentValue;
         $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
+
+        // Nama
+        $this->Nama->setupEditAttributes();
+        if (!$this->Nama->Raw) {
+            $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
+        }
+        $this->Nama->EditValue = $this->Nama->CurrentValue;
+        $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1197,12 +1197,12 @@ class Depo extends DbTable
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->DepoID);
-                    $doc->exportCaption($this->Nama);
                     $doc->exportCaption($this->Kode);
+                    $doc->exportCaption($this->Nama);
                 } else {
                     $doc->exportCaption($this->DepoID);
-                    $doc->exportCaption($this->Nama);
                     $doc->exportCaption($this->Kode);
+                    $doc->exportCaption($this->Nama);
                 }
                 $doc->endExportRow();
             }
@@ -1230,12 +1230,12 @@ class Depo extends DbTable
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->DepoID);
-                        $doc->exportField($this->Nama);
                         $doc->exportField($this->Kode);
+                        $doc->exportField($this->Nama);
                     } else {
                         $doc->exportField($this->DepoID);
-                        $doc->exportField($this->Nama);
                         $doc->exportField($this->Kode);
+                        $doc->exportField($this->Nama);
                     }
                     $doc->endExportRow($rowCnt);
                 }

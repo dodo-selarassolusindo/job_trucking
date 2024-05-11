@@ -130,8 +130,8 @@ class DepoAdd extends Depo
     public function setVisibility()
     {
         $this->DepoID->Visible = false;
-        $this->Nama->setVisibility();
         $this->Kode->setVisibility();
+        $this->Nama->setVisibility();
     }
 
     // Constructor
@@ -672,16 +672,6 @@ class DepoAdd extends Depo
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'Nama' first before field var 'x_Nama'
-        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
-        if (!$this->Nama->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Nama->Visible = false; // Disable update for API request
-            } else {
-                $this->Nama->setFormValue($val);
-            }
-        }
-
         // Check field name 'Kode' first before field var 'x_Kode'
         $val = $CurrentForm->hasValue("Kode") ? $CurrentForm->getValue("Kode") : $CurrentForm->getValue("x_Kode");
         if (!$this->Kode->IsDetailKey) {
@@ -689,6 +679,16 @@ class DepoAdd extends Depo
                 $this->Kode->Visible = false; // Disable update for API request
             } else {
                 $this->Kode->setFormValue($val);
+            }
+        }
+
+        // Check field name 'Nama' first before field var 'x_Nama'
+        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
+        if (!$this->Nama->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->Nama->Visible = false; // Disable update for API request
+            } else {
+                $this->Nama->setFormValue($val);
             }
         }
 
@@ -700,8 +700,8 @@ class DepoAdd extends Depo
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->Nama->CurrentValue = $this->Nama->FormValue;
         $this->Kode->CurrentValue = $this->Kode->FormValue;
+        $this->Nama->CurrentValue = $this->Nama->FormValue;
     }
 
     /**
@@ -743,8 +743,8 @@ class DepoAdd extends Depo
         // Call Row Selected event
         $this->rowSelected($row);
         $this->DepoID->setDbValue($row['DepoID']);
-        $this->Nama->setDbValue($row['Nama']);
         $this->Kode->setDbValue($row['Kode']);
+        $this->Nama->setDbValue($row['Nama']);
     }
 
     // Return a row with default values
@@ -752,8 +752,8 @@ class DepoAdd extends Depo
     {
         $row = [];
         $row['DepoID'] = $this->DepoID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
         $row['Kode'] = $this->Kode->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
 
@@ -791,37 +791,29 @@ class DepoAdd extends Depo
         // DepoID
         $this->DepoID->RowCssClass = "row";
 
-        // Nama
-        $this->Nama->RowCssClass = "row";
-
         // Kode
         $this->Kode->RowCssClass = "row";
+
+        // Nama
+        $this->Nama->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // DepoID
             $this->DepoID->ViewValue = $this->DepoID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
-
             // Kode
             $this->Kode->ViewValue = $this->Kode->CurrentValue;
 
             // Nama
-            $this->Nama->HrefValue = "";
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
             // Kode
             $this->Kode->HrefValue = "";
-        } elseif ($this->RowType == RowType::ADD) {
-            // Nama
-            $this->Nama->setupEditAttributes();
-            if (!$this->Nama->Raw) {
-                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
-            }
-            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
-            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
+            // Nama
+            $this->Nama->HrefValue = "";
+        } elseif ($this->RowType == RowType::ADD) {
             // Kode
             $this->Kode->setupEditAttributes();
             if (!$this->Kode->Raw) {
@@ -830,13 +822,21 @@ class DepoAdd extends Depo
             $this->Kode->EditValue = HtmlEncode($this->Kode->CurrentValue);
             $this->Kode->PlaceHolder = RemoveHtml($this->Kode->caption());
 
-            // Add refer script
-
             // Nama
-            $this->Nama->HrefValue = "";
+            $this->Nama->setupEditAttributes();
+            if (!$this->Nama->Raw) {
+                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
+            }
+            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
+            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
+
+            // Add refer script
 
             // Kode
             $this->Kode->HrefValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -858,14 +858,14 @@ class DepoAdd extends Depo
             return true;
         }
         $validateForm = true;
-            if ($this->Nama->Visible && $this->Nama->Required) {
-                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
-                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
-                }
-            }
             if ($this->Kode->Visible && $this->Kode->Required) {
                 if (!$this->Kode->IsDetailKey && EmptyValue($this->Kode->FormValue)) {
                     $this->Kode->addErrorMessage(str_replace("%s", $this->Kode->caption(), $this->Kode->RequiredErrorMessage));
+                }
+            }
+            if ($this->Nama->Visible && $this->Nama->Required) {
+                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
+                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
                 }
             }
 
@@ -939,11 +939,11 @@ class DepoAdd extends Depo
         global $Security;
         $rsnew = [];
 
-        // Nama
-        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
-
         // Kode
         $this->Kode->setDbValueDef($rsnew, $this->Kode->CurrentValue, false);
+
+        // Nama
+        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
         return $rsnew;
     }
 
@@ -953,11 +953,11 @@ class DepoAdd extends Depo
      */
     protected function restoreAddFormFromRow($row)
     {
-        if (isset($row['Nama'])) { // Nama
-            $this->Nama->setFormValue($row['Nama']);
-        }
         if (isset($row['Kode'])) { // Kode
             $this->Kode->setFormValue($row['Kode']);
+        }
+        if (isset($row['Nama'])) { // Nama
+            $this->Nama->setFormValue($row['Nama']);
         }
     }
 

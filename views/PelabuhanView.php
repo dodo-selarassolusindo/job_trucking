@@ -62,6 +62,17 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->Kode->Visible) { // Kode ?>
+    <tr id="r_Kode"<?= $Page->Kode->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_pelabuhan_Kode"><?= $Page->Kode->caption() ?></span></td>
+        <td data-name="Kode"<?= $Page->Kode->cellAttributes() ?>>
+<span id="el_pelabuhan_Kode">
+<span<?= $Page->Kode->viewAttributes() ?>>
+<?= $Page->Kode->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
     <tr id="r_Nama"<?= $Page->Nama->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_pelabuhan_Nama"><?= $Page->Nama->caption() ?></span></td>
