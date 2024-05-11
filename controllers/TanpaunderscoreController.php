@@ -18,7 +18,7 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class TanpaunderscoreController extends ControllerBase
 {
     // custom
-    #[Map(["GET", "POST", "OPTIONS"], "/Tanpaunderscore[/{params:.*}]", [PermissionMiddleware::class], "custom.tanpaunderscore")]
+    #[Map(["GET", "POST", "OPTIONS"], "/tanpaunderscore[/{params:.*}]", [PermissionMiddleware::class], "custom.tanpaunderscore")]
     public function custom(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "Tanpaunderscore");

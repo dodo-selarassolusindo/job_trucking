@@ -38,7 +38,7 @@ class AudittrailView extends Audittrail
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "AudittrailView";
+    public $CurrentPageName = "audittrailview";
 
     // Page URLs
     public $AddUrl;
@@ -308,7 +308,7 @@ class AudittrailView extends Audittrail
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "AudittrailView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "audittrailview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -564,7 +564,7 @@ class AudittrailView extends Audittrail
             $this->Id->setQueryStringValue($keyValue);
             $this->RecKey["Id"] = $this->Id->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "AudittrailList"; // Return to list
+            $returnUrl = "audittraillist"; // Return to list
         }
 
         // Get action
@@ -586,7 +586,7 @@ class AudittrailView extends Audittrail
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "AudittrailList"; // No matching record, return to list
+                        $returnUrl = "audittraillist"; // No matching record, return to list
                     }
                 break;
         }
@@ -860,7 +860,7 @@ class AudittrailView extends Audittrail
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("AudittrailList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("audittraillist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

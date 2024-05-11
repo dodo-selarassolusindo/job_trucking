@@ -812,7 +812,7 @@ class Shipper extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("ShipperList");
+        return $_SESSION[$name] ?? GetUrl("shipperlist");
     }
 
     // Set return page URL
@@ -826,9 +826,9 @@ class Shipper extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "ShipperView" => $Language->phrase("View"),
-            "ShipperEdit" => $Language->phrase("Edit"),
-            "ShipperAdd" => $Language->phrase("Add"),
+            "shipperview" => $Language->phrase("View"),
+            "shipperedit" => $Language->phrase("Edit"),
+            "shipperadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -836,7 +836,7 @@ class Shipper extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "ShipperList";
+        return "shipperlist";
     }
 
     // API page name
@@ -867,16 +867,16 @@ class Shipper extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "ShipperList";
+        return "shipperlist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("ShipperView", $parm);
+            $url = $this->keyUrl("shipperview", $parm);
         } else {
-            $url = $this->keyUrl("ShipperView", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("shipperview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -885,9 +885,9 @@ class Shipper extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "ShipperAdd?" . $parm;
+            $url = "shipperadd?" . $parm;
         } else {
-            $url = "ShipperAdd";
+            $url = "shipperadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -895,28 +895,28 @@ class Shipper extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("ShipperEdit", $parm);
+        $url = $this->keyUrl("shipperedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("ShipperList", "action=edit");
+        $url = $this->keyUrl("shipperlist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("ShipperAdd", $parm);
+        $url = $this->keyUrl("shipperadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("ShipperList", "action=copy");
+        $url = $this->keyUrl("shipperlist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -926,7 +926,7 @@ class Shipper extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("ShipperDelete", $parm);
+            return $this->keyUrl("shipperdelete", $parm);
         }
     }
 

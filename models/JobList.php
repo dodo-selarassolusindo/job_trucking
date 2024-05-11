@@ -44,7 +44,7 @@ class JobList extends Job
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "JobList";
+    public $CurrentPageName = "joblist";
 
     // Page URLs
     public $AddUrl;
@@ -200,13 +200,13 @@ class JobList extends Job
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "JobAdd";
+        $this->AddUrl = "jobadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "JobDelete";
-        $this->MultiUpdateUrl = "JobUpdate";
+        $this->MultiDeleteUrl = "jobdelete";
+        $this->MultiUpdateUrl = "jobupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -361,7 +361,7 @@ class JobList extends Job
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "JobView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

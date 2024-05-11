@@ -16,35 +16,35 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class UserlevelpermissionsController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/UserlevelpermissionsList[/{keys:.*}]", [PermissionMiddleware::class], "list.userlevelpermissions")]
+    #[Map(["GET","POST","OPTIONS"], "/userlevelpermissionslist[/{keys:.*}]", [PermissionMiddleware::class], "list.userlevelpermissions")]
     public function list(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $this->getKeyParams($args), "UserlevelpermissionsList");
     }
 
     // add
-    #[Map(["GET","POST","OPTIONS"], "/UserlevelpermissionsAdd[/{keys:.*}]", [PermissionMiddleware::class], "add.userlevelpermissions")]
+    #[Map(["GET","POST","OPTIONS"], "/userlevelpermissionsadd[/{keys:.*}]", [PermissionMiddleware::class], "add.userlevelpermissions")]
     public function add(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $this->getKeyParams($args), "UserlevelpermissionsAdd");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/UserlevelpermissionsView[/{keys:.*}]", [PermissionMiddleware::class], "view.userlevelpermissions")]
+    #[Map(["GET","POST","OPTIONS"], "/userlevelpermissionsview[/{keys:.*}]", [PermissionMiddleware::class], "view.userlevelpermissions")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $this->getKeyParams($args), "UserlevelpermissionsView");
     }
 
     // edit
-    #[Map(["GET","POST","OPTIONS"], "/UserlevelpermissionsEdit[/{keys:.*}]", [PermissionMiddleware::class], "edit.userlevelpermissions")]
+    #[Map(["GET","POST","OPTIONS"], "/userlevelpermissionsedit[/{keys:.*}]", [PermissionMiddleware::class], "edit.userlevelpermissions")]
     public function edit(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $this->getKeyParams($args), "UserlevelpermissionsEdit");
     }
 
     // delete
-    #[Map(["GET","POST","OPTIONS"], "/UserlevelpermissionsDelete[/{keys:.*}]", [PermissionMiddleware::class], "delete.userlevelpermissions")]
+    #[Map(["GET","POST","OPTIONS"], "/userlevelpermissionsdelete[/{keys:.*}]", [PermissionMiddleware::class], "delete.userlevelpermissions")]
     public function delete(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $this->getKeyParams($args), "UserlevelpermissionsDelete");

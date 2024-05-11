@@ -38,7 +38,7 @@ class UserlevelpermissionsDelete extends Userlevelpermissions
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "UserlevelpermissionsDelete";
+    public $CurrentPageName = "userlevelpermissionsdelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -413,7 +413,7 @@ class UserlevelpermissionsDelete extends Userlevelpermissions
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("UserlevelpermissionsList"); // Prevent SQL injection, return to list
+            $this->terminate("userlevelpermissionslist"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -467,7 +467,7 @@ class UserlevelpermissionsDelete extends Userlevelpermissions
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("UserlevelpermissionsList"); // Return to list
+                $this->terminate("userlevelpermissionslist"); // Return to list
                 return;
             }
         }
@@ -767,7 +767,7 @@ class UserlevelpermissionsDelete extends Userlevelpermissions
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelpermissionsList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelpermissionslist"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

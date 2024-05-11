@@ -38,7 +38,7 @@ class CustomerView extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "CustomerView";
+    public $CurrentPageName = "customerview";
 
     // Page URLs
     public $AddUrl;
@@ -302,7 +302,7 @@ class CustomerView extends Customer
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "CustomerView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -558,7 +558,7 @@ class CustomerView extends Customer
             $this->CustomerID->setQueryStringValue($keyValue);
             $this->RecKey["CustomerID"] = $this->CustomerID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "CustomerList"; // Return to list
+            $returnUrl = "customerlist"; // Return to list
         }
 
         // Get action
@@ -580,7 +580,7 @@ class CustomerView extends Customer
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "CustomerList"; // No matching record, return to list
+                        $returnUrl = "customerlist"; // No matching record, return to list
                     }
                 break;
         }
@@ -826,7 +826,7 @@ class CustomerView extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("CustomerList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

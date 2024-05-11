@@ -824,7 +824,7 @@ class AdvancedSecurity
         if (count($this->UserLevelPriv) == 0 && $this->isAdmin() && $Page != null && Session(SESSION_USER_LEVEL_MSG) == "") {
             $Page->setFailureMessage($Language->phrase("NoUserLevel"));
             $_SESSION[SESSION_USER_LEVEL_MSG] = "1"; // Show only once
-            $Page->terminate("UserlevelsList");
+            $Page->terminate("userlevelslist");
         }
         return true;
     }

@@ -277,7 +277,7 @@ class Userpriv extends Userlevels
             $this->pageLoad();
         }
         $Breadcrumb = Breadcrumb::create("index")
-            ->add("list", "userlevels", "UserlevelsList", "", "userlevels")
+            ->add("list", "userlevels", "userlevelslist", "", "userlevels")
             ->add("userpriv", "UserLevelPermission", CurrentUrl());
         $this->Heading = $Language->phrase("UserLevelPermission");
 
@@ -304,7 +304,7 @@ class Userpriv extends Userlevels
             if (Get("userlevelid") !== null) {
                 $this->userlevelid->setQueryStringValue(Get("userlevelid"));
             } else {
-                $this->terminate("UserlevelsList"); // Return to list
+                $this->terminate("userlevelslist"); // Return to list
                 return;
             }
             if ($this->userlevelid->QueryStringValue == "-1") {
@@ -330,13 +330,13 @@ class Userpriv extends Userlevels
 
         // Should not edit own permissions
         if ($Security->hasUserLevelID($this->userlevelid->CurrentValue)) {
-            $this->terminate("UserlevelsList"); // Return to list
+            $this->terminate("userlevelslist"); // Return to list
             return;
         }
         switch ($this->CurrentAction) {
             case "show": // Display
                 if (!$Security->setupUserLevelEx()) { // Get all User Level info
-                    $this->terminate("UserlevelsList"); // Return to list
+                    $this->terminate("userlevelslist"); // Return to list
                     return;
                 }
                 $ar = [];
@@ -359,7 +359,7 @@ class Userpriv extends Userlevels
                         $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
                     }
                     // Alternatively, comment out the following line to go back to this page
-                    $this->terminate("UserlevelsList"); // Return to list
+                    $this->terminate("userlevelslist"); // Return to list
                     return;
                 }
         }

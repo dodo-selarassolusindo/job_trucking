@@ -751,7 +751,7 @@ class Userlevels extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("UserlevelsList");
+        return $_SESSION[$name] ?? GetUrl("userlevelslist");
     }
 
     // Set return page URL
@@ -765,9 +765,9 @@ class Userlevels extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "UserlevelsView" => $Language->phrase("View"),
-            "UserlevelsEdit" => $Language->phrase("Edit"),
-            "UserlevelsAdd" => $Language->phrase("Add"),
+            "userlevelsview" => $Language->phrase("View"),
+            "userlevelsedit" => $Language->phrase("Edit"),
+            "userlevelsadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -775,7 +775,7 @@ class Userlevels extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "UserlevelsList";
+        return "userlevelslist";
     }
 
     // API page name
@@ -806,16 +806,16 @@ class Userlevels extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "UserlevelsList";
+        return "userlevelslist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("UserlevelsView", $parm);
+            $url = $this->keyUrl("userlevelsview", $parm);
         } else {
-            $url = $this->keyUrl("UserlevelsView", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("userlevelsview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -824,9 +824,9 @@ class Userlevels extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "UserlevelsAdd?" . $parm;
+            $url = "userlevelsadd?" . $parm;
         } else {
-            $url = "UserlevelsAdd";
+            $url = "userlevelsadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -834,28 +834,28 @@ class Userlevels extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("UserlevelsEdit", $parm);
+        $url = $this->keyUrl("userlevelsedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("UserlevelsList", "action=edit");
+        $url = $this->keyUrl("userlevelslist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("UserlevelsAdd", $parm);
+        $url = $this->keyUrl("userlevelsadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("UserlevelsList", "action=copy");
+        $url = $this->keyUrl("userlevelslist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -865,7 +865,7 @@ class Userlevels extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("UserlevelsDelete", $parm);
+            return $this->keyUrl("userlevelsdelete", $parm);
         }
     }
 

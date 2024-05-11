@@ -18,7 +18,7 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class ListSizeController extends ControllerBase
 {
     // custom
-    #[Map(["GET", "POST", "OPTIONS"], "/ListSize[/{params:.*}]", [PermissionMiddleware::class], "custom.list_size")]
+    #[Map(["GET", "POST", "OPTIONS"], "/listsize[/{params:.*}]", [PermissionMiddleware::class], "custom.list_size")]
     public function custom(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "ListSize");

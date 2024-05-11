@@ -38,7 +38,7 @@ class EmployeesAdd extends Employees
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "EmployeesAdd";
+    public $CurrentPageName = "employeesadd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -296,7 +296,7 @@ class EmployeesAdd extends Employees
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "EmployeesView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "employeesview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -604,7 +604,7 @@ class EmployeesAdd extends Employees
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("EmployeesList"); // No matching record, return to list
+                    $this->terminate("employeeslist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -615,18 +615,18 @@ class EmployeesAdd extends Employees
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "EmployeesList") {
+                    if (GetPageName($returnUrl) == "employeeslist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "EmployeesView") {
+                    } elseif (GetPageName($returnUrl) == "employeesview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "EmployeesList") {
+                        if (GetPageName($returnUrl) != "employeeslist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "EmployeesList"; // Return list page content
+                            $returnUrl = "employeeslist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -2172,7 +2172,7 @@ class EmployeesAdd extends Employees
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("EmployeesList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("employeeslist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

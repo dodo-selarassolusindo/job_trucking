@@ -38,7 +38,7 @@ class EmployeesEdit extends Employees
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "EmployeesEdit";
+    public $CurrentPageName = "employeesedit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -296,7 +296,7 @@ class EmployeesEdit extends Employees
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "EmployeesView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "employeesview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -638,13 +638,13 @@ class EmployeesEdit extends Employees
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("EmployeesList"); // No matching record, return to list
+                        $this->terminate("employeeslist"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "EmployeesList") {
+                if (GetPageName($returnUrl) == "employeeslist") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -656,9 +656,9 @@ class EmployeesEdit extends Employees
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "EmployeesList") {
+                        if (GetPageName($returnUrl) != "employeeslist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "EmployeesList"; // Return list page content
+                            $returnUrl = "employeeslist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -2210,7 +2210,7 @@ class EmployeesEdit extends Employees
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("EmployeesList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("employeeslist"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

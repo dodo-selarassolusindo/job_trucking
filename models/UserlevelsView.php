@@ -38,7 +38,7 @@ class UserlevelsView extends Userlevels
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "UserlevelsView";
+    public $CurrentPageName = "userlevelsview";
 
     // Page URLs
     public $AddUrl;
@@ -300,7 +300,7 @@ class UserlevelsView extends Userlevels
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "UserlevelsView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "userlevelsview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -553,7 +553,7 @@ class UserlevelsView extends Userlevels
             $this->userlevelid->setQueryStringValue($keyValue);
             $this->RecKey["userlevelid"] = $this->userlevelid->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "UserlevelsList"; // Return to list
+            $returnUrl = "userlevelslist"; // Return to list
         }
 
         // Get action
@@ -575,7 +575,7 @@ class UserlevelsView extends Userlevels
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "UserlevelsList"; // No matching record, return to list
+                        $returnUrl = "userlevelslist"; // No matching record, return to list
                     }
                 break;
         }
@@ -804,7 +804,7 @@ class UserlevelsView extends Userlevels
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelsList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelslist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

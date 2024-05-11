@@ -38,7 +38,7 @@ class LokasiAdd extends Lokasi
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "LokasiAdd";
+    public $CurrentPageName = "lokasiadd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class LokasiAdd extends Lokasi
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "LokasiView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "lokasiview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -574,7 +574,7 @@ class LokasiAdd extends Lokasi
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("LokasiList"); // No matching record, return to list
+                    $this->terminate("lokasilist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -585,18 +585,18 @@ class LokasiAdd extends Lokasi
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "LokasiList") {
+                    if (GetPageName($returnUrl) == "lokasilist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "LokasiView") {
+                    } elseif (GetPageName($returnUrl) == "lokasiview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "LokasiList") {
+                        if (GetPageName($returnUrl) != "lokasilist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "LokasiList"; // Return list page content
+                            $returnUrl = "lokasilist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -922,7 +922,7 @@ class LokasiAdd extends Lokasi
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("LokasiList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("lokasilist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

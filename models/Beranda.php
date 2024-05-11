@@ -45,7 +45,7 @@ class Beranda
 
     // CSS class/style
     public $ReportContainerClass = "ew-grid";
-    public $CurrentPageName = "BerandaController";
+    public $CurrentPageName = "berandacontroller";
 
     // Page headings
     public $Heading = "";

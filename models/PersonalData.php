@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "TanpaunderscoreController";
+    public $CurrentPageName = "tanpaunderscorecontroller";
 
     // Page headings
     public $Heading = "";

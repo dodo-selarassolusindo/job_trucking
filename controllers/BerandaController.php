@@ -18,7 +18,7 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class BerandaController extends ControllerBase
 {
     // custom
-    #[Map(["GET", "POST", "OPTIONS"], "/Beranda[/{params:.*}]", [PermissionMiddleware::class], "custom.beranda")]
+    #[Map(["GET", "POST", "OPTIONS"], "/beranda[/{params:.*}]", [PermissionMiddleware::class], "custom.beranda")]
     public function custom(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "Beranda");

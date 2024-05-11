@@ -38,7 +38,7 @@ class UserlevelpermissionsEdit extends Userlevelpermissions
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "UserlevelpermissionsEdit";
+    public $CurrentPageName = "userlevelpermissionsedit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -272,7 +272,7 @@ class UserlevelpermissionsEdit extends Userlevelpermissions
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "UserlevelpermissionsView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "userlevelpermissionsview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -622,13 +622,13 @@ class UserlevelpermissionsEdit extends Userlevelpermissions
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("UserlevelpermissionsList"); // No matching record, return to list
+                        $this->terminate("userlevelpermissionslist"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "UserlevelpermissionsList") {
+                if (GetPageName($returnUrl) == "userlevelpermissionslist") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -640,9 +640,9 @@ class UserlevelpermissionsEdit extends Userlevelpermissions
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "UserlevelpermissionsList") {
+                        if (GetPageName($returnUrl) != "userlevelpermissionslist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "UserlevelpermissionsList"; // Return list page content
+                            $returnUrl = "userlevelpermissionslist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -1083,7 +1083,7 @@ class UserlevelpermissionsEdit extends Userlevelpermissions
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelpermissionsList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelpermissionslist"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

@@ -58,15 +58,15 @@ $USER_LEVEL_PRIVS = [["{31D612D4-4474-4C58-A701-27B411C705E8}audittrail","-2","0
  * [4] string Project ID
  * [5] string URL (for OthersController::index)
  */
-$USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","AudittrailList"],
-    ["customer","customer","Customer",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","CustomerList"],
-    ["employees","employees","Users",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","EmployeesList"],
-    ["job","job","Job",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","JobList"],
-    ["lokasi","lokasi","Lokasi",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","LokasiList"],
-    ["shipper","shipper","Shipper",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","ShipperList"],
-    ["size","size","Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","SizeList"],
-    ["userlevelpermissions","userlevelpermissions","Detail",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","UserlevelpermissionsList"],
-    ["userlevels","userlevels","Hak Akses",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","UserlevelsList"],
-    ["beranda.php","beranda","Beranda",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","Beranda"],
-    ["list_size.php","list_size","Daftar Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","ListSize"],
-    ["tanpaunderscore.php","tanpaunderscore","Tanpa Under Score",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","Tanpaunderscore"]];
+$USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","audittraillist"],
+    ["customer","customer","Customer",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","customerlist"],
+    ["employees","employees","Users",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","employeeslist"],
+    ["job","job","Job",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","joblist"],
+    ["lokasi","lokasi","Lokasi",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","lokasilist"],
+    ["shipper","shipper","Shipper",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","shipperlist"],
+    ["size","size","Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","sizelist"],
+    ["userlevelpermissions","userlevelpermissions","Detail",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","userlevelpermissionslist"],
+    ["userlevels","userlevels","Hak Akses",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","userlevelslist"],
+    ["beranda.php","beranda","Beranda",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","beranda"],
+    ["list_size.php","list_size","Daftar Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","listsize"],
+    ["tanpaunderscore.php","tanpaunderscore","Tanpa Under Score",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","tanpaunderscore"]];

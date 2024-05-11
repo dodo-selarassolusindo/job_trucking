@@ -45,7 +45,7 @@ class Tanpaunderscore
 
     // CSS class/style
     public $ReportContainerClass = "ew-grid";
-    public $CurrentPageName = "TanpaunderscoreController";
+    public $CurrentPageName = "tanpaunderscorecontroller";
 
     // Page headings
     public $Heading = "";

@@ -38,7 +38,7 @@ class EmployeesDelete extends Employees
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "EmployeesDelete";
+    public $CurrentPageName = "employeesdelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -444,7 +444,7 @@ class EmployeesDelete extends Employees
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("EmployeesList"); // Prevent SQL injection, return to list
+            $this->terminate("employeeslist"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -466,7 +466,7 @@ class EmployeesDelete extends Employees
             }
         }
         if (!$res) {
-            $this->terminate("EmployeesList"); // Return to list
+            $this->terminate("employeeslist"); // Return to list
             return;
         }
 
@@ -517,7 +517,7 @@ class EmployeesDelete extends Employees
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("EmployeesList"); // Return to list
+                $this->terminate("employeeslist"); // Return to list
                 return;
             }
         }
@@ -1107,7 +1107,7 @@ class EmployeesDelete extends Employees
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("EmployeesList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("employeeslist"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

@@ -38,7 +38,7 @@ class SizeAdd extends Size
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "SizeAdd";
+    public $CurrentPageName = "sizeadd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class SizeAdd extends Size
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "SizeView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -574,7 +574,7 @@ class SizeAdd extends Size
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("SizeList"); // No matching record, return to list
+                    $this->terminate("sizelist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -585,18 +585,18 @@ class SizeAdd extends Size
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "SizeList") {
+                    if (GetPageName($returnUrl) == "sizelist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "SizeView") {
+                    } elseif (GetPageName($returnUrl) == "sizeview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "SizeList") {
+                        if (GetPageName($returnUrl) != "sizelist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "SizeList"; // Return list page content
+                            $returnUrl = "sizelist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -922,7 +922,7 @@ class SizeAdd extends Size
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("SizeList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

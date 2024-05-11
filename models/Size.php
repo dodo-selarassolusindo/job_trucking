@@ -760,7 +760,7 @@ class Size extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("SizeList");
+        return $_SESSION[$name] ?? GetUrl("sizelist");
     }
 
     // Set return page URL
@@ -774,9 +774,9 @@ class Size extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "SizeView" => $Language->phrase("View"),
-            "SizeEdit" => $Language->phrase("Edit"),
-            "SizeAdd" => $Language->phrase("Add"),
+            "sizeview" => $Language->phrase("View"),
+            "sizeedit" => $Language->phrase("Edit"),
+            "sizeadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -784,7 +784,7 @@ class Size extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "SizeList";
+        return "sizelist";
     }
 
     // API page name
@@ -815,16 +815,16 @@ class Size extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "SizeList";
+        return "sizelist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("SizeView", $parm);
+            $url = $this->keyUrl("sizeview", $parm);
         } else {
-            $url = $this->keyUrl("SizeView", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("sizeview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -833,9 +833,9 @@ class Size extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "SizeAdd?" . $parm;
+            $url = "sizeadd?" . $parm;
         } else {
-            $url = "SizeAdd";
+            $url = "sizeadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -843,28 +843,28 @@ class Size extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("SizeEdit", $parm);
+        $url = $this->keyUrl("sizeedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("SizeList", "action=edit");
+        $url = $this->keyUrl("sizelist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("SizeAdd", $parm);
+        $url = $this->keyUrl("sizeadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("SizeList", "action=copy");
+        $url = $this->keyUrl("sizelist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -874,7 +874,7 @@ class Size extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("SizeDelete", $parm);
+            return $this->keyUrl("sizedelete", $parm);
         }
     }
 

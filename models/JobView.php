@@ -38,7 +38,7 @@ class JobView extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "JobView";
+    public $CurrentPageName = "jobview";
 
     // Page URLs
     public $AddUrl;
@@ -305,7 +305,7 @@ class JobView extends Job
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "JobView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -561,7 +561,7 @@ class JobView extends Job
             $this->JobID->setQueryStringValue($keyValue);
             $this->RecKey["JobID"] = $this->JobID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "JobList"; // Return to list
+            $returnUrl = "joblist"; // Return to list
         }
 
         // Get action
@@ -583,7 +583,7 @@ class JobView extends Job
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "JobList"; // No matching record, return to list
+                        $returnUrl = "joblist"; // No matching record, return to list
                     }
                 break;
         }
@@ -867,7 +867,7 @@ class JobView extends Job
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("JobList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

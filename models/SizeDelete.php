@@ -38,7 +38,7 @@ class SizeDelete extends Size
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "SizeDelete";
+    public $CurrentPageName = "sizedelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -414,7 +414,7 @@ class SizeDelete extends Size
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("SizeList"); // Prevent SQL injection, return to list
+            $this->terminate("sizelist"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -468,7 +468,7 @@ class SizeDelete extends Size
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("SizeList"); // Return to list
+                $this->terminate("sizelist"); // Return to list
                 return;
             }
         }
@@ -751,7 +751,7 @@ class SizeDelete extends Size
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("SizeList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

@@ -1405,7 +1405,7 @@ class Employees extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("EmployeesList");
+        return $_SESSION[$name] ?? GetUrl("employeeslist");
     }
 
     // Set return page URL
@@ -1419,9 +1419,9 @@ class Employees extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "EmployeesView" => $Language->phrase("View"),
-            "EmployeesEdit" => $Language->phrase("Edit"),
-            "EmployeesAdd" => $Language->phrase("Add"),
+            "employeesview" => $Language->phrase("View"),
+            "employeesedit" => $Language->phrase("Edit"),
+            "employeesadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -1429,7 +1429,7 @@ class Employees extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "EmployeesList";
+        return "employeeslist";
     }
 
     // API page name
@@ -1460,16 +1460,16 @@ class Employees extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "EmployeesList";
+        return "employeeslist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("EmployeesView", $parm);
+            $url = $this->keyUrl("employeesview", $parm);
         } else {
-            $url = $this->keyUrl("EmployeesView", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("employeesview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -1478,9 +1478,9 @@ class Employees extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "EmployeesAdd?" . $parm;
+            $url = "employeesadd?" . $parm;
         } else {
-            $url = "EmployeesAdd";
+            $url = "employeesadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -1488,28 +1488,28 @@ class Employees extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("EmployeesEdit", $parm);
+        $url = $this->keyUrl("employeesedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("EmployeesList", "action=edit");
+        $url = $this->keyUrl("employeeslist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("EmployeesAdd", $parm);
+        $url = $this->keyUrl("employeesadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("EmployeesList", "action=copy");
+        $url = $this->keyUrl("employeeslist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -1519,7 +1519,7 @@ class Employees extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("EmployeesDelete", $parm);
+            return $this->keyUrl("employeesdelete", $parm);
         }
     }
 

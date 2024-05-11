@@ -38,7 +38,7 @@ class UserlevelsEdit extends Userlevels
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "UserlevelsEdit";
+    public $CurrentPageName = "userlevelsedit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class UserlevelsEdit extends Userlevels
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "UserlevelsView"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "userlevelsview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -605,13 +605,13 @@ class UserlevelsEdit extends Userlevels
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("UserlevelsList"); // No matching record, return to list
+                        $this->terminate("userlevelslist"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "UserlevelsList") {
+                if (GetPageName($returnUrl) == "userlevelslist") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -623,9 +623,9 @@ class UserlevelsEdit extends Userlevels
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "UserlevelsList") {
+                        if (GetPageName($returnUrl) != "userlevelslist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "UserlevelsList"; // Return list page content
+                            $returnUrl = "userlevelslist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -1045,7 +1045,7 @@ class UserlevelsEdit extends Userlevels
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelsList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelslist"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

@@ -44,7 +44,7 @@ class SizeList extends Size
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "SizeList";
+    public $CurrentPageName = "sizelist";
 
     // Page URLs
     public $AddUrl;
@@ -195,13 +195,13 @@ class SizeList extends Size
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "SizeAdd";
+        $this->AddUrl = "sizeadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "SizeDelete";
-        $this->MultiUpdateUrl = "SizeUpdate";
+        $this->MultiDeleteUrl = "sizedelete";
+        $this->MultiUpdateUrl = "sizeupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -356,7 +356,7 @@ class SizeList extends Size
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "SizeView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

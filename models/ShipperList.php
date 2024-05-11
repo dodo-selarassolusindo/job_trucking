@@ -44,7 +44,7 @@ class ShipperList extends Shipper
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "ShipperList";
+    public $CurrentPageName = "shipperlist";
 
     // Page URLs
     public $AddUrl;
@@ -197,13 +197,13 @@ class ShipperList extends Shipper
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "ShipperAdd";
+        $this->AddUrl = "shipperadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "ShipperDelete";
-        $this->MultiUpdateUrl = "ShipperUpdate";
+        $this->MultiDeleteUrl = "shipperdelete";
+        $this->MultiUpdateUrl = "shipperupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -358,7 +358,7 @@ class ShipperList extends Shipper
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "ShipperView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

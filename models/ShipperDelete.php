@@ -38,7 +38,7 @@ class ShipperDelete extends Shipper
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "ShipperDelete";
+    public $CurrentPageName = "shipperdelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -416,7 +416,7 @@ class ShipperDelete extends Shipper
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("ShipperList"); // Prevent SQL injection, return to list
+            $this->terminate("shipperlist"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -470,7 +470,7 @@ class ShipperDelete extends Shipper
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("ShipperList"); // Return to list
+                $this->terminate("shipperlist"); // Return to list
                 return;
             }
         }
@@ -775,7 +775,7 @@ class ShipperDelete extends Shipper
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ShipperList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

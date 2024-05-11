@@ -38,7 +38,7 @@ class LokasiView extends Lokasi
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "LokasiView";
+    public $CurrentPageName = "lokasiview";
 
     // Page URLs
     public $AddUrl;
@@ -300,7 +300,7 @@ class LokasiView extends Lokasi
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "LokasiView"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "lokasiview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -556,7 +556,7 @@ class LokasiView extends Lokasi
             $this->LokasiID->setQueryStringValue($keyValue);
             $this->RecKey["LokasiID"] = $this->LokasiID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "LokasiList"; // Return to list
+            $returnUrl = "lokasilist"; // Return to list
         }
 
         // Get action
@@ -578,7 +578,7 @@ class LokasiView extends Lokasi
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "LokasiList"; // No matching record, return to list
+                        $returnUrl = "lokasilist"; // No matching record, return to list
                     }
                 break;
         }
@@ -802,7 +802,7 @@ class LokasiView extends Lokasi
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("LokasiList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("lokasilist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }
