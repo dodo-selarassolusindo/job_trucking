@@ -2,6 +2,9 @@
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
+    <menu id="14">
+      <phrase id="menutext" value="Tanpa Under Score" />
+    </menu>
     <menu id="10">
       <phrase id="menutext" value="Beranda" />
     </menu>
@@ -264,6 +267,9 @@
     </table>
     <table id="list_size">
       <phrase id="tblcaption" value="Daftar Size" />
+    </table>
+    <table id="tanpaunderscore">
+      <phrase id="tblcaption" value="Tanpa Under Score" />
     </table>
   </project>
 </ew-language>

@@ -43,7 +43,9 @@ $USER_LEVEL_PRIVS = [["{31D612D4-4474-4C58-A701-27B411C705E8}audittrail","-2","0
     ["{31D612D4-4474-4C58-A701-27B411C705E8}beranda.php","-2","72"],
     ["{31D612D4-4474-4C58-A701-27B411C705E8}beranda.php","0","0"],
     ["{31D612D4-4474-4C58-A701-27B411C705E8}list_size.php","-2","72"],
-    ["{31D612D4-4474-4C58-A701-27B411C705E8}list_size.php","0","0"]];
+    ["{31D612D4-4474-4C58-A701-27B411C705E8}list_size.php","0","0"],
+    ["{31D612D4-4474-4C58-A701-27B411C705E8}tanpaunderscore.php","-2","72"],
+    ["{31D612D4-4474-4C58-A701-27B411C705E8}tanpaunderscore.php","0","0"]];
 
 /**
  * Tables
@@ -66,4 +68,5 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{31D612D4-
     ["userlevelpermissions","userlevelpermissions","Detail",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","userlevelpermissionslist"],
     ["userlevels","userlevels","Hak Akses",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","userlevelslist"],
     ["beranda.php","beranda","Beranda",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","beranda"],
-    ["list_size.php","list_size","Daftar Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","listsize"]];
+    ["list_size.php","list_size","Daftar Size",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","listsize"],
+    ["tanpaunderscore.php","tanpaunderscore","Tanpa Under Score",true,"{31D612D4-4474-4C58-A701-27B411C705E8}","tanpaunderscore"]];

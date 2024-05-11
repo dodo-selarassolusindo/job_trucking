@@ -4,6 +4,7 @@ namespace PHPMaker2024\prj_job_trucking;
 
 // Navbar menu
 $topMenu = new Menu("navbar", true, true);
+$topMenu->addMenuItem(14, "mi_tanpaunderscore", $Language->menuPhrase("14", "MenuText"), "tanpaunderscore", -1, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}tanpaunderscore.php'), false, false, "", "", true, false);
 $topMenu->addMenuItem(10, "mi_beranda", $Language->menuPhrase("10", "MenuText"), "beranda", -1, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}beranda.php'), false, false, "", "", true, false);
 $topMenu->addMenuItem(11, "mci_Master", $Language->menuPhrase("11", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "sizelist", 11, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}size'), false, false, "", "", true, false);
@@ -19,6 +20,7 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
+$sideMenu->addMenuItem(14, "mi_tanpaunderscore", $Language->menuPhrase("14", "MenuText"), "tanpaunderscore", -1, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}tanpaunderscore.php'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(10, "mi_beranda", $Language->menuPhrase("10", "MenuText"), "beranda", -1, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}beranda.php'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(11, "mci_Master", $Language->menuPhrase("11", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "sizelist", 11, "", AllowListMenu('{31D612D4-4474-4C58-A701-27B411C705E8}size'), false, false, "", "", true, true);
