@@ -27,4 +27,8 @@ $r = ExecuteRows($q);
 </div>
 
 <?php } ?>
+
+<div class="small-box bg-info">
+    <a href="beranda" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Kembali</a>
+</div>
 <?= GetDebugMessage() ?>
