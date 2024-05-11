@@ -18,7 +18,7 @@ $Page->showMessage();
         <div class="icon">
             <i class="ion ion-bag"></i>
         </div>
-        <a href="size.php" class="small-box-footer">Klik di sini <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="./size.php" class="small-box-footer">Klik di sini <i class="fas fa-arrow-circle-right"></i></a>
     </div>
 </div>
 

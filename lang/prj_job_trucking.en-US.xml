@@ -2,11 +2,11 @@
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
-    <menu id="21">
-      <phrase id="menutext" value="Size" />
-    </menu>
     <menu id="5">
       <phrase id="menutext" value="Beranda" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="Size" />
     </menu>
     <menu id="6">
       <phrase id="menutext" value="Job" />

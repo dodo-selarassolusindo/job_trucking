@@ -19,7 +19,6 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
-$sideMenu->addMenuItem(21, "mi_size", $Language->menuPhrase("21", "MenuText"), "size", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size.php'), false, false, "", "", false, true);
 $sideMenu->addMenuItem(5, "mi_beranda", $Language->menuPhrase("5", "MenuText"), "beranda", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda.php'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_job", $Language->menuPhrase("6", "MenuText"), "joblist", -1, "", AllowListMenu('{DB904388-BBCA-46DF-8766-6547B7E1D6C1}job'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(16, "mci_Master", $Language->menuPhrase("16", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
