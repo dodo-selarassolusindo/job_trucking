@@ -16,6 +16,7 @@ $Page->showMessage();
     <div class="icon">
         <i class="ion ion-bag"></i>
     </div>
+    <a href="beranda" class="small-box-footer">Kembali <i class="fas fa-arrow-circle-left"></i></a>
     <a href="size2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
 </div>
 
@@ -27,6 +28,7 @@ $Page->showMessage();
     <div class="icon">
         <i class="ion ion-bag"></i>
     </div>
+    <a href="beranda" class="small-box-footer">Kembali <i class="fas fa-arrow-circle-left"></i></a>
     <a href="size2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
 </div>
 <?= GetDebugMessage() ?>
