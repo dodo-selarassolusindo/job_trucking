@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "sizedelete";
+    public $CurrentPageName = "sizecontroller";
 
     // Page headings
     public $Heading = "";
