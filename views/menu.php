@@ -10,6 +10,7 @@ $topMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "siz
 $topMenu->addMenuItem(18, "mi_type", $Language->menuPhrase("18", "MenuText"), "typelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}type'), false, false, "", "", true, false);
 $topMenu->addMenuItem(19, "mi_size_type", $Language->menuPhrase("19", "MenuText"), "sizetypelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size_type'), false, false, "", "", true, false);
 $topMenu->addMenuItem(5, "mi_lokasi", $Language->menuPhrase("5", "MenuText"), "lokasilist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi'), false, false, "", "", true, false);
+$topMenu->addMenuItem(20, "mi_pelabuhan", $Language->menuPhrase("20", "MenuText"), "pelabuhanlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}pelabuhan'), false, false, "", "", true, false);
 $topMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, false);
 $topMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, false);
 $topMenu->addMenuItem(4, "mi_job", $Language->menuPhrase("4", "MenuText"), "joblist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job'), false, false, "", "", true, false);
@@ -29,6 +30,7 @@ $sideMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "si
 $sideMenu->addMenuItem(18, "mi_type", $Language->menuPhrase("18", "MenuText"), "typelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}type'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(19, "mi_size_type", $Language->menuPhrase("19", "MenuText"), "sizetypelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size_type'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(5, "mi_lokasi", $Language->menuPhrase("5", "MenuText"), "lokasilist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi'), false, false, "", "", true, true);
+$sideMenu->addMenuItem(20, "mi_pelabuhan", $Language->menuPhrase("20", "MenuText"), "pelabuhanlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}pelabuhan'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(4, "mi_job", $Language->menuPhrase("4", "MenuText"), "joblist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job'), false, false, "", "", true, true);

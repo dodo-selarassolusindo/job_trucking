@@ -64,6 +64,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -385,6 +390,31 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -419,6 +449,11 @@
                 '/logout',
                 '/swagger/swagger',
                 '/[index]',
+                '/pelabuhanlist[/{PelabuhanID}]',
+                '/pelabuhanadd[/{PelabuhanID}]',
+                '/pelabuhanview[/{PelabuhanID}]',
+                '/pelabuhanedit[/{PelabuhanID}]',
+                '/pelabuhandelete[/{PelabuhanID}]',
                 '/shipperlist[/{ShipperID}]',
                 '/shipperadd[/{ShipperID}]',
                 '/shipperview[/{ShipperID}]',
@@ -485,6 +520,11 @@
                 'PHPMaker2024\\prj_job_trucking\\OthersController:logout',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:swagger',
                 'PHPMaker2024\\prj_job_trucking\\OthersController:index',
+                'PHPMaker2024\\prj_job_trucking\\PelabuhanController:list',
+                'PHPMaker2024\\prj_job_trucking\\PelabuhanController:add',
+                'PHPMaker2024\\prj_job_trucking\\PelabuhanController:view',
+                'PHPMaker2024\\prj_job_trucking\\PelabuhanController:edit',
+                'PHPMaker2024\\prj_job_trucking\\PelabuhanController:delete',
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:list',
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:add',
                 'PHPMaker2024\\prj_job_trucking\\ShipperController:view',
@@ -709,6 +749,21 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -743,6 +798,11 @@
                 'logout',
                 'swagger',
                 'index',
+                'list.pelabuhan',
+                'add.pelabuhan',
+                'view.pelabuhan',
+                'edit.pelabuhan',
+                'delete.pelabuhan',
                 'list.shipper',
                 'add.shipper',
                 'view.shipper',
@@ -777,6 +837,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -909,6 +974,11 @@
         $o[61],
         $o[62],
         $o[63],
+        $o[64],
+        $o[65],
+        $o[66],
+        $o[67],
+        $o[68],
     ],
     []
 );

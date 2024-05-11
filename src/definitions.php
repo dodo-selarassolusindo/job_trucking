@@ -86,6 +86,7 @@ return [
     "exportlog" => \DI\create(Exportlog::class),
     "job" => \DI\create(Job::class),
     "lokasi" => \DI\create(Lokasi::class),
+    "pelabuhan" => \DI\create(Pelabuhan::class),
     "shipper" => \DI\create(Shipper::class),
     "size" => \DI\create(Size::class),
     "size_type" => \DI\create(SizeType::class),

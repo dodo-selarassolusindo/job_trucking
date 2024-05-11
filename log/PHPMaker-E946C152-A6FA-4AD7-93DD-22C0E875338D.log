@@ -12,6 +12,7 @@ C:\xampp\htdocs\job_trucking\controllers\ExportlogController.php
 C:\xampp\htdocs\job_trucking\controllers\JobController.php
 C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
 C:\xampp\htdocs\job_trucking\controllers\OthersController.php
+C:\xampp\htdocs\job_trucking\controllers\PelabuhanController.php
 C:\xampp\htdocs\job_trucking\controllers\ShipperController.php
 C:\xampp\htdocs\job_trucking\controllers\Size2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\Size3Controller.php
@@ -65,6 +66,12 @@ C:\xampp\htdocs\job_trucking\models\LokasiDelete.php
 C:\xampp\htdocs\job_trucking\models\LokasiEdit.php
 C:\xampp\htdocs\job_trucking\models\LokasiList.php
 C:\xampp\htdocs\job_trucking\models\LokasiView.php
+C:\xampp\htdocs\job_trucking\models\Pelabuhan.php
+C:\xampp\htdocs\job_trucking\models\PelabuhanAdd.php
+C:\xampp\htdocs\job_trucking\models\PelabuhanDelete.php
+C:\xampp\htdocs\job_trucking\models\PelabuhanEdit.php
+C:\xampp\htdocs\job_trucking\models\PelabuhanList.php
+C:\xampp\htdocs\job_trucking\models\PelabuhanView.php
 C:\xampp\htdocs\job_trucking\models\PersonalData.php
 C:\xampp\htdocs\job_trucking\models\Shipper.php
 C:\xampp\htdocs\job_trucking\models\ShipperAdd.php
@@ -159,6 +166,7 @@ C:\xampp\htdocs\job_trucking\src\Entity\Employee.php
 C:\xampp\htdocs\job_trucking\src\Entity\Exportlog.php
 C:\xampp\htdocs\job_trucking\src\Entity\Job.php
 C:\xampp\htdocs\job_trucking\src\Entity\Lokasi.php
+C:\xampp\htdocs\job_trucking\src\Entity\Pelabuhan.php
 C:\xampp\htdocs\job_trucking\src\Entity\Shipper.php
 C:\xampp\htdocs\job_trucking\src\Entity\Size.php
 C:\xampp\htdocs\job_trucking\src\Entity\SizeType.php
@@ -280,6 +288,11 @@ C:\xampp\htdocs\job_trucking\views\LokasiDelete.php
 C:\xampp\htdocs\job_trucking\views\LokasiEdit.php
 C:\xampp\htdocs\job_trucking\views\LokasiList.php
 C:\xampp\htdocs\job_trucking\views\LokasiView.php
+C:\xampp\htdocs\job_trucking\views\PelabuhanAdd.php
+C:\xampp\htdocs\job_trucking\views\PelabuhanDelete.php
+C:\xampp\htdocs\job_trucking\views\PelabuhanEdit.php
+C:\xampp\htdocs\job_trucking\views\PelabuhanList.php
+C:\xampp\htdocs\job_trucking\views\PelabuhanView.php
 C:\xampp\htdocs\job_trucking\views\PersonalData.php
 C:\xampp\htdocs\job_trucking\views\ShipperAdd.php
 C:\xampp\htdocs\job_trucking\views\ShipperDelete.php

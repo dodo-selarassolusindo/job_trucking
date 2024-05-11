@@ -26,6 +26,9 @@
     <menu id="5">
       <phrase id="menutext" value="Destination" />
     </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Pelabuhan" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Customer" />
     </menu>
@@ -254,6 +257,15 @@
       <phrase id="tblcaption" value="Destination" />
       <field id="lokasiid">
         <phrase id="fldcaption" value="Lokasi ID" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+    </table>
+    <table id="pelabuhan">
+      <phrase id="tblcaption" value="Pelabuhan" />
+      <field id="pelabuhanid">
+        <phrase id="fldcaption" value="Pelabuhan ID" />
       </field>
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />
