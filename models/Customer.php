@@ -812,7 +812,7 @@ class Customer extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("customerlist");
+        return $_SESSION[$name] ?? GetUrl("CustomerList");
     }
 
     // Set return page URL
@@ -826,9 +826,9 @@ class Customer extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "customerview" => $Language->phrase("View"),
-            "customeredit" => $Language->phrase("Edit"),
-            "customeradd" => $Language->phrase("Add"),
+            "CustomerView" => $Language->phrase("View"),
+            "CustomerEdit" => $Language->phrase("Edit"),
+            "CustomerAdd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -836,7 +836,7 @@ class Customer extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "customerlist";
+        return "CustomerList";
     }
 
     // API page name
@@ -867,16 +867,16 @@ class Customer extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "customerlist";
+        return "CustomerList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("customerview", $parm);
+            $url = $this->keyUrl("CustomerView", $parm);
         } else {
-            $url = $this->keyUrl("customerview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("CustomerView", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -885,9 +885,9 @@ class Customer extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "customeradd?" . $parm;
+            $url = "CustomerAdd?" . $parm;
         } else {
-            $url = "customeradd";
+            $url = "CustomerAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -895,28 +895,28 @@ class Customer extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("customeredit", $parm);
+        $url = $this->keyUrl("CustomerEdit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("customerlist", "action=edit");
+        $url = $this->keyUrl("CustomerList", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("customeradd", $parm);
+        $url = $this->keyUrl("CustomerAdd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("customerlist", "action=copy");
+        $url = $this->keyUrl("CustomerList", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -926,7 +926,7 @@ class Customer extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("customerdelete", $parm);
+            return $this->keyUrl("CustomerDelete", $parm);
         }
     }
 

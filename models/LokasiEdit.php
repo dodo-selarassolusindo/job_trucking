@@ -38,7 +38,7 @@ class LokasiEdit extends Lokasi
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "lokasiedit";
+    public $CurrentPageName = "LokasiEdit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class LokasiEdit extends Lokasi
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "lokasiview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "LokasiView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -608,13 +608,13 @@ class LokasiEdit extends Lokasi
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("lokasilist"); // No matching record, return to list
+                        $this->terminate("LokasiList"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "lokasilist") {
+                if (GetPageName($returnUrl) == "LokasiList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -626,9 +626,9 @@ class LokasiEdit extends Lokasi
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "lokasilist") {
+                        if (GetPageName($returnUrl) != "LokasiList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "lokasilist"; // Return list page content
+                            $returnUrl = "LokasiList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -987,7 +987,7 @@ class LokasiEdit extends Lokasi
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("lokasilist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("LokasiList"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

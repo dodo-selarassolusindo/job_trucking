@@ -38,7 +38,7 @@ class ShipperView extends Shipper
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "shipperview";
+    public $CurrentPageName = "ShipperView";
 
     // Page URLs
     public $AddUrl;
@@ -302,7 +302,7 @@ class ShipperView extends Shipper
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "ShipperView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -558,7 +558,7 @@ class ShipperView extends Shipper
             $this->ShipperID->setQueryStringValue($keyValue);
             $this->RecKey["ShipperID"] = $this->ShipperID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "shipperlist"; // Return to list
+            $returnUrl = "ShipperList"; // Return to list
         }
 
         // Get action
@@ -580,7 +580,7 @@ class ShipperView extends Shipper
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "shipperlist"; // No matching record, return to list
+                        $returnUrl = "ShipperList"; // No matching record, return to list
                     }
                 break;
         }
@@ -826,7 +826,7 @@ class ShipperView extends Shipper
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ShipperList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

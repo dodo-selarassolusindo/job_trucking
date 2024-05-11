@@ -900,7 +900,7 @@ class Job extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("joblist");
+        return $_SESSION[$name] ?? GetUrl("JobList");
     }
 
     // Set return page URL
@@ -914,9 +914,9 @@ class Job extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "jobview" => $Language->phrase("View"),
-            "jobedit" => $Language->phrase("Edit"),
-            "jobadd" => $Language->phrase("Add"),
+            "JobView" => $Language->phrase("View"),
+            "JobEdit" => $Language->phrase("Edit"),
+            "JobAdd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -924,7 +924,7 @@ class Job extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "joblist";
+        return "JobList";
     }
 
     // API page name
@@ -955,16 +955,16 @@ class Job extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "joblist";
+        return "JobList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("jobview", $parm);
+            $url = $this->keyUrl("JobView", $parm);
         } else {
-            $url = $this->keyUrl("jobview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("JobView", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -973,9 +973,9 @@ class Job extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "jobadd?" . $parm;
+            $url = "JobAdd?" . $parm;
         } else {
-            $url = "jobadd";
+            $url = "JobAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -983,28 +983,28 @@ class Job extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("jobedit", $parm);
+        $url = $this->keyUrl("JobEdit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("joblist", "action=edit");
+        $url = $this->keyUrl("JobList", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("jobadd", $parm);
+        $url = $this->keyUrl("JobAdd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("joblist", "action=copy");
+        $url = $this->keyUrl("JobList", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -1014,7 +1014,7 @@ class Job extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("jobdelete", $parm);
+            return $this->keyUrl("JobDelete", $parm);
         }
     }
 

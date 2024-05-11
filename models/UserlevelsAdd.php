@@ -38,7 +38,7 @@ class UserlevelsAdd extends Userlevels
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "userlevelsadd";
+    public $CurrentPageName = "UserlevelsAdd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class UserlevelsAdd extends Userlevels
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "userlevelsview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "UserlevelsView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -580,7 +580,7 @@ class UserlevelsAdd extends Userlevels
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("userlevelslist"); // No matching record, return to list
+                    $this->terminate("UserlevelsList"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -591,18 +591,18 @@ class UserlevelsAdd extends Userlevels
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "userlevelslist") {
+                    if (GetPageName($returnUrl) == "UserlevelsList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "userlevelsview") {
+                    } elseif (GetPageName($returnUrl) == "UserlevelsView") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "userlevelslist") {
+                        if (GetPageName($returnUrl) != "UserlevelsList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "userlevelslist"; // Return list page content
+                            $returnUrl = "UserlevelsList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -1037,7 +1037,7 @@ class UserlevelsAdd extends Userlevels
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelslist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelsList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

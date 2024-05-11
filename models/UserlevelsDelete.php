@@ -38,7 +38,7 @@ class UserlevelsDelete extends Userlevels
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "userlevelsdelete";
+    public $CurrentPageName = "UserlevelsDelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -411,7 +411,7 @@ class UserlevelsDelete extends Userlevels
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("userlevelslist"); // Prevent SQL injection, return to list
+            $this->terminate("UserlevelsList"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -465,7 +465,7 @@ class UserlevelsDelete extends Userlevels
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("userlevelslist"); // Return to list
+                $this->terminate("UserlevelsList"); // Return to list
                 return;
             }
         }
@@ -757,7 +757,7 @@ class UserlevelsDelete extends Userlevels
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelslist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelsList"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

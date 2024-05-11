@@ -44,7 +44,7 @@ class UserlevelsList extends Userlevels
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "userlevelslist";
+    public $CurrentPageName = "UserlevelsList";
 
     // Page URLs
     public $AddUrl;
@@ -195,13 +195,13 @@ class UserlevelsList extends Userlevels
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "userlevelsadd";
+        $this->AddUrl = "UserlevelsAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "userlevelsdelete";
-        $this->MultiUpdateUrl = "userlevelsupdate";
+        $this->MultiDeleteUrl = "UserlevelsDelete";
+        $this->MultiUpdateUrl = "UserlevelsUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -356,7 +356,7 @@ class UserlevelsList extends Userlevels
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "userlevelsview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "UserlevelsView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

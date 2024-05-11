@@ -38,7 +38,7 @@ class ShipperAdd extends Shipper
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "shipperadd";
+    public $CurrentPageName = "ShipperAdd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -273,7 +273,7 @@ class ShipperAdd extends Shipper
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "shipperview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "ShipperView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -576,7 +576,7 @@ class ShipperAdd extends Shipper
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("shipperlist"); // No matching record, return to list
+                    $this->terminate("ShipperList"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -587,18 +587,18 @@ class ShipperAdd extends Shipper
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "shipperlist") {
+                    if (GetPageName($returnUrl) == "ShipperList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "shipperview") {
+                    } elseif (GetPageName($returnUrl) == "ShipperView") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "shipperlist") {
+                        if (GetPageName($returnUrl) != "ShipperList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "shipperlist"; // Return list page content
+                            $returnUrl = "ShipperList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -1012,7 +1012,7 @@ class ShipperAdd extends Shipper
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("shipperlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ShipperList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

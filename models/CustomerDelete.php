@@ -38,7 +38,7 @@ class CustomerDelete extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customerdelete";
+    public $CurrentPageName = "CustomerDelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -416,7 +416,7 @@ class CustomerDelete extends Customer
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("customerlist"); // Prevent SQL injection, return to list
+            $this->terminate("CustomerList"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -470,7 +470,7 @@ class CustomerDelete extends Customer
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("customerlist"); // Return to list
+                $this->terminate("CustomerList"); // Return to list
                 return;
             }
         }
@@ -775,7 +775,7 @@ class CustomerDelete extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("CustomerList"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

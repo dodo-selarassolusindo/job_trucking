@@ -38,7 +38,7 @@ class SizeEdit extends Size
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "sizeedit";
+    public $CurrentPageName = "SizeEdit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -271,7 +271,7 @@ class SizeEdit extends Size
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "SizeView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -608,13 +608,13 @@ class SizeEdit extends Size
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("sizelist"); // No matching record, return to list
+                        $this->terminate("SizeList"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "sizelist") {
+                if (GetPageName($returnUrl) == "SizeList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -626,9 +626,9 @@ class SizeEdit extends Size
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "sizelist") {
+                        if (GetPageName($returnUrl) != "SizeList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "sizelist"; // Return list page content
+                            $returnUrl = "SizeList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -987,7 +987,7 @@ class SizeEdit extends Size
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("SizeList"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

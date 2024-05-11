@@ -44,7 +44,7 @@ class CustomerList extends Customer
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "customerlist";
+    public $CurrentPageName = "CustomerList";
 
     // Page URLs
     public $AddUrl;
@@ -197,13 +197,13 @@ class CustomerList extends Customer
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "customeradd";
+        $this->AddUrl = "CustomerAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "customerdelete";
-        $this->MultiUpdateUrl = "customerupdate";
+        $this->MultiDeleteUrl = "CustomerDelete";
+        $this->MultiUpdateUrl = "CustomerUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -358,7 +358,7 @@ class CustomerList extends Customer
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "CustomerView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

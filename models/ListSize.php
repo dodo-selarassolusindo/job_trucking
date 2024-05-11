@@ -45,7 +45,7 @@ class ListSize
 
     // CSS class/style
     public $ReportContainerClass = "ew-grid";
-    public $CurrentPageName = "listsizecontroller";
+    public $CurrentPageName = "ListSizeController";
 
     // Page headings
     public $Heading = "";

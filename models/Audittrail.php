@@ -954,7 +954,7 @@ class Audittrail extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("audittraillist");
+        return $_SESSION[$name] ?? GetUrl("AudittrailList");
     }
 
     // Set return page URL
@@ -968,9 +968,9 @@ class Audittrail extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "audittrailview" => $Language->phrase("View"),
-            "audittrailedit" => $Language->phrase("Edit"),
-            "audittrailadd" => $Language->phrase("Add"),
+            "AudittrailView" => $Language->phrase("View"),
+            "AudittrailEdit" => $Language->phrase("Edit"),
+            "AudittrailAdd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -978,7 +978,7 @@ class Audittrail extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "audittraillist";
+        return "AudittrailList";
     }
 
     // API page name
@@ -1009,16 +1009,16 @@ class Audittrail extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "audittraillist";
+        return "AudittrailList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("audittrailview", $parm);
+            $url = $this->keyUrl("AudittrailView", $parm);
         } else {
-            $url = $this->keyUrl("audittrailview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("AudittrailView", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -1027,9 +1027,9 @@ class Audittrail extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "audittrailadd?" . $parm;
+            $url = "AudittrailAdd?" . $parm;
         } else {
-            $url = "audittrailadd";
+            $url = "AudittrailAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -1037,28 +1037,28 @@ class Audittrail extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("audittrailedit", $parm);
+        $url = $this->keyUrl("AudittrailEdit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("audittraillist", "action=edit");
+        $url = $this->keyUrl("AudittrailList", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("audittrailadd", $parm);
+        $url = $this->keyUrl("AudittrailAdd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("audittraillist", "action=copy");
+        $url = $this->keyUrl("AudittrailList", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -1068,7 +1068,7 @@ class Audittrail extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("audittraildelete", $parm);
+            return $this->keyUrl("AudittrailDelete", $parm);
         }
     }
 

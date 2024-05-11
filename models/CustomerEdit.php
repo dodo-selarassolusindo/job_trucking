@@ -38,7 +38,7 @@ class CustomerEdit extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customeredit";
+    public $CurrentPageName = "CustomerEdit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -273,7 +273,7 @@ class CustomerEdit extends Customer
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "CustomerView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -610,13 +610,13 @@ class CustomerEdit extends Customer
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("customerlist"); // No matching record, return to list
+                        $this->terminate("CustomerList"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "customerlist") {
+                if (GetPageName($returnUrl) == "CustomerList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -628,9 +628,9 @@ class CustomerEdit extends Customer
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "customerlist") {
+                        if (GetPageName($returnUrl) != "CustomerList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "customerlist"; // Return list page content
+                            $returnUrl = "CustomerList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -1077,7 +1077,7 @@ class CustomerEdit extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("CustomerList"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

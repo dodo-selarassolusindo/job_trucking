@@ -38,7 +38,7 @@ class LokasiDelete extends Lokasi
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "lokasidelete";
+    public $CurrentPageName = "LokasiDelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -414,7 +414,7 @@ class LokasiDelete extends Lokasi
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("lokasilist"); // Prevent SQL injection, return to list
+            $this->terminate("LokasiList"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -468,7 +468,7 @@ class LokasiDelete extends Lokasi
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("lokasilist"); // Return to list
+                $this->terminate("LokasiList"); // Return to list
                 return;
             }
         }
@@ -751,7 +751,7 @@ class LokasiDelete extends Lokasi
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("lokasilist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("LokasiList"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }

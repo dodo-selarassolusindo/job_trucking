@@ -38,7 +38,7 @@ class JobEdit extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "jobedit";
+    public $CurrentPageName = "JobEdit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -276,7 +276,7 @@ class JobEdit extends Job
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "JobView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -613,13 +613,13 @@ class JobEdit extends Job
                         if ($this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                         }
-                        $this->terminate("joblist"); // No matching record, return to list
+                        $this->terminate("JobList"); // No matching record, return to list
                         return;
                     }
                 break;
             case "update": // Update
                 $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "joblist") {
+                if (GetPageName($returnUrl) == "JobList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
                 $this->SendEmail = true; // Send email on update success
@@ -631,9 +631,9 @@ class JobEdit extends Job
                     // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "joblist") {
+                        if (GetPageName($returnUrl) != "JobList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "joblist"; // Return list page content
+                            $returnUrl = "JobList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) {
@@ -1230,7 +1230,7 @@ class JobEdit extends Job
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("JobList"), "", $this->TableVar, true);
         $pageId = "edit";
         $Breadcrumb->add("edit", $pageId, $url);
     }

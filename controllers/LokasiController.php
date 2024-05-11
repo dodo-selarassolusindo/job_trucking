@@ -16,35 +16,35 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class LokasiController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/lokasilist[/{LokasiID}]", [PermissionMiddleware::class], "list.lokasi")]
+    #[Map(["GET","POST","OPTIONS"], "/LokasiList[/{LokasiID}]", [PermissionMiddleware::class], "list.lokasi")]
     public function list(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "LokasiList");
     }
 
     // add
-    #[Map(["GET","POST","OPTIONS"], "/lokasiadd[/{LokasiID}]", [PermissionMiddleware::class], "add.lokasi")]
+    #[Map(["GET","POST","OPTIONS"], "/LokasiAdd[/{LokasiID}]", [PermissionMiddleware::class], "add.lokasi")]
     public function add(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "LokasiAdd");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/lokasiview[/{LokasiID}]", [PermissionMiddleware::class], "view.lokasi")]
+    #[Map(["GET","POST","OPTIONS"], "/LokasiView[/{LokasiID}]", [PermissionMiddleware::class], "view.lokasi")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "LokasiView");
     }
 
     // edit
-    #[Map(["GET","POST","OPTIONS"], "/lokasiedit[/{LokasiID}]", [PermissionMiddleware::class], "edit.lokasi")]
+    #[Map(["GET","POST","OPTIONS"], "/LokasiEdit[/{LokasiID}]", [PermissionMiddleware::class], "edit.lokasi")]
     public function edit(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "LokasiEdit");
     }
 
     // delete
-    #[Map(["GET","POST","OPTIONS"], "/lokasidelete[/{LokasiID}]", [PermissionMiddleware::class], "delete.lokasi")]
+    #[Map(["GET","POST","OPTIONS"], "/LokasiDelete[/{LokasiID}]", [PermissionMiddleware::class], "delete.lokasi")]
     public function delete(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "LokasiDelete");

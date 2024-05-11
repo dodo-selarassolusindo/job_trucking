@@ -38,7 +38,7 @@ class CustomerAdd extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customeradd";
+    public $CurrentPageName = "CustomerAdd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -273,7 +273,7 @@ class CustomerAdd extends Customer
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "CustomerView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -576,7 +576,7 @@ class CustomerAdd extends Customer
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("customerlist"); // No matching record, return to list
+                    $this->terminate("CustomerList"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -587,18 +587,18 @@ class CustomerAdd extends Customer
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "customerlist") {
+                    if (GetPageName($returnUrl) == "CustomerList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "customerview") {
+                    } elseif (GetPageName($returnUrl) == "CustomerView") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "customerlist") {
+                        if (GetPageName($returnUrl) != "CustomerList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "customerlist"; // Return list page content
+                            $returnUrl = "CustomerList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -1012,7 +1012,7 @@ class CustomerAdd extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("CustomerList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

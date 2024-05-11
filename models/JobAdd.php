@@ -38,7 +38,7 @@ class JobAdd extends Job
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "jobadd";
+    public $CurrentPageName = "JobAdd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -276,7 +276,7 @@ class JobAdd extends Job
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "jobview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "JobView"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -579,7 +579,7 @@ class JobAdd extends Job
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("joblist"); // No matching record, return to list
+                    $this->terminate("JobList"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -590,18 +590,18 @@ class JobAdd extends Job
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "joblist") {
+                    if (GetPageName($returnUrl) == "JobList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "jobview") {
+                    } elseif (GetPageName($returnUrl) == "JobView") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "joblist") {
+                        if (GetPageName($returnUrl) != "JobList") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "joblist"; // Return list page content
+                            $returnUrl = "JobList"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -1165,7 +1165,7 @@ class JobAdd extends Job
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joblist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("JobList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

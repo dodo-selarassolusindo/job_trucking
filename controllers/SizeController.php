@@ -16,35 +16,35 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class SizeController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/sizelist[/{SizeID}]", [PermissionMiddleware::class], "list.size")]
+    #[Map(["GET","POST","OPTIONS"], "/SizeList[/{SizeID}]", [PermissionMiddleware::class], "list.size")]
     public function list(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "SizeList");
     }
 
     // add
-    #[Map(["GET","POST","OPTIONS"], "/sizeadd[/{SizeID}]", [PermissionMiddleware::class], "add.size")]
+    #[Map(["GET","POST","OPTIONS"], "/SizeAdd[/{SizeID}]", [PermissionMiddleware::class], "add.size")]
     public function add(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "SizeAdd");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/sizeview[/{SizeID}]", [PermissionMiddleware::class], "view.size")]
+    #[Map(["GET","POST","OPTIONS"], "/SizeView[/{SizeID}]", [PermissionMiddleware::class], "view.size")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "SizeView");
     }
 
     // edit
-    #[Map(["GET","POST","OPTIONS"], "/sizeedit[/{SizeID}]", [PermissionMiddleware::class], "edit.size")]
+    #[Map(["GET","POST","OPTIONS"], "/SizeEdit[/{SizeID}]", [PermissionMiddleware::class], "edit.size")]
     public function edit(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "SizeEdit");
     }
 
     // delete
-    #[Map(["GET","POST","OPTIONS"], "/sizedelete[/{SizeID}]", [PermissionMiddleware::class], "delete.size")]
+    #[Map(["GET","POST","OPTIONS"], "/SizeDelete[/{SizeID}]", [PermissionMiddleware::class], "delete.size")]
     public function delete(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "SizeDelete");

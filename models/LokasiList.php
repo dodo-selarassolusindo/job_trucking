@@ -44,7 +44,7 @@ class LokasiList extends Lokasi
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "lokasilist";
+    public $CurrentPageName = "LokasiList";
 
     // Page URLs
     public $AddUrl;
@@ -195,13 +195,13 @@ class LokasiList extends Lokasi
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "lokasiadd";
+        $this->AddUrl = "LokasiAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "lokasidelete";
-        $this->MultiUpdateUrl = "lokasiupdate";
+        $this->MultiDeleteUrl = "LokasiDelete";
+        $this->MultiUpdateUrl = "LokasiUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -356,7 +356,7 @@ class LokasiList extends Lokasi
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "lokasiview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "LokasiView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();

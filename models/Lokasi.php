@@ -760,7 +760,7 @@ class Lokasi extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("lokasilist");
+        return $_SESSION[$name] ?? GetUrl("LokasiList");
     }
 
     // Set return page URL
@@ -774,9 +774,9 @@ class Lokasi extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "lokasiview" => $Language->phrase("View"),
-            "lokasiedit" => $Language->phrase("Edit"),
-            "lokasiadd" => $Language->phrase("Add"),
+            "LokasiView" => $Language->phrase("View"),
+            "LokasiEdit" => $Language->phrase("Edit"),
+            "LokasiAdd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -784,7 +784,7 @@ class Lokasi extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "lokasilist";
+        return "LokasiList";
     }
 
     // API page name
@@ -815,16 +815,16 @@ class Lokasi extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "lokasilist";
+        return "LokasiList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("lokasiview", $parm);
+            $url = $this->keyUrl("LokasiView", $parm);
         } else {
-            $url = $this->keyUrl("lokasiview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("LokasiView", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -833,9 +833,9 @@ class Lokasi extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "lokasiadd?" . $parm;
+            $url = "LokasiAdd?" . $parm;
         } else {
-            $url = "lokasiadd";
+            $url = "LokasiAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -843,28 +843,28 @@ class Lokasi extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("lokasiedit", $parm);
+        $url = $this->keyUrl("LokasiEdit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("lokasilist", "action=edit");
+        $url = $this->keyUrl("LokasiList", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("lokasiadd", $parm);
+        $url = $this->keyUrl("LokasiAdd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("lokasilist", "action=copy");
+        $url = $this->keyUrl("LokasiList", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -874,7 +874,7 @@ class Lokasi extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("lokasidelete", $parm);
+            return $this->keyUrl("LokasiDelete", $parm);
         }
     }
 

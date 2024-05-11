@@ -809,7 +809,7 @@ class Userlevelpermissions extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("userlevelpermissionslist");
+        return $_SESSION[$name] ?? GetUrl("UserlevelpermissionsList");
     }
 
     // Set return page URL
@@ -823,9 +823,9 @@ class Userlevelpermissions extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "userlevelpermissionsview" => $Language->phrase("View"),
-            "userlevelpermissionsedit" => $Language->phrase("Edit"),
-            "userlevelpermissionsadd" => $Language->phrase("Add"),
+            "UserlevelpermissionsView" => $Language->phrase("View"),
+            "UserlevelpermissionsEdit" => $Language->phrase("Edit"),
+            "UserlevelpermissionsAdd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -833,7 +833,7 @@ class Userlevelpermissions extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "userlevelpermissionslist";
+        return "UserlevelpermissionsList";
     }
 
     // API page name
@@ -864,16 +864,16 @@ class Userlevelpermissions extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "userlevelpermissionslist";
+        return "UserlevelpermissionsList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("userlevelpermissionsview", $parm);
+            $url = $this->keyUrl("UserlevelpermissionsView", $parm);
         } else {
-            $url = $this->keyUrl("userlevelpermissionsview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("UserlevelpermissionsView", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -882,9 +882,9 @@ class Userlevelpermissions extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "userlevelpermissionsadd?" . $parm;
+            $url = "UserlevelpermissionsAdd?" . $parm;
         } else {
-            $url = "userlevelpermissionsadd";
+            $url = "UserlevelpermissionsAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -892,28 +892,28 @@ class Userlevelpermissions extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("userlevelpermissionsedit", $parm);
+        $url = $this->keyUrl("UserlevelpermissionsEdit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("userlevelpermissionslist", "action=edit");
+        $url = $this->keyUrl("UserlevelpermissionsList", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("userlevelpermissionsadd", $parm);
+        $url = $this->keyUrl("UserlevelpermissionsAdd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("userlevelpermissionslist", "action=copy");
+        $url = $this->keyUrl("UserlevelpermissionsList", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -923,7 +923,7 @@ class Userlevelpermissions extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("userlevelpermissionsdelete", $parm);
+            return $this->keyUrl("UserlevelpermissionsDelete", $parm);
         }
     }
 

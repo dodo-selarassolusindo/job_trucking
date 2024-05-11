@@ -38,7 +38,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "userlevelpermissionsview";
+    public $CurrentPageName = "UserlevelpermissionsView";
 
     // Page URLs
     public $AddUrl;
@@ -304,7 +304,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "userlevelpermissionsview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "UserlevelpermissionsView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -558,7 +558,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
             $this->userlevelid->setQueryStringValue($keyValue);
             $this->RecKey["userlevelid"] = $this->userlevelid->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "userlevelpermissionslist"; // Return to list
+            $returnUrl = "UserlevelpermissionsList"; // Return to list
         }
         if (($keyValue = Get("_tablename") ?? Route("_tablename")) !== null) {
             $this->_tablename->setQueryStringValue($keyValue);
@@ -570,7 +570,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
             $this->_tablename->setQueryStringValue($keyValue);
             $this->RecKey["_tablename"] = $this->_tablename->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "userlevelpermissionslist"; // Return to list
+            $returnUrl = "UserlevelpermissionsList"; // Return to list
         }
 
         // Get action
@@ -592,7 +592,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "userlevelpermissionslist"; // No matching record, return to list
+                        $returnUrl = "UserlevelpermissionsList"; // No matching record, return to list
                     }
                 break;
         }
@@ -829,7 +829,7 @@ class UserlevelpermissionsView extends Userlevelpermissions
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("userlevelpermissionslist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("UserlevelpermissionsList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

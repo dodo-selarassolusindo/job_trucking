@@ -16,14 +16,14 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class AudittrailController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/audittraillist[/{Id}]", [PermissionMiddleware::class], "list.audittrail")]
+    #[Map(["GET","POST","OPTIONS"], "/AudittrailList[/{Id}]", [PermissionMiddleware::class], "list.audittrail")]
     public function list(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "AudittrailList");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/audittrailview[/{Id}]", [PermissionMiddleware::class], "view.audittrail")]
+    #[Map(["GET","POST","OPTIONS"], "/AudittrailView[/{Id}]", [PermissionMiddleware::class], "view.audittrail")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "AudittrailView");

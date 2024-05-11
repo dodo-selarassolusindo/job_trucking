@@ -38,7 +38,7 @@ class EmployeesView extends Employees
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "employeesview";
+    public $CurrentPageName = "EmployeesView";
 
     // Page URLs
     public $AddUrl;
@@ -325,7 +325,7 @@ class EmployeesView extends Employees
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "employeesview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "EmployeesView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -586,7 +586,7 @@ class EmployeesView extends Employees
             $this->EmployeeID->setQueryStringValue($keyValue);
             $this->RecKey["EmployeeID"] = $this->EmployeeID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "employeeslist"; // Return to list
+            $returnUrl = "EmployeesList"; // Return to list
         }
 
         // Get action
@@ -608,7 +608,7 @@ class EmployeesView extends Employees
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "employeeslist"; // No matching record, return to list
+                        $returnUrl = "EmployeesList"; // No matching record, return to list
                     }
                 break;
         }
@@ -1153,7 +1153,7 @@ class EmployeesView extends Employees
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("employeeslist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("EmployeesList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }

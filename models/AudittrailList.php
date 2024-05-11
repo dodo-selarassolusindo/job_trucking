@@ -44,7 +44,7 @@ class AudittrailList extends Audittrail
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "audittraillist";
+    public $CurrentPageName = "AudittrailList";
 
     // Page URLs
     public $AddUrl;
@@ -203,13 +203,13 @@ class AudittrailList extends Audittrail
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "audittrailadd";
+        $this->AddUrl = "AudittrailAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "audittraildelete";
-        $this->MultiUpdateUrl = "audittrailupdate";
+        $this->MultiDeleteUrl = "AudittrailDelete";
+        $this->MultiUpdateUrl = "AudittrailUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
@@ -364,7 +364,7 @@ class AudittrailList extends Audittrail
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "audittrailview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "AudittrailView"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
