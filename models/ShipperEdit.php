@@ -40,6 +40,14 @@ class ShipperEdit extends Shipper
     // CSS class/style
     public $CurrentPageName = "shipperedit";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class ShipperEdit extends Shipper
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->ShipperID->setVisibility();
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -357,7 +365,7 @@ class ShipperEdit extends Shipper
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['ShipperID'];
         }
         return $key;
     }
@@ -370,7 +378,7 @@ class ShipperEdit extends Shipper
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->ShipperID->Visible = false;
         }
     }
 
@@ -524,12 +532,12 @@ class ShipperEdit extends Shipper
         if (IsApi()) {
             // Load key values
             $loaded = true;
-            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-                $this->id->setOldValue($this->id->QueryStringValue);
-            } elseif (Post("id") !== null) {
-                $this->id->setFormValue(Post("id"));
-                $this->id->setOldValue($this->id->FormValue);
+            if (($keyValue = Get("ShipperID") ?? Key(0) ?? Route(2)) !== null) {
+                $this->ShipperID->setQueryStringValue($keyValue);
+                $this->ShipperID->setOldValue($this->ShipperID->QueryStringValue);
+            } elseif (Post("ShipperID") !== null) {
+                $this->ShipperID->setFormValue(Post("ShipperID"));
+                $this->ShipperID->setOldValue($this->ShipperID->FormValue);
             } else {
                 $loaded = false; // Unable to load key
             }
@@ -560,11 +568,11 @@ class ShipperEdit extends Shipper
 
                 // Load key from QueryString
                 $loadByQuery = false;
-                if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                    $this->id->setQueryStringValue($keyValue);
+                if (($keyValue = Get("ShipperID") ?? Route("ShipperID")) !== null) {
+                    $this->ShipperID->setQueryStringValue($keyValue);
                     $loadByQuery = true;
                 } else {
-                    $this->id->CurrentValue = null;
+                    $this->ShipperID->CurrentValue = null;
                 }
             }
 
@@ -693,10 +701,10 @@ class ShipperEdit extends Shipper
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+        // Check field name 'ShipperID' first before field var 'x_ShipperID'
+        $val = $CurrentForm->hasValue("ShipperID") ? $CurrentForm->getValue("ShipperID") : $CurrentForm->getValue("x_ShipperID");
+        if (!$this->ShipperID->IsDetailKey) {
+            $this->ShipperID->setFormValue($val);
         }
 
         // Check field name 'Nama' first before field var 'x_Nama'
@@ -734,7 +742,7 @@ class ShipperEdit extends Shipper
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+        $this->ShipperID->CurrentValue = $this->ShipperID->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
         $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
         $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
@@ -778,7 +786,7 @@ class ShipperEdit extends Shipper
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->ShipperID->setDbValue($row['ShipperID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -788,7 +796,7 @@ class ShipperEdit extends Shipper
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['ShipperID'] = $this->ShipperID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -826,8 +834,8 @@ class ShipperEdit extends Shipper
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // ShipperID
+        $this->ShipperID->RowCssClass = "row";
 
         // Nama
         $this->Nama->RowCssClass = "row";
@@ -840,8 +848,8 @@ class ShipperEdit extends Shipper
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // ShipperID
+            $this->ShipperID->ViewValue = $this->ShipperID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -852,8 +860,8 @@ class ShipperEdit extends Shipper
             // Contact_Person
             $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
+            // ShipperID
+            $this->ShipperID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -864,9 +872,9 @@ class ShipperEdit extends Shipper
             // Contact_Person
             $this->Contact_Person->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
+            // ShipperID
+            $this->ShipperID->setupEditAttributes();
+            $this->ShipperID->EditValue = $this->ShipperID->CurrentValue;
 
             // Nama
             $this->Nama->setupEditAttributes();
@@ -894,8 +902,8 @@ class ShipperEdit extends Shipper
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
+            // ShipperID
+            $this->ShipperID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -926,9 +934,9 @@ class ShipperEdit extends Shipper
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            if ($this->ShipperID->Visible && $this->ShipperID->Required) {
+                if (!$this->ShipperID->IsDetailKey && EmptyValue($this->ShipperID->FormValue)) {
+                    $this->ShipperID->addErrorMessage(str_replace("%s", $this->ShipperID->caption(), $this->ShipperID->RequiredErrorMessage));
                 }
             }
             if ($this->Nama->Visible && $this->Nama->Required) {

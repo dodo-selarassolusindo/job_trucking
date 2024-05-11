@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class CustomerAdd extends Customer
+class SizeAdd extends Size
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class CustomerAdd extends Customer
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "CustomerAdd";
+    public $PageObjName = "SizeAdd";
 
     // View file path
     public $View = null;
@@ -38,7 +38,7 @@ class CustomerAdd extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customeradd";
+    public $CurrentPageName = "sizeadd";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -129,10 +129,8 @@ class CustomerAdd extends Customer
     // Set field visibility
     public function setVisibility()
     {
-        $this->CustomerID->Visible = false;
-        $this->Nama->setVisibility();
-        $this->Nomor_Telepon->setVisibility();
-        $this->Contact_Person->setVisibility();
+        $this->SizeID->Visible = false;
+        $this->Ukuran->setVisibility();
     }
 
     // Constructor
@@ -140,8 +138,8 @@ class CustomerAdd extends Customer
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'customer';
-        $this->TableName = 'customer';
+        $this->TableVar = 'size';
+        $this->TableName = 'size';
 
         // Table CSS class
         $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-add-table";
@@ -152,14 +150,14 @@ class CustomerAdd extends Customer
         // Language object
         $Language = Container("app.language");
 
-        // Table object (customer)
-        if (!isset($GLOBALS["customer"]) || $GLOBALS["customer"]::class == PROJECT_NAMESPACE . "customer") {
-            $GLOBALS["customer"] = &$this;
+        // Table object (size)
+        if (!isset($GLOBALS["size"]) || $GLOBALS["size"]::class == PROJECT_NAMESPACE . "size") {
+            $GLOBALS["size"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'customer');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size');
         }
 
         // Start timer
@@ -273,7 +271,7 @@ class CustomerAdd extends Customer
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -365,7 +363,7 @@ class CustomerAdd extends Customer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['CustomerID'];
+            $key .= @$ar['SizeID'];
         }
         return $key;
     }
@@ -378,7 +376,7 @@ class CustomerAdd extends Customer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->CustomerID->Visible = false;
+            $this->SizeID->Visible = false;
         }
     }
 
@@ -534,8 +532,8 @@ class CustomerAdd extends Customer
             $postBack = true;
         } else {
             // Load key values from QueryString
-            if (($keyValue = Get("CustomerID") ?? Route("CustomerID")) !== null) {
-                $this->CustomerID->setQueryStringValue($keyValue);
+            if (($keyValue = Get("SizeID") ?? Route("SizeID")) !== null) {
+                $this->SizeID->setQueryStringValue($keyValue);
             }
             $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $this->CopyRecord = !EmptyValue($this->OldKey);
@@ -576,7 +574,7 @@ class CustomerAdd extends Customer
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("customerlist"); // No matching record, return to list
+                    $this->terminate("sizelist"); // No matching record, return to list
                     return;
                 }
                 break;
@@ -587,18 +585,18 @@ class CustomerAdd extends Customer
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
                     $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "customerlist") {
+                    if (GetPageName($returnUrl) == "sizelist") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "customerview") {
+                    } elseif (GetPageName($returnUrl) == "sizeview") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
                     // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "customerlist") {
+                        if (GetPageName($returnUrl) != "sizelist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "customerlist"; // Return list page content
+                            $returnUrl = "sizelist"; // Return list page content
                         }
                     }
                     if (IsJsonResponse()) { // Return to caller
@@ -673,47 +671,25 @@ class CustomerAdd extends Customer
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'Nama' first before field var 'x_Nama'
-        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
-        if (!$this->Nama->IsDetailKey) {
+        // Check field name 'Ukuran' first before field var 'x_Ukuran'
+        $val = $CurrentForm->hasValue("Ukuran") ? $CurrentForm->getValue("Ukuran") : $CurrentForm->getValue("x_Ukuran");
+        if (!$this->Ukuran->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Nama->Visible = false; // Disable update for API request
+                $this->Ukuran->Visible = false; // Disable update for API request
             } else {
-                $this->Nama->setFormValue($val);
+                $this->Ukuran->setFormValue($val);
             }
         }
 
-        // Check field name 'Nomor_Telepon' first before field var 'x_Nomor_Telepon'
-        $val = $CurrentForm->hasValue("Nomor_Telepon") ? $CurrentForm->getValue("Nomor_Telepon") : $CurrentForm->getValue("x_Nomor_Telepon");
-        if (!$this->Nomor_Telepon->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Nomor_Telepon->Visible = false; // Disable update for API request
-            } else {
-                $this->Nomor_Telepon->setFormValue($val);
-            }
-        }
-
-        // Check field name 'Contact_Person' first before field var 'x_Contact_Person'
-        $val = $CurrentForm->hasValue("Contact_Person") ? $CurrentForm->getValue("Contact_Person") : $CurrentForm->getValue("x_Contact_Person");
-        if (!$this->Contact_Person->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Contact_Person->Visible = false; // Disable update for API request
-            } else {
-                $this->Contact_Person->setFormValue($val);
-            }
-        }
-
-        // Check field name 'CustomerID' first before field var 'x_CustomerID'
-        $val = $CurrentForm->hasValue("CustomerID") ? $CurrentForm->getValue("CustomerID") : $CurrentForm->getValue("x_CustomerID");
+        // Check field name 'SizeID' first before field var 'x_SizeID'
+        $val = $CurrentForm->hasValue("SizeID") ? $CurrentForm->getValue("SizeID") : $CurrentForm->getValue("x_SizeID");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->Nama->CurrentValue = $this->Nama->FormValue;
-        $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
-        $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
+        $this->Ukuran->CurrentValue = $this->Ukuran->FormValue;
     }
 
     /**
@@ -754,20 +730,16 @@ class CustomerAdd extends Customer
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->CustomerID->setDbValue($row['CustomerID']);
-        $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
-        $this->Contact_Person->setDbValue($row['Contact_Person']);
+        $this->SizeID->setDbValue($row['SizeID']);
+        $this->Ukuran->setDbValue($row['Ukuran']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['CustomerID'] = $this->CustomerID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
-        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
+        $row['SizeID'] = $this->SizeID->DefaultValue;
+        $row['Ukuran'] = $this->Ukuran->DefaultValue;
         return $row;
     }
 
@@ -802,75 +774,35 @@ class CustomerAdd extends Customer
 
         // Common render codes for all row types
 
-        // CustomerID
-        $this->CustomerID->RowCssClass = "row";
+        // SizeID
+        $this->SizeID->RowCssClass = "row";
 
-        // Nama
-        $this->Nama->RowCssClass = "row";
-
-        // Nomor_Telepon
-        $this->Nomor_Telepon->RowCssClass = "row";
-
-        // Contact_Person
-        $this->Contact_Person->RowCssClass = "row";
+        // Ukuran
+        $this->Ukuran->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // CustomerID
-            $this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+            // SizeID
+            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
+            // Ukuran
+            $this->Ukuran->ViewValue = $this->Ukuran->CurrentValue;
 
-            // Nomor_Telepon
-            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
-
-            // Contact_Person
-            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
-
-            // Nama
-            $this->Nama->HrefValue = "";
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->HrefValue = "";
-
-            // Contact_Person
-            $this->Contact_Person->HrefValue = "";
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
-            // Nama
-            $this->Nama->setupEditAttributes();
-            if (!$this->Nama->Raw) {
-                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
+            // Ukuran
+            $this->Ukuran->setupEditAttributes();
+            if (!$this->Ukuran->Raw) {
+                $this->Ukuran->CurrentValue = HtmlDecode($this->Ukuran->CurrentValue);
             }
-            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
-            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->setupEditAttributes();
-            if (!$this->Nomor_Telepon->Raw) {
-                $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
-            }
-            $this->Nomor_Telepon->EditValue = HtmlEncode($this->Nomor_Telepon->CurrentValue);
-            $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
-
-            // Contact_Person
-            $this->Contact_Person->setupEditAttributes();
-            if (!$this->Contact_Person->Raw) {
-                $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
-            }
-            $this->Contact_Person->EditValue = HtmlEncode($this->Contact_Person->CurrentValue);
-            $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
+            $this->Ukuran->EditValue = HtmlEncode($this->Ukuran->CurrentValue);
+            $this->Ukuran->PlaceHolder = RemoveHtml($this->Ukuran->caption());
 
             // Add refer script
 
-            // Nama
-            $this->Nama->HrefValue = "";
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->HrefValue = "";
-
-            // Contact_Person
-            $this->Contact_Person->HrefValue = "";
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -892,19 +824,9 @@ class CustomerAdd extends Customer
             return true;
         }
         $validateForm = true;
-            if ($this->Nama->Visible && $this->Nama->Required) {
-                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
-                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
-                }
-            }
-            if ($this->Nomor_Telepon->Visible && $this->Nomor_Telepon->Required) {
-                if (!$this->Nomor_Telepon->IsDetailKey && EmptyValue($this->Nomor_Telepon->FormValue)) {
-                    $this->Nomor_Telepon->addErrorMessage(str_replace("%s", $this->Nomor_Telepon->caption(), $this->Nomor_Telepon->RequiredErrorMessage));
-                }
-            }
-            if ($this->Contact_Person->Visible && $this->Contact_Person->Required) {
-                if (!$this->Contact_Person->IsDetailKey && EmptyValue($this->Contact_Person->FormValue)) {
-                    $this->Contact_Person->addErrorMessage(str_replace("%s", $this->Contact_Person->caption(), $this->Contact_Person->RequiredErrorMessage));
+            if ($this->Ukuran->Visible && $this->Ukuran->Required) {
+                if (!$this->Ukuran->IsDetailKey && EmptyValue($this->Ukuran->FormValue)) {
+                    $this->Ukuran->addErrorMessage(str_replace("%s", $this->Ukuran->caption(), $this->Ukuran->RequiredErrorMessage));
                 }
             }
 
@@ -978,14 +900,8 @@ class CustomerAdd extends Customer
         global $Security;
         $rsnew = [];
 
-        // Nama
-        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
-
-        // Nomor_Telepon
-        $this->Nomor_Telepon->setDbValueDef($rsnew, $this->Nomor_Telepon->CurrentValue, false);
-
-        // Contact_Person
-        $this->Contact_Person->setDbValueDef($rsnew, $this->Contact_Person->CurrentValue, false);
+        // Ukuran
+        $this->Ukuran->setDbValueDef($rsnew, $this->Ukuran->CurrentValue, false);
         return $rsnew;
     }
 
@@ -995,14 +911,8 @@ class CustomerAdd extends Customer
      */
     protected function restoreAddFormFromRow($row)
     {
-        if (isset($row['Nama'])) { // Nama
-            $this->Nama->setFormValue($row['Nama']);
-        }
-        if (isset($row['Nomor_Telepon'])) { // Nomor_Telepon
-            $this->Nomor_Telepon->setFormValue($row['Nomor_Telepon']);
-        }
-        if (isset($row['Contact_Person'])) { // Contact_Person
-            $this->Contact_Person->setFormValue($row['Contact_Person']);
+        if (isset($row['Ukuran'])) { // Ukuran
+            $this->Ukuran->setFormValue($row['Ukuran']);
         }
     }
 
@@ -1012,7 +922,7 @@ class CustomerAdd extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }

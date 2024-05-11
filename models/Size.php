@@ -13,9 +13,9 @@ use Slim\App;
 use Closure;
 
 /**
- * Table class for userlevels
+ * Table class for size
  */
-class Userlevels extends DbTable
+class Size extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -54,8 +54,8 @@ class Userlevels extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $userlevelid;
-    public $userlevelname;
+    public $SizeID;
+    public $Ukuran;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -68,14 +68,14 @@ class Userlevels extends DbTable
 
         // Language object
         $Language = Container("app.language");
-        $this->TableVar = "userlevels";
-        $this->TableName = 'userlevels';
+        $this->TableVar = "size";
+        $this->TableName = 'size';
         $this->TableType = "TABLE";
         $this->ImportUseTransaction = $this->supportsTransaction() && Config("IMPORT_USE_TRANSACTION");
         $this->UseTransaction = $this->supportsTransaction() && Config("USE_TRANSACTION");
 
         // Update Table
-        $this->UpdateTable = "userlevels";
+        $this->UpdateTable = "size";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -99,59 +99,60 @@ class Userlevels extends DbTable
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UseAjaxActions = $this->UseAjaxActions || Config("USE_AJAX_ACTIONS");
+        $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // userlevelid
-        $this->userlevelid = new DbField(
+        // SizeID
+        $this->SizeID = new DbField(
             $this, // Table
-            'x_userlevelid', // Variable name
-            'userlevelid', // Name
-            '`userlevelid`', // Expression
-            '`userlevelid`', // Basic search expression
+            'x_SizeID', // Variable name
+            'SizeID', // Name
+            '`SizeID`', // Expression
+            '`SizeID`', // Basic search expression
             3, // Type
             11, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`userlevelid`', // Virtual expression
+            '`SizeID`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'NO' // Edit Tag
         );
-        $this->userlevelid->InputTextType = "text";
-        $this->userlevelid->Raw = true;
-        $this->userlevelid->IsPrimaryKey = true; // Primary key field
-        $this->userlevelid->Nullable = false; // NOT NULL field
-        $this->userlevelid->Required = true; // Required field
-        $this->userlevelid->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->userlevelid->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['userlevelid'] = &$this->userlevelid;
+        $this->SizeID->InputTextType = "text";
+        $this->SizeID->Raw = true;
+        $this->SizeID->IsAutoIncrement = true; // Autoincrement field
+        $this->SizeID->IsPrimaryKey = true; // Primary key field
+        $this->SizeID->Nullable = false; // NOT NULL field
+        $this->SizeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->SizeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['SizeID'] = &$this->SizeID;
 
-        // userlevelname
-        $this->userlevelname = new DbField(
+        // Ukuran
+        $this->Ukuran = new DbField(
             $this, // Table
-            'x_userlevelname', // Variable name
-            'userlevelname', // Name
-            '`userlevelname`', // Expression
-            '`userlevelname`', // Basic search expression
+            'x_Ukuran', // Variable name
+            'Ukuran', // Name
+            '`Ukuran`', // Expression
+            '`Ukuran`', // Basic search expression
             200, // Type
             255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`userlevelname`', // Virtual expression
+            '`Ukuran`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->userlevelname->InputTextType = "text";
-        $this->userlevelname->Nullable = false; // NOT NULL field
-        $this->userlevelname->Required = true; // Required field
-        $this->userlevelname->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
-        $this->Fields['userlevelname'] = &$this->userlevelname;
+        $this->Ukuran->InputTextType = "text";
+        $this->Ukuran->Nullable = false; // NOT NULL field
+        $this->Ukuran->Required = true; // Required field
+        $this->Ukuran->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Ukuran'] = &$this->Ukuran;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -220,7 +221,7 @@ class Userlevels extends DbTable
     // Get FROM clause
     public function getSqlFrom()
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "userlevels";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "size";
     }
 
     // Get FROM clause (for backward compatibility)
@@ -332,7 +333,7 @@ class Userlevels extends DbTable
     // Get ORDER BY clause
     public function getSqlOrderBy()
     {
-        return ($this->SqlOrderBy != "") ? $this->SqlOrderBy : Config("USER_LEVEL_ID_FIELD");
+        return ($this->SqlOrderBy != "") ? $this->SqlOrderBy : "";
     }
 
     // Get ORDER BY clause (for backward compatibility)
@@ -563,6 +564,8 @@ class Userlevels extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
+            $this->SizeID->setDbValue($conn->lastInsertId());
+            $rs['SizeID'] = $this->SizeID->DbValue;
             if ($this->AuditTrailOnAdd) {
                 $this->writeAuditTrailOnAdd($rs);
             }
@@ -615,9 +618,16 @@ class Userlevels extends DbTable
             $success = false;
             $this->DbErrorMessage = $e->getMessage();
         }
+
+        // Return auto increment field
+        if ($success) {
+            if (!isset($rs['SizeID']) && !EmptyValue($this->SizeID->CurrentValue)) {
+                $rs['SizeID'] = $this->SizeID->CurrentValue;
+            }
+        }
         if ($success && $this->AuditTrailOnEdit && $rsold) {
             $rsaudit = $rs;
-            $fldname = 'userlevelid';
+            $fldname = 'SizeID';
             if (!array_key_exists($fldname, $rsaudit)) {
                 $rsaudit[$fldname] = $rsold[$fldname];
             }
@@ -642,8 +652,8 @@ class Userlevels extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('userlevelid', $rs)) {
-                AddFilter($where, QuotedName('userlevelid', $this->Dbid) . '=' . QuotedValue($rs['userlevelid'], $this->userlevelid->DataType, $this->Dbid));
+            if (array_key_exists('SizeID', $rs)) {
+                AddFilter($where, QuotedName('SizeID', $this->Dbid) . '=' . QuotedValue($rs['SizeID'], $this->SizeID->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -676,8 +686,8 @@ class Userlevels extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->userlevelid->DbValue = $row['userlevelid'];
-        $this->userlevelname->DbValue = $row['userlevelname'];
+        $this->SizeID->DbValue = $row['SizeID'];
+        $this->Ukuran->DbValue = $row['Ukuran'];
     }
 
     // Delete uploaded files
@@ -689,14 +699,14 @@ class Userlevels extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`userlevelid` = @userlevelid@";
+        return "`SizeID` = @SizeID@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->userlevelid->CurrentValue : $this->userlevelid->OldValue;
+        $val = $current ? $this->SizeID->CurrentValue : $this->SizeID->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -714,9 +724,9 @@ class Userlevels extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->userlevelid->CurrentValue = $keys[0];
+                $this->SizeID->CurrentValue = $keys[0];
             } else {
-                $this->userlevelid->OldValue = $keys[0];
+                $this->SizeID->OldValue = $keys[0];
             }
         }
     }
@@ -726,9 +736,9 @@ class Userlevels extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('userlevelid', $row) ? $row['userlevelid'] : null;
+            $val = array_key_exists('SizeID', $row) ? $row['SizeID'] : null;
         } else {
-            $val = !EmptyValue($this->userlevelid->OldValue) && !$current ? $this->userlevelid->OldValue : $this->userlevelid->CurrentValue;
+            $val = !EmptyValue($this->SizeID->OldValue) && !$current ? $this->SizeID->OldValue : $this->SizeID->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -736,7 +746,7 @@ class Userlevels extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@userlevelid@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@SizeID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -751,7 +761,7 @@ class Userlevels extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("userlevelslist");
+        return $_SESSION[$name] ?? GetUrl("sizelist");
     }
 
     // Set return page URL
@@ -765,9 +775,9 @@ class Userlevels extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "userlevelsview" => $Language->phrase("View"),
-            "userlevelsedit" => $Language->phrase("Edit"),
-            "userlevelsadd" => $Language->phrase("Add"),
+            "sizeview" => $Language->phrase("View"),
+            "sizeedit" => $Language->phrase("Edit"),
+            "sizeadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -775,18 +785,18 @@ class Userlevels extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "userlevelslist";
+        return "sizelist";
     }
 
     // API page name
     public function getApiPageName($action)
     {
         return match (strtolower($action)) {
-            Config("API_VIEW_ACTION") => "UserlevelsView",
-            Config("API_ADD_ACTION") => "UserlevelsAdd",
-            Config("API_EDIT_ACTION") => "UserlevelsEdit",
-            Config("API_DELETE_ACTION") => "UserlevelsDelete",
-            Config("API_LIST_ACTION") => "UserlevelsList",
+            Config("API_VIEW_ACTION") => "SizeView",
+            Config("API_ADD_ACTION") => "SizeAdd",
+            Config("API_EDIT_ACTION") => "SizeEdit",
+            Config("API_DELETE_ACTION") => "SizeDelete",
+            Config("API_LIST_ACTION") => "SizeList",
             default => ""
         };
     }
@@ -806,16 +816,16 @@ class Userlevels extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "userlevelslist";
+        return "sizelist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("userlevelsview", $parm);
+            $url = $this->keyUrl("sizeview", $parm);
         } else {
-            $url = $this->keyUrl("userlevelsview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("sizeview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -824,9 +834,9 @@ class Userlevels extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "userlevelsadd?" . $parm;
+            $url = "sizeadd?" . $parm;
         } else {
-            $url = "userlevelsadd";
+            $url = "sizeadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -834,28 +844,28 @@ class Userlevels extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("userlevelsedit", $parm);
+        $url = $this->keyUrl("sizeedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("userlevelslist", "action=edit");
+        $url = $this->keyUrl("sizelist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("userlevelsadd", $parm);
+        $url = $this->keyUrl("sizeadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("userlevelslist", "action=copy");
+        $url = $this->keyUrl("sizelist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -865,7 +875,7 @@ class Userlevels extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("userlevelsdelete", $parm);
+            return $this->keyUrl("sizedelete", $parm);
         }
     }
 
@@ -878,7 +888,7 @@ class Userlevels extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"userlevelid\":" . VarToJson($this->userlevelid->CurrentValue, "number");
+        $json .= "\"SizeID\":" . VarToJson($this->SizeID->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -889,8 +899,8 @@ class Userlevels extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->userlevelid->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->userlevelid->CurrentValue);
+        if ($this->SizeID->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->SizeID->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -966,7 +976,7 @@ class Userlevels extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("userlevelid") ?? Route("userlevelid")) !== null) {
+            if (($keyValue = Param("SizeID") ?? Route("SizeID")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1010,9 +1020,9 @@ class Userlevels extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->userlevelid->CurrentValue = $key;
+                $this->SizeID->CurrentValue = $key;
             } else {
-                $this->userlevelid->OldValue = $key;
+                $this->SizeID->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1037,15 +1047,15 @@ class Userlevels extends DbTable
         } else {
             return;
         }
-        $this->userlevelid->setDbValue($row['userlevelid']);
-        $this->userlevelname->setDbValue($row['userlevelname']);
+        $this->SizeID->setDbValue($row['SizeID']);
+        $this->Ukuran->setDbValue($row['Ukuran']);
     }
 
     // Render list content
     public function renderListContent($filter)
     {
         global $Response;
-        $listPage = "UserlevelsList";
+        $listPage = "SizeList";
         $listClass = PROJECT_NAMESPACE . $listPage;
         $page = new $listClass();
         $page->loadRecordsetFromFilter($filter);
@@ -1069,27 +1079,23 @@ class Userlevels extends DbTable
 
         // Common render codes
 
-        // userlevelid
+        // SizeID
 
-        // userlevelname
+        // Ukuran
 
-        // userlevelid
-        $this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-        $this->userlevelid->ViewValue = FormatNumber($this->userlevelid->ViewValue, $this->userlevelid->formatPattern());
+        // SizeID
+        $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
 
-        // userlevelname
-        $this->userlevelname->ViewValue = $this->userlevelname->CurrentValue;
-        if ($Security->getUserLevelName($this->userlevelid->CurrentValue) != "") {
-            $this->userlevelname->ViewValue = $Security->getUserLevelName($this->userlevelid->CurrentValue);
-        }
+        // Ukuran
+        $this->Ukuran->ViewValue = $this->Ukuran->CurrentValue;
 
-        // userlevelid
-        $this->userlevelid->HrefValue = "";
-        $this->userlevelid->TooltipValue = "";
+        // SizeID
+        $this->SizeID->HrefValue = "";
+        $this->SizeID->TooltipValue = "";
 
-        // userlevelname
-        $this->userlevelname->HrefValue = "";
-        $this->userlevelname->TooltipValue = "";
+        // Ukuran
+        $this->Ukuran->HrefValue = "";
+        $this->Ukuran->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1106,21 +1112,17 @@ class Userlevels extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // userlevelid
-        $this->userlevelid->setupEditAttributes();
-        $this->userlevelid->EditValue = $this->userlevelid->CurrentValue;
-        $this->userlevelid->PlaceHolder = RemoveHtml($this->userlevelid->caption());
+        // SizeID
+        $this->SizeID->setupEditAttributes();
+        $this->SizeID->EditValue = $this->SizeID->CurrentValue;
 
-        // userlevelname
-        $this->userlevelname->setupEditAttributes();
-        if (!$this->userlevelname->Raw) {
-            $this->userlevelname->CurrentValue = HtmlDecode($this->userlevelname->CurrentValue);
+        // Ukuran
+        $this->Ukuran->setupEditAttributes();
+        if (!$this->Ukuran->Raw) {
+            $this->Ukuran->CurrentValue = HtmlDecode($this->Ukuran->CurrentValue);
         }
-        $this->userlevelname->EditValue = $this->userlevelname->CurrentValue;
-        if (in_array($this->userlevelid->CurrentValue, [-2, -1, 0])) {
-            $this->userlevelname->ReadOnly = true;
-        }
-        $this->userlevelname->PlaceHolder = RemoveHtml($this->userlevelname->caption());
+        $this->Ukuran->EditValue = $this->Ukuran->CurrentValue;
+        $this->Ukuran->PlaceHolder = RemoveHtml($this->Ukuran->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1150,11 +1152,11 @@ class Userlevels extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->userlevelid);
-                    $doc->exportCaption($this->userlevelname);
+                    $doc->exportCaption($this->SizeID);
+                    $doc->exportCaption($this->Ukuran);
                 } else {
-                    $doc->exportCaption($this->userlevelid);
-                    $doc->exportCaption($this->userlevelname);
+                    $doc->exportCaption($this->SizeID);
+                    $doc->exportCaption($this->Ukuran);
                 }
                 $doc->endExportRow();
             }
@@ -1181,11 +1183,11 @@ class Userlevels extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->userlevelid);
-                        $doc->exportField($this->userlevelname);
+                        $doc->exportField($this->SizeID);
+                        $doc->exportField($this->Ukuran);
                     } else {
-                        $doc->exportField($this->userlevelid);
-                        $doc->exportField($this->userlevelname);
+                        $doc->exportField($this->SizeID);
+                        $doc->exportField($this->Ukuran);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1213,7 +1215,7 @@ class Userlevels extends DbTable
     // Write audit trail start/end for grid update
     public function writeAuditTrailDummy($typ)
     {
-        WriteAuditLog(CurrentUserIdentifier(), $typ, 'userlevels');
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'size');
     }
 
     // Write audit trail (add page)
@@ -1229,7 +1231,7 @@ class Userlevels extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['userlevelid'];
+        $key .= $rs['SizeID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1244,7 +1246,7 @@ class Userlevels extends DbTable
                 } else {
                     $newvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "A", 'userlevels', $fldname, $key, "", $newvalue);
+                WriteAuditLog($usr, "A", 'size', $fldname, $key, "", $newvalue);
             }
         }
     }
@@ -1262,7 +1264,7 @@ class Userlevels extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rsold['userlevelid'];
+        $key .= $rsold['SizeID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1287,7 +1289,7 @@ class Userlevels extends DbTable
                         $oldvalue = $rsold[$fldname];
                         $newvalue = $rsnew[$fldname];
                     }
-                    WriteAuditLog($usr, "U", 'userlevels', $fldname, $key, $oldvalue, $newvalue);
+                    WriteAuditLog($usr, "U", 'size', $fldname, $key, $oldvalue, $newvalue);
                 }
             }
         }
@@ -1306,7 +1308,7 @@ class Userlevels extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['userlevelid'];
+        $key .= $rs['SizeID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1321,7 +1323,7 @@ class Userlevels extends DbTable
                 } else {
                     $oldvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "D", 'userlevels', $fldname, $key, $oldvalue);
+                WriteAuditLog($usr, "D", 'size', $fldname, $key, $oldvalue);
             }
         }
     }

@@ -22,44 +22,44 @@ use function PHPMaker2024\prj_job_trucking\HtmlDecode;
 use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 
 /**
- * Entity class for "lokasi" table
+ * Entity class for "size" table
  */
 #[Entity]
-#[Table(name: "lokasi")]
-class Lokasi extends AbstractEntity
+#[Table(name: "size")]
+class Size extends AbstractEntity
 {
     public static array $propertyNames = [
-        'LokasiID' => 'lokasiId',
-        'Nama' => 'nama',
+        'SizeID' => 'sizeId',
+        'Ukuran' => 'ukuran',
     ];
 
     #[Id]
-    #[Column(name: "LokasiID", type: "integer", unique: true)]
+    #[Column(name: "SizeID", type: "integer", unique: true)]
     #[GeneratedValue]
-    private int $lokasiId;
+    private int $sizeId;
 
-    #[Column(name: "Nama", type: "string")]
-    private string $nama;
+    #[Column(name: "Ukuran", type: "string")]
+    private string $ukuran;
 
-    public function getLokasiId(): int
+    public function getSizeId(): int
     {
-        return $this->lokasiId;
+        return $this->sizeId;
     }
 
-    public function setLokasiId(int $value): static
+    public function setSizeId(int $value): static
     {
-        $this->lokasiId = $value;
+        $this->sizeId = $value;
         return $this;
     }
 
-    public function getNama(): string
+    public function getUkuran(): string
     {
-        return HtmlDecode($this->nama);
+        return HtmlDecode($this->ukuran);
     }
 
-    public function setNama(string $value): static
+    public function setUkuran(string $value): static
     {
-        $this->nama = RemoveXss($value);
+        $this->ukuran = RemoveXss($value);
         return $this;
     }
 }

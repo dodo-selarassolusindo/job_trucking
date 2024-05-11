@@ -29,7 +29,7 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 class Job extends AbstractEntity
 {
     public static array $propertyNames = [
-        'id' => 'id',
+        'JobID' => 'jobId',
         'Lokasi' => 'lokasi',
         'Tanggal' => 'tanggal',
         'Nomor' => 'nomor',
@@ -39,9 +39,9 @@ class Job extends AbstractEntity
     ];
 
     #[Id]
-    #[Column(type: "integer", unique: true)]
+    #[Column(name: "JobID", type: "integer", unique: true)]
     #[GeneratedValue]
-    private int $id;
+    private int $jobId;
 
     #[Column(name: "Lokasi", type: "integer")]
     private int $lokasi;
@@ -61,14 +61,14 @@ class Job extends AbstractEntity
     #[Column(name: "Shipper", type: "integer")]
     private int $shipper;
 
-    public function getId(): int
+    public function getJobId(): int
     {
-        return $this->id;
+        return $this->jobId;
     }
 
-    public function setId(int $value): static
+    public function setJobId(int $value): static
     {
-        $this->id = $value;
+        $this->jobId = $value;
         return $this;
     }
 

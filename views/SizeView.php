@@ -3,7 +3,7 @@
 namespace PHPMaker2024\prj_job_trucking;
 
 // Page object
-$LokasiView = &$Page;
+$SizeView = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <div class="btn-toolbar ew-toolbar">
@@ -16,21 +16,21 @@ $LokasiView = &$Page;
 $Page->showMessage();
 ?>
 <main class="view">
-<form name="flokasiview" id="flokasiview" class="ew-form ew-view-form overlay-wrapper" action="<?= CurrentPageUrl(false) ?>" method="post" novalidate autocomplete="off">
+<form name="fsizeview" id="fsizeview" class="ew-form ew-view-form overlay-wrapper" action="<?= CurrentPageUrl(false) ?>" method="post" novalidate autocomplete="off">
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentTable = <?= JsonEncode($Page->toClientVar()) ?>;
-ew.deepAssign(ew.vars, { tables: { lokasi: currentTable } });
+ew.deepAssign(ew.vars, { tables: { size: currentTable } });
 var currentPageID = ew.PAGE_ID = "view";
 var currentForm;
-var flokasiview;
+var fsizeview;
 loadjs.ready(["wrapper", "head"], function () {
     let $ = jQuery;
     let fields = currentTable.fields;
 
     // Form object
     let form = new ew.FormBuilder()
-        .setId("flokasiview")
+        .setId("fsizeview")
         .setPageId("view")
         .build();
     window[form.id] = form;
@@ -48,27 +48,27 @@ loadjs.ready("head", function () {
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="lokasi">
+<input type="hidden" name="t" value="size">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
-    <tr id="r_LokasiID"<?= $Page->LokasiID->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_lokasi_LokasiID"><?= $Page->LokasiID->caption() ?></span></td>
-        <td data-name="LokasiID"<?= $Page->LokasiID->cellAttributes() ?>>
-<span id="el_lokasi_LokasiID">
-<span<?= $Page->LokasiID->viewAttributes() ?>>
-<?= $Page->LokasiID->getViewValue() ?></span>
+<?php if ($Page->SizeID->Visible) { // SizeID ?>
+    <tr id="r_SizeID"<?= $Page->SizeID->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_size_SizeID"><?= $Page->SizeID->caption() ?></span></td>
+        <td data-name="SizeID"<?= $Page->SizeID->cellAttributes() ?>>
+<span id="el_size_SizeID">
+<span<?= $Page->SizeID->viewAttributes() ?>>
+<?= $Page->SizeID->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-    <tr id="r_Nama"<?= $Page->Nama->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_lokasi_Nama"><?= $Page->Nama->caption() ?></span></td>
-        <td data-name="Nama"<?= $Page->Nama->cellAttributes() ?>>
-<span id="el_lokasi_Nama">
-<span<?= $Page->Nama->viewAttributes() ?>>
-<?= $Page->Nama->getViewValue() ?></span>
+<?php if ($Page->Ukuran->Visible) { // Ukuran ?>
+    <tr id="r_Ukuran"<?= $Page->Ukuran->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_size_Ukuran"><?= $Page->Ukuran->caption() ?></span></td>
+        <td data-name="Ukuran"<?= $Page->Ukuran->cellAttributes() ?>>
+<span id="el_size_Ukuran">
+<span<?= $Page->Ukuran->viewAttributes() ?>>
+<?= $Page->Ukuran->getViewValue() ?></span>
 </span>
 </td>
     </tr>

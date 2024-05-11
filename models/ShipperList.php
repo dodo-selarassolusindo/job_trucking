@@ -64,6 +64,14 @@ class ShipperList extends Shipper
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -145,7 +153,7 @@ class ShipperList extends Shipper
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->ShipperID->setVisibility();
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -441,7 +449,7 @@ class ShipperList extends Shipper
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['ShipperID'];
         }
         return $key;
     }
@@ -454,7 +462,7 @@ class ShipperList extends Shipper
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->ShipperID->Visible = false;
         }
     }
 
@@ -879,6 +887,13 @@ class ShipperList extends Shipper
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
             }
+
+            // Audit trail on search
+            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+                $searchParm = ServerVar("QUERY_STRING");
+                $searchSql = $this->getSessionWhere();
+                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
+            }
         }
 
         // Set up list action columns
@@ -1025,7 +1040,7 @@ class ShipperList extends Shipper
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->ShipperID->AdvancedSearch->toJson(), ","); // Field ShipperID
         $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
         $filterList = Concat($filterList, $this->Nomor_Telepon->AdvancedSearch->toJson(), ","); // Field Nomor_Telepon
         $filterList = Concat($filterList, $this->Contact_Person->AdvancedSearch->toJson(), ","); // Field Contact_Person
@@ -1068,13 +1083,13 @@ class ShipperList extends Shipper
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
+        // Field ShipperID
+        $this->ShipperID->AdvancedSearch->SearchValue = @$filter["x_ShipperID"];
+        $this->ShipperID->AdvancedSearch->SearchOperator = @$filter["z_ShipperID"];
+        $this->ShipperID->AdvancedSearch->SearchCondition = @$filter["v_ShipperID"];
+        $this->ShipperID->AdvancedSearch->SearchValue2 = @$filter["y_ShipperID"];
+        $this->ShipperID->AdvancedSearch->SearchOperator2 = @$filter["w_ShipperID"];
+        $this->ShipperID->AdvancedSearch->save();
 
         // Field Nama
         $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
@@ -1219,7 +1234,7 @@ class ShipperList extends Shipper
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
+            $this->updateSort($this->ShipperID); // ShipperID
             $this->updateSort($this->Nama); // Nama
             $this->updateSort($this->Nomor_Telepon); // Nomor_Telepon
             $this->updateSort($this->Contact_Person); // Contact_Person
@@ -1247,7 +1262,7 @@ class ShipperList extends Shipper
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
+                $this->ShipperID->setSort("");
                 $this->Nama->setSort("");
                 $this->Nomor_Telepon->setSort("");
                 $this->Contact_Person->setSort("");
@@ -1450,7 +1465,7 @@ class ShipperList extends Shipper
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->ShipperID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1488,7 +1503,7 @@ class ShipperList extends Shipper
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
+            $this->createColumnOption($option, "ShipperID");
             $this->createColumnOption($option, "Nama");
             $this->createColumnOption($option, "Nomor_Telepon");
             $this->createColumnOption($option, "Contact_Person");
@@ -1926,7 +1941,7 @@ class ShipperList extends Shipper
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->ShipperID->setDbValue($row['ShipperID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -1936,7 +1951,7 @@ class ShipperList extends Shipper
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['ShipperID'] = $this->ShipperID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -1980,7 +1995,7 @@ class ShipperList extends Shipper
 
         // Common render codes for all row types
 
-        // id
+        // ShipperID
 
         // Nama
 
@@ -1990,8 +2005,8 @@ class ShipperList extends Shipper
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // ShipperID
+            $this->ShipperID->ViewValue = $this->ShipperID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -2002,9 +2017,9 @@ class ShipperList extends Shipper
             // Contact_Person
             $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // ShipperID
+            $this->ShipperID->HrefValue = "";
+            $this->ShipperID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

@@ -28,7 +28,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+            ["CustomerID", [fields.CustomerID.visible && fields.CustomerID.required ? ew.Validators.required(fields.CustomerID.caption) : null], fields.CustomerID.isInvalid],
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid],
             ["Nomor_Telepon", [fields.Nomor_Telepon.visible && fields.Nomor_Telepon.required ? ew.Validators.required(fields.Nomor_Telepon.caption) : null], fields.Nomor_Telepon.isInvalid],
             ["Contact_Person", [fields.Contact_Person.visible && fields.Contact_Person.required ? ew.Validators.required(fields.Contact_Person.caption) : null], fields.Contact_Person.isInvalid]
@@ -71,14 +71,14 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_customer_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_customer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="customer" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+    <div id="r_CustomerID"<?= $Page->CustomerID->rowAttributes() ?>>
+        <label id="elh_customer_CustomerID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->CustomerID->caption() ?><?= $Page->CustomerID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->CustomerID->cellAttributes() ?>>
+<span id="el_customer_CustomerID">
+<span<?= $Page->CustomerID->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->CustomerID->getDisplayValue($Page->CustomerID->EditValue))) ?>"></span>
+<input type="hidden" data-table="customer" data-field="x_CustomerID" data-hidden="1" name="x_CustomerID" id="x_CustomerID" value="<?= HtmlEncode($Page->CustomerID->CurrentValue) ?>">
 </span>
 </div></div>
     </div>

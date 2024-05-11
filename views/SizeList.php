@@ -3,12 +3,12 @@
 namespace PHPMaker2024\prj_job_trucking;
 
 // Page object
-$ShipperList = &$Page;
+$SizeList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentTable = <?= JsonEncode($Page->toClientVar()) ?>;
-ew.deepAssign(ew.vars, { tables: { shipper: currentTable } });
+ew.deepAssign(ew.vars, { tables: { size: currentTable } });
 var currentPageID = ew.PAGE_ID = "list";
 var currentForm;
 var <?= $Page->FormName ?>;
@@ -51,20 +51,20 @@ loadjs.ready("head", function () {
 </div>
 <?php } ?>
 <?php if (!$Page->IsModal) { ?>
-<form name="fshippersrch" id="fshippersrch" class="ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>" novalidate autocomplete="off">
-<div id="fshippersrch_search_panel" class="mb-2 mb-sm-0 <?= $Page->SearchPanelClass ?>"><!-- .ew-search-panel -->
+<form name="fsizesrch" id="fsizesrch" class="ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>" novalidate autocomplete="off">
+<div id="fsizesrch_search_panel" class="mb-2 mb-sm-0 <?= $Page->SearchPanelClass ?>"><!-- .ew-search-panel -->
 <script>
 var currentTable = <?= JsonEncode($Page->toClientVar()) ?>;
-ew.deepAssign(ew.vars, { tables: { shipper: currentTable } });
+ew.deepAssign(ew.vars, { tables: { size: currentTable } });
 var currentForm;
-var fshippersrch, currentSearchForm, currentAdvancedSearchForm;
+var fsizesrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready(["wrapper", "head"], function () {
     let $ = jQuery,
         fields = currentTable.fields;
 
     // Form object for search
     let form = new ew.FormBuilder()
-        .setId("fshippersrch")
+        .setId("fsizesrch")
         .setPageId("list")
 <?php if ($Page->UseAjaxActions) { ?>
         .setSubmitWithFetch(true)
@@ -95,10 +95,10 @@ loadjs.ready(["wrapper", "head"], function () {
                 <span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span>
             </button>
             <div class="dropdown-menu dropdown-menu-end">
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "" ? " active" : "" ?>" form="fshippersrch" data-ew-action="search-type"><?= $Language->phrase("QuickSearchAuto") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "=" ? " active" : "" ?>" form="fshippersrch" data-ew-action="search-type" data-search-type="="><?= $Language->phrase("QuickSearchExact") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "AND" ? " active" : "" ?>" form="fshippersrch" data-ew-action="search-type" data-search-type="AND"><?= $Language->phrase("QuickSearchAll") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "OR" ? " active" : "" ?>" form="fshippersrch" data-ew-action="search-type" data-search-type="OR"><?= $Language->phrase("QuickSearchAny") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "" ? " active" : "" ?>" form="fsizesrch" data-ew-action="search-type"><?= $Language->phrase("QuickSearchAuto") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "=" ? " active" : "" ?>" form="fsizesrch" data-ew-action="search-type" data-search-type="="><?= $Language->phrase("QuickSearchExact") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "AND" ? " active" : "" ?>" form="fsizesrch" data-ew-action="search-type" data-search-type="AND"><?= $Language->phrase("QuickSearchAll") ?></button>
+                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "OR" ? " active" : "" ?>" form="fsizesrch" data-ew-action="search-type" data-search-type="OR"><?= $Language->phrase("QuickSearchAny") ?></button>
             </div>
         </div>
     </div>
@@ -128,13 +128,13 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="shipper">
+<input type="hidden" name="t" value="size">
 <?php if ($Page->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
-<div id="gmp_shipper" class="card-body ew-grid-middle-panel <?= $Page->TableContainerClass ?>" style="<?= $Page->TableContainerStyle ?>">
+<div id="gmp_size" class="card-body ew-grid-middle-panel <?= $Page->TableContainerClass ?>" style="<?= $Page->TableContainerStyle ?>">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit() || $Page->isMultiEdit()) { ?>
-<table id="tbl_shipperlist" class="<?= $Page->TableClass ?>"><!-- .ew-table -->
+<table id="tbl_sizelist" class="<?= $Page->TableClass ?>"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -147,17 +147,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->ShipperID->Visible) { // ShipperID ?>
-        <th data-name="ShipperID" class="<?= $Page->ShipperID->headerCellClass() ?>"><div id="elh_shipper_ShipperID" class="shipper_ShipperID"><?= $Page->renderFieldHeader($Page->ShipperID) ?></div></th>
+<?php if ($Page->SizeID->Visible) { // SizeID ?>
+        <th data-name="SizeID" class="<?= $Page->SizeID->headerCellClass() ?>"><div id="elh_size_SizeID" class="size_SizeID"><?= $Page->renderFieldHeader($Page->SizeID) ?></div></th>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-        <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_shipper_Nama" class="shipper_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
-<?php } ?>
-<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
-        <th data-name="Nomor_Telepon" class="<?= $Page->Nomor_Telepon->headerCellClass() ?>"><div id="elh_shipper_Nomor_Telepon" class="shipper_Nomor_Telepon"><?= $Page->renderFieldHeader($Page->Nomor_Telepon) ?></div></th>
-<?php } ?>
-<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
-        <th data-name="Contact_Person" class="<?= $Page->Contact_Person->headerCellClass() ?>"><div id="elh_shipper_Contact_Person" class="shipper_Contact_Person"><?= $Page->renderFieldHeader($Page->Contact_Person) ?></div></th>
+<?php if ($Page->Ukuran->Visible) { // Ukuran ?>
+        <th data-name="Ukuran" class="<?= $Page->Ukuran->headerCellClass() ?>"><div id="elh_size_Ukuran" class="size_Ukuran"><?= $Page->renderFieldHeader($Page->Ukuran) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -186,35 +180,19 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->ShipperID->Visible) { // ShipperID ?>
-        <td data-name="ShipperID"<?= $Page->ShipperID->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_shipper_ShipperID" class="el_shipper_ShipperID">
-<span<?= $Page->ShipperID->viewAttributes() ?>>
-<?= $Page->ShipperID->getViewValue() ?></span>
+    <?php if ($Page->SizeID->Visible) { // SizeID ?>
+        <td data-name="SizeID"<?= $Page->SizeID->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_size_SizeID" class="el_size_SizeID">
+<span<?= $Page->SizeID->viewAttributes() ?>>
+<?= $Page->SizeID->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->Nama->Visible) { // Nama ?>
-        <td data-name="Nama"<?= $Page->Nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_shipper_Nama" class="el_shipper_Nama">
-<span<?= $Page->Nama->viewAttributes() ?>>
-<?= $Page->Nama->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
-        <td data-name="Nomor_Telepon"<?= $Page->Nomor_Telepon->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_shipper_Nomor_Telepon" class="el_shipper_Nomor_Telepon">
-<span<?= $Page->Nomor_Telepon->viewAttributes() ?>>
-<?= $Page->Nomor_Telepon->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
-        <td data-name="Contact_Person"<?= $Page->Contact_Person->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_shipper_Contact_Person" class="el_shipper_Contact_Person">
-<span<?= $Page->Contact_Person->viewAttributes() ?>>
-<?= $Page->Contact_Person->getViewValue() ?></span>
+    <?php if ($Page->Ukuran->Visible) { // Ukuran ?>
+        <td data-name="Ukuran"<?= $Page->Ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_size_Ukuran" class="el_size_Ukuran">
+<span<?= $Page->Ukuran->viewAttributes() ?>>
+<?= $Page->Ukuran->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -277,7 +255,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("shipper");
+    ew.addEventHandlers("size");
 });
 </script>
 <script>

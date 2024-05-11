@@ -33,6 +33,14 @@ class Job extends DbTable
     public $OffsetColumnClass = "col-sm-10 offset-sm-2";
     public $TableLeftColumnClass = "w-col-2";
 
+    // Audit trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Ajax / Modal
     public $UseAjaxActions = false;
     public $ModalSearch = false;
@@ -46,7 +54,7 @@ class Job extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $id;
+    public $JobID;
     public $Lokasi;
     public $Tanggal;
     public $Nomor;
@@ -100,32 +108,32 @@ class Job extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // id
-        $this->id = new DbField(
+        // JobID
+        $this->JobID = new DbField(
             $this, // Table
-            'x_id', // Variable name
-            'id', // Name
-            '`id`', // Expression
-            '`id`', // Basic search expression
+            'x_JobID', // Variable name
+            'JobID', // Name
+            '`JobID`', // Expression
+            '`JobID`', // Basic search expression
             3, // Type
             11, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`id`', // Virtual expression
+            '`JobID`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'NO' // Edit Tag
         );
-        $this->id->InputTextType = "text";
-        $this->id->Raw = true;
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['id'] = &$this->id;
+        $this->JobID->InputTextType = "text";
+        $this->JobID->Raw = true;
+        $this->JobID->IsAutoIncrement = true; // Autoincrement field
+        $this->JobID->IsPrimaryKey = true; // Primary key field
+        $this->JobID->Nullable = false; // NOT NULL field
+        $this->JobID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->JobID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['JobID'] = &$this->JobID;
 
         // Lokasi
         $this->Lokasi = new DbField(
@@ -152,7 +160,7 @@ class Job extends DbTable
         $this->Lokasi->setSelectMultiple(false); // Select one
         $this->Lokasi->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->Lokasi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Lokasi->Lookup = new Lookup($this->Lokasi, 'lokasi', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->Lokasi->Lookup = new Lookup($this->Lokasi, 'lokasi', false, 'LokasiID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Lokasi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Lokasi->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Lokasi'] = &$this->Lokasi;
@@ -258,7 +266,7 @@ class Job extends DbTable
         $this->Customer->setSelectMultiple(false); // Select one
         $this->Customer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->Customer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Customer->Lookup = new Lookup($this->Customer, 'customer', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->Customer->Lookup = new Lookup($this->Customer, 'customer', false, 'CustomerID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Customer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Customer->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Customer'] = &$this->Customer;
@@ -288,7 +296,7 @@ class Job extends DbTable
         $this->Shipper->setSelectMultiple(false); // Select one
         $this->Shipper->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->Shipper->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Shipper->Lookup = new Lookup($this->Shipper, 'shipper', false, 'id', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->Shipper->Lookup = new Lookup($this->Shipper, 'shipper', false, 'ShipperID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Shipper->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Shipper->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Shipper'] = &$this->Shipper;
@@ -703,8 +711,11 @@ class Job extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->JobID->setDbValue($conn->lastInsertId());
+            $rs['JobID'] = $this->JobID->DbValue;
+            if ($this->AuditTrailOnAdd) {
+                $this->writeAuditTrailOnAdd($rs);
+            }
         }
         return $result;
     }
@@ -757,9 +768,17 @@ class Job extends DbTable
 
         // Return auto increment field
         if ($success) {
-            if (!isset($rs['id']) && !EmptyValue($this->id->CurrentValue)) {
-                $rs['id'] = $this->id->CurrentValue;
+            if (!isset($rs['JobID']) && !EmptyValue($this->JobID->CurrentValue)) {
+                $rs['JobID'] = $this->JobID->CurrentValue;
             }
+        }
+        if ($success && $this->AuditTrailOnEdit && $rsold) {
+            $rsaudit = $rs;
+            $fldname = 'JobID';
+            if (!array_key_exists($fldname, $rsaudit)) {
+                $rsaudit[$fldname] = $rsold[$fldname];
+            }
+            $this->writeAuditTrailOnEdit($rsold, $rsaudit);
         }
         return $success;
     }
@@ -780,8 +799,8 @@ class Job extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('JobID', $rs)) {
+                AddFilter($where, QuotedName('JobID', $this->Dbid) . '=' . QuotedValue($rs['JobID'], $this->JobID->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -802,6 +821,9 @@ class Job extends DbTable
                 $this->DbErrorMessage = $e->getMessage();
             }
         }
+        if ($success && $this->AuditTrailOnDelete) {
+            $this->writeAuditTrailOnDelete($rs);
+        }
         return $success;
     }
 
@@ -811,7 +833,7 @@ class Job extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
+        $this->JobID->DbValue = $row['JobID'];
         $this->Lokasi->DbValue = $row['Lokasi'];
         $this->Tanggal->DbValue = $row['Tanggal'];
         $this->Nomor->DbValue = $row['Nomor'];
@@ -829,14 +851,14 @@ class Job extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`JobID` = @JobID@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->JobID->CurrentValue : $this->JobID->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -854,9 +876,9 @@ class Job extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->JobID->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->JobID->OldValue = $keys[0];
             }
         }
     }
@@ -866,9 +888,9 @@ class Job extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('JobID', $row) ? $row['JobID'] : null;
         } else {
-            $val = !EmptyValue($this->id->OldValue) && !$current ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = !EmptyValue($this->JobID->OldValue) && !$current ? $this->JobID->OldValue : $this->JobID->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -876,7 +898,7 @@ class Job extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@JobID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -1018,7 +1040,7 @@ class Job extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . VarToJson($this->id->CurrentValue, "number");
+        $json .= "\"JobID\":" . VarToJson($this->JobID->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1029,8 +1051,8 @@ class Job extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->JobID->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->JobID->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1106,7 +1128,7 @@ class Job extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("JobID") ?? Route("JobID")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1150,9 +1172,9 @@ class Job extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->JobID->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->JobID->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1177,7 +1199,7 @@ class Job extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
+        $this->JobID->setDbValue($row['JobID']);
         $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
@@ -1214,7 +1236,7 @@ class Job extends DbTable
 
         // Common render codes
 
-        // id
+        // JobID
 
         // Lokasi
 
@@ -1228,15 +1250,15 @@ class Job extends DbTable
 
         // Shipper
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
+        // JobID
+        $this->JobID->ViewValue = $this->JobID->CurrentValue;
 
         // Lokasi
         $curVal = strval($this->Lokasi->CurrentValue);
         if ($curVal != "") {
             $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
             if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
                 $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $conn = Conn();
                 $config = $conn->getConfiguration();
@@ -1270,7 +1292,7 @@ class Job extends DbTable
         if ($curVal != "") {
             $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
             if ($this->Customer->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchDataType(), "");
                 $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $conn = Conn();
                 $config = $conn->getConfiguration();
@@ -1293,7 +1315,7 @@ class Job extends DbTable
         if ($curVal != "") {
             $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
             if ($this->Shipper->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchDataType(), "");
                 $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $conn = Conn();
                 $config = $conn->getConfiguration();
@@ -1311,9 +1333,9 @@ class Job extends DbTable
             $this->Shipper->ViewValue = null;
         }
 
-        // id
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // JobID
+        $this->JobID->HrefValue = "";
+        $this->JobID->TooltipValue = "";
 
         // Lokasi
         $this->Lokasi->HrefValue = "";
@@ -1354,9 +1376,9 @@ class Job extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditValue = $this->id->CurrentValue;
+        // JobID
+        $this->JobID->setupEditAttributes();
+        $this->JobID->EditValue = $this->JobID->CurrentValue;
 
         // Lokasi
         $this->Lokasi->setupEditAttributes();
@@ -1423,7 +1445,7 @@ class Job extends DbTable
                     $doc->exportCaption($this->Customer);
                     $doc->exportCaption($this->Shipper);
                 } else {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->JobID);
                     $doc->exportCaption($this->Lokasi);
                     $doc->exportCaption($this->Tanggal);
                     $doc->exportCaption($this->Nomor);
@@ -1463,7 +1485,7 @@ class Job extends DbTable
                         $doc->exportField($this->Customer);
                         $doc->exportField($this->Shipper);
                     } else {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->JobID);
                         $doc->exportField($this->Lokasi);
                         $doc->exportField($this->Tanggal);
                         $doc->exportField($this->Nomor);
@@ -1492,6 +1514,122 @@ class Job extends DbTable
 
         // No binary fields
         return false;
+    }
+
+    // Write audit trail start/end for grid update
+    public function writeAuditTrailDummy($typ)
+    {
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'job');
+    }
+
+    // Write audit trail (add page)
+    public function writeAuditTrailOnAdd(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnAdd) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['JobID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $newvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo Field
+                    $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML Field
+                    $newvalue = "[XML]";
+                } else {
+                    $newvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "A", 'job', $fldname, $key, "", $newvalue);
+            }
+        }
+    }
+
+    // Write audit trail (edit page)
+    public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnEdit) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rsold['JobID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rsnew) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && array_key_exists($fldname, $rsold) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->DataType == DataType::DATE) { // DateTime field
+                    $modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
+                } else {
+                    $modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+                }
+                if ($modified) {
+                    if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                        $oldvalue = $Language->phrase("PasswordMask");
+                        $newvalue = $Language->phrase("PasswordMask");
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                        $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsold[$fldname] : "[MEMO]";
+                        $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsnew[$fldname] : "[MEMO]";
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                        $oldvalue = "[XML]";
+                        $newvalue = "[XML]";
+                    } else {
+                        $oldvalue = $rsold[$fldname];
+                        $newvalue = $rsnew[$fldname];
+                    }
+                    WriteAuditLog($usr, "U", 'job', $fldname, $key, $oldvalue, $newvalue);
+                }
+            }
+        }
+    }
+
+    // Write audit trail (delete page)
+    public function writeAuditTrailOnDelete(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnDelete) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['JobID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $oldvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                    $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                    $oldvalue = "[XML]";
+                } else {
+                    $oldvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "D", 'job', $fldname, $key, $oldvalue);
+            }
+        }
     }
 
     // Table level events

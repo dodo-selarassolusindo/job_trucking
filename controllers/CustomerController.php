@@ -16,35 +16,35 @@ use PHPMaker2024\prj_job_trucking\Attributes\Put;
 class CustomerController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/customerlist[/{id}]", [PermissionMiddleware::class], "list.customer")]
+    #[Map(["GET","POST","OPTIONS"], "/customerlist[/{CustomerID}]", [PermissionMiddleware::class], "list.customer")]
     public function list(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "CustomerList");
     }
 
     // add
-    #[Map(["GET","POST","OPTIONS"], "/customeradd[/{id}]", [PermissionMiddleware::class], "add.customer")]
+    #[Map(["GET","POST","OPTIONS"], "/customeradd[/{CustomerID}]", [PermissionMiddleware::class], "add.customer")]
     public function add(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "CustomerAdd");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/customerview[/{id}]", [PermissionMiddleware::class], "view.customer")]
+    #[Map(["GET","POST","OPTIONS"], "/customerview[/{CustomerID}]", [PermissionMiddleware::class], "view.customer")]
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "CustomerView");
     }
 
     // edit
-    #[Map(["GET","POST","OPTIONS"], "/customeredit[/{id}]", [PermissionMiddleware::class], "edit.customer")]
+    #[Map(["GET","POST","OPTIONS"], "/customeredit[/{CustomerID}]", [PermissionMiddleware::class], "edit.customer")]
     public function edit(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "CustomerEdit");
     }
 
     // delete
-    #[Map(["GET","POST","OPTIONS"], "/customerdelete[/{id}]", [PermissionMiddleware::class], "delete.customer")]
+    #[Map(["GET","POST","OPTIONS"], "/customerdelete[/{CustomerID}]", [PermissionMiddleware::class], "delete.customer")]
     public function delete(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "CustomerDelete");

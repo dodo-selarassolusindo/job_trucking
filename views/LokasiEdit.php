@@ -28,7 +28,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+            ["LokasiID", [fields.LokasiID.visible && fields.LokasiID.required ? ew.Validators.required(fields.LokasiID.caption) : null], fields.LokasiID.isInvalid],
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid]
         ])
 
@@ -69,14 +69,14 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_lokasi_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_lokasi_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="lokasi" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+    <div id="r_LokasiID"<?= $Page->LokasiID->rowAttributes() ?>>
+        <label id="elh_lokasi_LokasiID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->LokasiID->caption() ?><?= $Page->LokasiID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->LokasiID->cellAttributes() ?>>
+<span id="el_lokasi_LokasiID">
+<span<?= $Page->LokasiID->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->LokasiID->getDisplayValue($Page->LokasiID->EditValue))) ?>"></span>
+<input type="hidden" data-table="lokasi" data-field="x_LokasiID" data-hidden="1" name="x_LokasiID" id="x_LokasiID" value="<?= HtmlEncode($Page->LokasiID->CurrentValue) ?>">
 </span>
 </div></div>
     </div>

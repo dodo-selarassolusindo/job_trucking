@@ -40,6 +40,14 @@ class ShipperDelete extends Shipper
     // CSS class/style
     public $CurrentPageName = "shipperdelete";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class ShipperDelete extends Shipper
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->ShipperID->setVisibility();
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -333,7 +341,7 @@ class ShipperDelete extends Shipper
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['ShipperID'];
         }
         return $key;
     }
@@ -346,7 +354,7 @@ class ShipperDelete extends Shipper
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->ShipperID->Visible = false;
         }
     }
     public $DbMasterFilter = "";
@@ -583,7 +591,7 @@ class ShipperDelete extends Shipper
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->ShipperID->setDbValue($row['ShipperID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -593,7 +601,7 @@ class ShipperDelete extends Shipper
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['ShipperID'] = $this->ShipperID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -612,7 +620,7 @@ class ShipperDelete extends Shipper
 
         // Common render codes for all row types
 
-        // id
+        // ShipperID
 
         // Nama
 
@@ -622,8 +630,8 @@ class ShipperDelete extends Shipper
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // ShipperID
+            $this->ShipperID->ViewValue = $this->ShipperID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -634,9 +642,9 @@ class ShipperDelete extends Shipper
             // Contact_Person
             $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // ShipperID
+            $this->ShipperID->HrefValue = "";
+            $this->ShipperID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -675,6 +683,9 @@ class ShipperDelete extends Shipper
         if ($this->UseTransaction) {
             $conn->beginTransaction();
         }
+        if ($this->AuditTrailOnDelete) {
+            $this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+        }
 
         // Clone old rows
         $rsold = $rows;
@@ -685,7 +696,7 @@ class ShipperDelete extends Shipper
             if ($thisKey != "") {
                 $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
             }
-            $thisKey .= $row['id'];
+            $thisKey .= $row['ShipperID'];
 
             // Call row deleting event
             $deleteRow = $this->rowDeleting($row);
@@ -734,9 +745,15 @@ class ShipperDelete extends Shipper
             if (count($failKeys) > 0) {
                 $this->setWarningMessage(str_replace("%k", explode(", ", $failKeys), $Language->phrase("DeleteRecordsFailed")));
             }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
+            }
         } else {
             if ($this->UseTransaction) { // Rollback transaction
                 $conn->rollback();
+            }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
             }
         }
 

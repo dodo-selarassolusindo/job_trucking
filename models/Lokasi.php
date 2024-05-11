@@ -33,6 +33,14 @@ class Lokasi extends DbTable
     public $OffsetColumnClass = "col-sm-10 offset-sm-2";
     public $TableLeftColumnClass = "w-col-2";
 
+    // Audit trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Ajax / Modal
     public $UseAjaxActions = false;
     public $ModalSearch = false;
@@ -46,7 +54,7 @@ class Lokasi extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $id;
+    public $LokasiID;
     public $Nama;
 
     // Page ID
@@ -91,35 +99,36 @@ class Lokasi extends DbTable
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UseAjaxActions = $this->UseAjaxActions || Config("USE_AJAX_ACTIONS");
+        $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // id
-        $this->id = new DbField(
+        // LokasiID
+        $this->LokasiID = new DbField(
             $this, // Table
-            'x_id', // Variable name
-            'id', // Name
-            '`id`', // Expression
-            '`id`', // Basic search expression
+            'x_LokasiID', // Variable name
+            'LokasiID', // Name
+            '`LokasiID`', // Expression
+            '`LokasiID`', // Basic search expression
             3, // Type
             11, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`id`', // Virtual expression
+            '`LokasiID`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'NO' // Edit Tag
         );
-        $this->id->InputTextType = "text";
-        $this->id->Raw = true;
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['id'] = &$this->id;
+        $this->LokasiID->InputTextType = "text";
+        $this->LokasiID->Raw = true;
+        $this->LokasiID->IsAutoIncrement = true; // Autoincrement field
+        $this->LokasiID->IsPrimaryKey = true; // Primary key field
+        $this->LokasiID->Nullable = false; // NOT NULL field
+        $this->LokasiID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->LokasiID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['LokasiID'] = &$this->LokasiID;
 
         // Nama
         $this->Nama = new DbField(
@@ -555,8 +564,11 @@ class Lokasi extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->LokasiID->setDbValue($conn->lastInsertId());
+            $rs['LokasiID'] = $this->LokasiID->DbValue;
+            if ($this->AuditTrailOnAdd) {
+                $this->writeAuditTrailOnAdd($rs);
+            }
         }
         return $result;
     }
@@ -609,9 +621,17 @@ class Lokasi extends DbTable
 
         // Return auto increment field
         if ($success) {
-            if (!isset($rs['id']) && !EmptyValue($this->id->CurrentValue)) {
-                $rs['id'] = $this->id->CurrentValue;
+            if (!isset($rs['LokasiID']) && !EmptyValue($this->LokasiID->CurrentValue)) {
+                $rs['LokasiID'] = $this->LokasiID->CurrentValue;
             }
+        }
+        if ($success && $this->AuditTrailOnEdit && $rsold) {
+            $rsaudit = $rs;
+            $fldname = 'LokasiID';
+            if (!array_key_exists($fldname, $rsaudit)) {
+                $rsaudit[$fldname] = $rsold[$fldname];
+            }
+            $this->writeAuditTrailOnEdit($rsold, $rsaudit);
         }
         return $success;
     }
@@ -632,8 +652,8 @@ class Lokasi extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('LokasiID', $rs)) {
+                AddFilter($where, QuotedName('LokasiID', $this->Dbid) . '=' . QuotedValue($rs['LokasiID'], $this->LokasiID->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -654,6 +674,9 @@ class Lokasi extends DbTable
                 $this->DbErrorMessage = $e->getMessage();
             }
         }
+        if ($success && $this->AuditTrailOnDelete) {
+            $this->writeAuditTrailOnDelete($rs);
+        }
         return $success;
     }
 
@@ -663,7 +686,7 @@ class Lokasi extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
+        $this->LokasiID->DbValue = $row['LokasiID'];
         $this->Nama->DbValue = $row['Nama'];
     }
 
@@ -676,14 +699,14 @@ class Lokasi extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`LokasiID` = @LokasiID@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->LokasiID->CurrentValue : $this->LokasiID->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -701,9 +724,9 @@ class Lokasi extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->LokasiID->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->LokasiID->OldValue = $keys[0];
             }
         }
     }
@@ -713,9 +736,9 @@ class Lokasi extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('LokasiID', $row) ? $row['LokasiID'] : null;
         } else {
-            $val = !EmptyValue($this->id->OldValue) && !$current ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = !EmptyValue($this->LokasiID->OldValue) && !$current ? $this->LokasiID->OldValue : $this->LokasiID->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -723,7 +746,7 @@ class Lokasi extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@LokasiID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -865,7 +888,7 @@ class Lokasi extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . VarToJson($this->id->CurrentValue, "number");
+        $json .= "\"LokasiID\":" . VarToJson($this->LokasiID->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -876,8 +899,8 @@ class Lokasi extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->LokasiID->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->LokasiID->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -953,7 +976,7 @@ class Lokasi extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("LokasiID") ?? Route("LokasiID")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -997,9 +1020,9 @@ class Lokasi extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->LokasiID->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->LokasiID->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1024,7 +1047,7 @@ class Lokasi extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -1056,19 +1079,19 @@ class Lokasi extends DbTable
 
         // Common render codes
 
-        // id
+        // LokasiID
 
         // Nama
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
+        // LokasiID
+        $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
         // Nama
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-        // id
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // LokasiID
+        $this->LokasiID->HrefValue = "";
+        $this->LokasiID->TooltipValue = "";
 
         // Nama
         $this->Nama->HrefValue = "";
@@ -1089,9 +1112,9 @@ class Lokasi extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditValue = $this->id->CurrentValue;
+        // LokasiID
+        $this->LokasiID->setupEditAttributes();
+        $this->LokasiID->EditValue = $this->LokasiID->CurrentValue;
 
         // Nama
         $this->Nama->setupEditAttributes();
@@ -1129,10 +1152,10 @@ class Lokasi extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->LokasiID);
                     $doc->exportCaption($this->Nama);
                 } else {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->LokasiID);
                     $doc->exportCaption($this->Nama);
                 }
                 $doc->endExportRow();
@@ -1160,10 +1183,10 @@ class Lokasi extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->LokasiID);
                         $doc->exportField($this->Nama);
                     } else {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->LokasiID);
                         $doc->exportField($this->Nama);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1187,6 +1210,122 @@ class Lokasi extends DbTable
 
         // No binary fields
         return false;
+    }
+
+    // Write audit trail start/end for grid update
+    public function writeAuditTrailDummy($typ)
+    {
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'lokasi');
+    }
+
+    // Write audit trail (add page)
+    public function writeAuditTrailOnAdd(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnAdd) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['LokasiID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $newvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo Field
+                    $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML Field
+                    $newvalue = "[XML]";
+                } else {
+                    $newvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "A", 'lokasi', $fldname, $key, "", $newvalue);
+            }
+        }
+    }
+
+    // Write audit trail (edit page)
+    public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnEdit) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rsold['LokasiID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rsnew) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && array_key_exists($fldname, $rsold) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->DataType == DataType::DATE) { // DateTime field
+                    $modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
+                } else {
+                    $modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+                }
+                if ($modified) {
+                    if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                        $oldvalue = $Language->phrase("PasswordMask");
+                        $newvalue = $Language->phrase("PasswordMask");
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                        $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsold[$fldname] : "[MEMO]";
+                        $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsnew[$fldname] : "[MEMO]";
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                        $oldvalue = "[XML]";
+                        $newvalue = "[XML]";
+                    } else {
+                        $oldvalue = $rsold[$fldname];
+                        $newvalue = $rsnew[$fldname];
+                    }
+                    WriteAuditLog($usr, "U", 'lokasi', $fldname, $key, $oldvalue, $newvalue);
+                }
+            }
+        }
+    }
+
+    // Write audit trail (delete page)
+    public function writeAuditTrailOnDelete(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnDelete) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['LokasiID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $oldvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                    $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                    $oldvalue = "[XML]";
+                } else {
+                    $oldvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "D", 'lokasi', $fldname, $key, $oldvalue);
+            }
+        }
     }
 
     // Table level events

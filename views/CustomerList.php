@@ -147,8 +147,8 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_customer_id" class="customer_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+<?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+        <th data-name="CustomerID" class="<?= $Page->CustomerID->headerCellClass() ?>"><div id="elh_customer_CustomerID" class="customer_CustomerID"><?= $Page->renderFieldHeader($Page->CustomerID) ?></div></th>
 <?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_customer_Nama" class="customer_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
@@ -186,11 +186,11 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_customer_id" class="el_customer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+    <?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+        <td data-name="CustomerID"<?= $Page->CustomerID->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_customer_CustomerID" class="el_customer_CustomerID">
+<span<?= $Page->CustomerID->viewAttributes() ?>>
+<?= $Page->CustomerID->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -40,6 +40,14 @@ class LokasiEdit extends Lokasi
     // CSS class/style
     public $CurrentPageName = "lokasiedit";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class LokasiEdit extends Lokasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->LokasiID->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -355,7 +363,7 @@ class LokasiEdit extends Lokasi
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['LokasiID'];
         }
         return $key;
     }
@@ -368,7 +376,7 @@ class LokasiEdit extends Lokasi
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->LokasiID->Visible = false;
         }
     }
 
@@ -522,12 +530,12 @@ class LokasiEdit extends Lokasi
         if (IsApi()) {
             // Load key values
             $loaded = true;
-            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-                $this->id->setOldValue($this->id->QueryStringValue);
-            } elseif (Post("id") !== null) {
-                $this->id->setFormValue(Post("id"));
-                $this->id->setOldValue($this->id->FormValue);
+            if (($keyValue = Get("LokasiID") ?? Key(0) ?? Route(2)) !== null) {
+                $this->LokasiID->setQueryStringValue($keyValue);
+                $this->LokasiID->setOldValue($this->LokasiID->QueryStringValue);
+            } elseif (Post("LokasiID") !== null) {
+                $this->LokasiID->setFormValue(Post("LokasiID"));
+                $this->LokasiID->setOldValue($this->LokasiID->FormValue);
             } else {
                 $loaded = false; // Unable to load key
             }
@@ -558,11 +566,11 @@ class LokasiEdit extends Lokasi
 
                 // Load key from QueryString
                 $loadByQuery = false;
-                if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                    $this->id->setQueryStringValue($keyValue);
+                if (($keyValue = Get("LokasiID") ?? Route("LokasiID")) !== null) {
+                    $this->LokasiID->setQueryStringValue($keyValue);
                     $loadByQuery = true;
                 } else {
-                    $this->id->CurrentValue = null;
+                    $this->LokasiID->CurrentValue = null;
                 }
             }
 
@@ -691,10 +699,10 @@ class LokasiEdit extends Lokasi
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+        // Check field name 'LokasiID' first before field var 'x_LokasiID'
+        $val = $CurrentForm->hasValue("LokasiID") ? $CurrentForm->getValue("LokasiID") : $CurrentForm->getValue("x_LokasiID");
+        if (!$this->LokasiID->IsDetailKey) {
+            $this->LokasiID->setFormValue($val);
         }
 
         // Check field name 'Nama' first before field var 'x_Nama'
@@ -712,7 +720,7 @@ class LokasiEdit extends Lokasi
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+        $this->LokasiID->CurrentValue = $this->LokasiID->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
     }
 
@@ -754,7 +762,7 @@ class LokasiEdit extends Lokasi
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -762,7 +770,7 @@ class LokasiEdit extends Lokasi
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['LokasiID'] = $this->LokasiID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -798,29 +806,29 @@ class LokasiEdit extends Lokasi
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // LokasiID
+        $this->LokasiID->RowCssClass = "row";
 
         // Nama
         $this->Nama->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
+            // LokasiID
+            $this->LokasiID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->setupEditAttributes();
+            $this->LokasiID->EditValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->setupEditAttributes();
@@ -832,8 +840,8 @@ class LokasiEdit extends Lokasi
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
+            // LokasiID
+            $this->LokasiID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -858,9 +866,9 @@ class LokasiEdit extends Lokasi
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            if ($this->LokasiID->Visible && $this->LokasiID->Required) {
+                if (!$this->LokasiID->IsDetailKey && EmptyValue($this->LokasiID->FormValue)) {
+                    $this->LokasiID->addErrorMessage(str_replace("%s", $this->LokasiID->caption(), $this->LokasiID->RequiredErrorMessage));
                 }
             }
             if ($this->Nama->Visible && $this->Nama->Required) {

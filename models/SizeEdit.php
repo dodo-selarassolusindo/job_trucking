@@ -15,18 +15,18 @@ use Closure;
 /**
  * Page class
  */
-class CustomerAdd extends Customer
+class SizeEdit extends Size
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "add";
+    public $PageID = "edit";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "CustomerAdd";
+    public $PageObjName = "SizeEdit";
 
     // View file path
     public $View = null;
@@ -38,7 +38,7 @@ class CustomerAdd extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customeradd";
+    public $CurrentPageName = "sizeedit";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -129,10 +129,8 @@ class CustomerAdd extends Customer
     // Set field visibility
     public function setVisibility()
     {
-        $this->CustomerID->Visible = false;
-        $this->Nama->setVisibility();
-        $this->Nomor_Telepon->setVisibility();
-        $this->Contact_Person->setVisibility();
+        $this->SizeID->setVisibility();
+        $this->Ukuran->setVisibility();
     }
 
     // Constructor
@@ -140,11 +138,11 @@ class CustomerAdd extends Customer
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'customer';
-        $this->TableName = 'customer';
+        $this->TableVar = 'size';
+        $this->TableName = 'size';
 
         // Table CSS class
-        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-add-table";
+        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-edit-table";
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -152,14 +150,14 @@ class CustomerAdd extends Customer
         // Language object
         $Language = Container("app.language");
 
-        // Table object (customer)
-        if (!isset($GLOBALS["customer"]) || $GLOBALS["customer"]::class == PROJECT_NAMESPACE . "customer") {
-            $GLOBALS["customer"] = &$this;
+        // Table object (size)
+        if (!isset($GLOBALS["size"]) || $GLOBALS["size"]::class == PROJECT_NAMESPACE . "size") {
+            $GLOBALS["size"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'customer');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size');
         }
 
         // Start timer
@@ -273,7 +271,7 @@ class CustomerAdd extends Customer
                 ) { // List / View / Master View page
                     if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                         $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "customerview"); // If View page, no primary button
+                        $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
                     } else { // List page
                         $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                         $this->clearFailureMessage();
@@ -365,7 +363,7 @@ class CustomerAdd extends Customer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['CustomerID'];
+            $key .= @$ar['SizeID'];
         }
         return $key;
     }
@@ -378,7 +376,7 @@ class CustomerAdd extends Customer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->CustomerID->Visible = false;
+            $this->SizeID->Visible = false;
         }
     }
 
@@ -454,14 +452,20 @@ class CustomerAdd extends Customer
         }
         return $lookup->toJson($this, $response); // Use settings from current page
     }
-    public $FormClassName = "ew-form ew-add-form";
+
+    // Properties
+    public $FormClassName = "ew-form ew-edit-form overlay-wrapper";
     public $IsModal = false;
     public $IsMobileOrModal = false;
-    public $DbMasterFilter = "";
-    public $DbDetailFilter = "";
+    public $DbMasterFilter;
+    public $DbDetailFilter;
+    public $HashValue; // Hash Value
+    public $DisplayRecords = 1;
     public $StartRecord;
-    public $Priv = 0;
-    public $CopyRecord;
+    public $StopRecord;
+    public $TotalRecords = 0;
+    public $RecordRange = 10;
+    public $RecordCount;
 
     /**
      * Page run
@@ -514,98 +518,124 @@ class CustomerAdd extends Customer
             $this->InlineDelete = true;
         }
 
-        // Load default values for add
-        $this->loadDefaultValues();
-
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
         }
         $this->IsMobileOrModal = IsMobile() || $this->IsModal;
+        $loaded = false;
         $postBack = false;
 
-        // Set up current action
+        // Set up current action and primary key
         if (IsApi()) {
-            $this->CurrentAction = "insert"; // Add record directly
-            $postBack = true;
-        } elseif (Post("action", "") !== "") {
-            $this->CurrentAction = Post("action"); // Get form action
-            $this->setKey(Post($this->OldKeyName));
+            // Load key values
+            $loaded = true;
+            if (($keyValue = Get("SizeID") ?? Key(0) ?? Route(2)) !== null) {
+                $this->SizeID->setQueryStringValue($keyValue);
+                $this->SizeID->setOldValue($this->SizeID->QueryStringValue);
+            } elseif (Post("SizeID") !== null) {
+                $this->SizeID->setFormValue(Post("SizeID"));
+                $this->SizeID->setOldValue($this->SizeID->FormValue);
+            } else {
+                $loaded = false; // Unable to load key
+            }
+
+            // Load record
+            if ($loaded) {
+                $loaded = $this->loadRow();
+            }
+            if (!$loaded) {
+                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                $this->terminate();
+                return;
+            }
+            $this->CurrentAction = "update"; // Update record directly
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $postBack = true;
         } else {
-            // Load key values from QueryString
-            if (($keyValue = Get("CustomerID") ?? Route("CustomerID")) !== null) {
-                $this->CustomerID->setQueryStringValue($keyValue);
-            }
-            $this->OldKey = $this->getKey(true); // Get from CurrentValue
-            $this->CopyRecord = !EmptyValue($this->OldKey);
-            if ($this->CopyRecord) {
-                $this->CurrentAction = "copy"; // Copy record
-                $this->setKey($this->OldKey); // Set up record key
+            if (Post("action", "") !== "") {
+                $this->CurrentAction = Post("action"); // Get action code
+                if (!$this->isShow()) { // Not reload record, handle as postback
+                    $postBack = true;
+                }
+
+                // Get key from Form
+                $this->setKey(Post($this->OldKeyName), $this->isShow());
             } else {
-                $this->CurrentAction = "show"; // Display blank record
+                $this->CurrentAction = "show"; // Default action is display
+
+                // Load key from QueryString
+                $loadByQuery = false;
+                if (($keyValue = Get("SizeID") ?? Route("SizeID")) !== null) {
+                    $this->SizeID->setQueryStringValue($keyValue);
+                    $loadByQuery = true;
+                } else {
+                    $this->SizeID->CurrentValue = null;
+                }
+            }
+
+            // Load result set
+            if ($this->isShow()) {
+                    // Load current record
+                    $loaded = $this->loadRow();
+                $this->OldKey = $loaded ? $this->getKey(true) : ""; // Get from CurrentValue
             }
         }
 
-        // Load old record or default values
-        $rsold = $this->loadOldRecord();
-
-        // Load form values
+        // Process form if post back
         if ($postBack) {
-            $this->loadFormValues(); // Load form values
+            $this->loadFormValues(); // Get form values
         }
 
         // Validate form if post back
         if ($postBack) {
             if (!$this->validateForm()) {
                 $this->EventCancelled = true; // Event cancelled
-                $this->restoreFormValues(); // Restore form values
+                $this->restoreFormValues();
                 if (IsApi()) {
                     $this->terminate();
                     return;
                 } else {
-                    $this->CurrentAction = "show"; // Form error, reset action
+                    $this->CurrentAction = ""; // Form error, reset action
                 }
             }
         }
 
         // Perform current action
         switch ($this->CurrentAction) {
-            case "copy": // Copy an existing record
-                if (!$rsold) { // Record not loaded
-                    if ($this->getFailureMessage() == "") {
-                        $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+            case "show": // Get a record to display
+                    if (!$loaded) { // Load record based on key
+                        if ($this->getFailureMessage() == "") {
+                            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+                        }
+                        $this->terminate("sizelist"); // No matching record, return to list
+                        return;
                     }
-                    $this->terminate("customerlist"); // No matching record, return to list
-                    return;
-                }
                 break;
-            case "insert": // Add new record
-                $this->SendEmail = true; // Send email on add success
-                if ($this->addRow($rsold)) { // Add successful
-                    if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
-                        $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
-                    }
-                    $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "customerlist") {
-                        $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "customerview") {
-                        $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
+            case "update": // Update
+                $returnUrl = $this->getReturnUrl();
+                if (GetPageName($returnUrl) == "sizelist") {
+                    $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
+                }
+                $this->SendEmail = true; // Send email on update success
+                if ($this->editRow()) { // Update record based on key
+                    if ($this->getSuccessMessage() == "") {
+                        $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Update success
                     }
 
-                    // Handle UseAjaxActions
+                    // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "customerlist") {
+                        if (GetPageName($returnUrl) != "sizelist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "customerlist"; // Return list page content
+                            $returnUrl = "sizelist"; // Return list page content
                         }
                     }
-                    if (IsJsonResponse()) { // Return to caller
+                    if (IsJsonResponse()) {
                         $this->terminate(true);
                         return;
                     } else {
-                        $this->terminate($returnUrl);
+                        $this->terminate($returnUrl); // Return to caller
                         return;
                     }
                 } elseif (IsApi()) { // API request, return
@@ -616,19 +646,20 @@ class CustomerAdd extends Customer
                     $this->clearFailureMessage();
                     $this->terminate();
                     return;
+                } elseif ($this->getFailureMessage() == $Language->phrase("NoRecord")) {
+                    $this->terminate($returnUrl); // Return to caller
+                    return;
                 } else {
                     $this->EventCancelled = true; // Event cancelled
-                    $this->restoreFormValues(); // Add failed, restore form values
+                    $this->restoreFormValues(); // Restore form values if update failed
                 }
         }
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
-        // Render row based on row type
-        $this->RowType = RowType::ADD; // Render add type
-
-        // Render row
+        // Render the record
+        $this->RowType = RowType::EDIT; // Render as Edit
         $this->resetAttributes();
         $this->renderRow();
 
@@ -661,11 +692,6 @@ class CustomerAdd extends Customer
         global $CurrentForm, $Language;
     }
 
-    // Load default values
-    protected function loadDefaultValues()
-    {
-    }
-
     // Load form values
     protected function loadFormValues()
     {
@@ -673,47 +699,29 @@ class CustomerAdd extends Customer
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'Nama' first before field var 'x_Nama'
-        $val = $CurrentForm->hasValue("Nama") ? $CurrentForm->getValue("Nama") : $CurrentForm->getValue("x_Nama");
-        if (!$this->Nama->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Nama->Visible = false; // Disable update for API request
-            } else {
-                $this->Nama->setFormValue($val);
-            }
+        // Check field name 'SizeID' first before field var 'x_SizeID'
+        $val = $CurrentForm->hasValue("SizeID") ? $CurrentForm->getValue("SizeID") : $CurrentForm->getValue("x_SizeID");
+        if (!$this->SizeID->IsDetailKey) {
+            $this->SizeID->setFormValue($val);
         }
 
-        // Check field name 'Nomor_Telepon' first before field var 'x_Nomor_Telepon'
-        $val = $CurrentForm->hasValue("Nomor_Telepon") ? $CurrentForm->getValue("Nomor_Telepon") : $CurrentForm->getValue("x_Nomor_Telepon");
-        if (!$this->Nomor_Telepon->IsDetailKey) {
+        // Check field name 'Ukuran' first before field var 'x_Ukuran'
+        $val = $CurrentForm->hasValue("Ukuran") ? $CurrentForm->getValue("Ukuran") : $CurrentForm->getValue("x_Ukuran");
+        if (!$this->Ukuran->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->Nomor_Telepon->Visible = false; // Disable update for API request
+                $this->Ukuran->Visible = false; // Disable update for API request
             } else {
-                $this->Nomor_Telepon->setFormValue($val);
+                $this->Ukuran->setFormValue($val);
             }
         }
-
-        // Check field name 'Contact_Person' first before field var 'x_Contact_Person'
-        $val = $CurrentForm->hasValue("Contact_Person") ? $CurrentForm->getValue("Contact_Person") : $CurrentForm->getValue("x_Contact_Person");
-        if (!$this->Contact_Person->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->Contact_Person->Visible = false; // Disable update for API request
-            } else {
-                $this->Contact_Person->setFormValue($val);
-            }
-        }
-
-        // Check field name 'CustomerID' first before field var 'x_CustomerID'
-        $val = $CurrentForm->hasValue("CustomerID") ? $CurrentForm->getValue("CustomerID") : $CurrentForm->getValue("x_CustomerID");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->Nama->CurrentValue = $this->Nama->FormValue;
-        $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
-        $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
+        $this->SizeID->CurrentValue = $this->SizeID->FormValue;
+        $this->Ukuran->CurrentValue = $this->Ukuran->FormValue;
     }
 
     /**
@@ -754,20 +762,16 @@ class CustomerAdd extends Customer
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->CustomerID->setDbValue($row['CustomerID']);
-        $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
-        $this->Contact_Person->setDbValue($row['Contact_Person']);
+        $this->SizeID->setDbValue($row['SizeID']);
+        $this->Ukuran->setDbValue($row['Ukuran']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['CustomerID'] = $this->CustomerID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
-        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
+        $row['SizeID'] = $this->SizeID->DefaultValue;
+        $row['Ukuran'] = $this->Ukuran->DefaultValue;
         return $row;
     }
 
@@ -802,75 +806,45 @@ class CustomerAdd extends Customer
 
         // Common render codes for all row types
 
-        // CustomerID
-        $this->CustomerID->RowCssClass = "row";
+        // SizeID
+        $this->SizeID->RowCssClass = "row";
 
-        // Nama
-        $this->Nama->RowCssClass = "row";
-
-        // Nomor_Telepon
-        $this->Nomor_Telepon->RowCssClass = "row";
-
-        // Contact_Person
-        $this->Contact_Person->RowCssClass = "row";
+        // Ukuran
+        $this->Ukuran->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // CustomerID
-            $this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+            // SizeID
+            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
+            // Ukuran
+            $this->Ukuran->ViewValue = $this->Ukuran->CurrentValue;
 
-            // Nomor_Telepon
-            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+            // SizeID
+            $this->SizeID->HrefValue = "";
 
-            // Contact_Person
-            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
+        } elseif ($this->RowType == RowType::EDIT) {
+            // SizeID
+            $this->SizeID->setupEditAttributes();
+            $this->SizeID->EditValue = $this->SizeID->CurrentValue;
 
-            // Nama
-            $this->Nama->HrefValue = "";
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->HrefValue = "";
-
-            // Contact_Person
-            $this->Contact_Person->HrefValue = "";
-        } elseif ($this->RowType == RowType::ADD) {
-            // Nama
-            $this->Nama->setupEditAttributes();
-            if (!$this->Nama->Raw) {
-                $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
+            // Ukuran
+            $this->Ukuran->setupEditAttributes();
+            if (!$this->Ukuran->Raw) {
+                $this->Ukuran->CurrentValue = HtmlDecode($this->Ukuran->CurrentValue);
             }
-            $this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
-            $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
+            $this->Ukuran->EditValue = HtmlEncode($this->Ukuran->CurrentValue);
+            $this->Ukuran->PlaceHolder = RemoveHtml($this->Ukuran->caption());
 
-            // Nomor_Telepon
-            $this->Nomor_Telepon->setupEditAttributes();
-            if (!$this->Nomor_Telepon->Raw) {
-                $this->Nomor_Telepon->CurrentValue = HtmlDecode($this->Nomor_Telepon->CurrentValue);
-            }
-            $this->Nomor_Telepon->EditValue = HtmlEncode($this->Nomor_Telepon->CurrentValue);
-            $this->Nomor_Telepon->PlaceHolder = RemoveHtml($this->Nomor_Telepon->caption());
+            // Edit refer script
 
-            // Contact_Person
-            $this->Contact_Person->setupEditAttributes();
-            if (!$this->Contact_Person->Raw) {
-                $this->Contact_Person->CurrentValue = HtmlDecode($this->Contact_Person->CurrentValue);
-            }
-            $this->Contact_Person->EditValue = HtmlEncode($this->Contact_Person->CurrentValue);
-            $this->Contact_Person->PlaceHolder = RemoveHtml($this->Contact_Person->caption());
+            // SizeID
+            $this->SizeID->HrefValue = "";
 
-            // Add refer script
-
-            // Nama
-            $this->Nama->HrefValue = "";
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->HrefValue = "";
-
-            // Contact_Person
-            $this->Contact_Person->HrefValue = "";
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -892,19 +866,14 @@ class CustomerAdd extends Customer
             return true;
         }
         $validateForm = true;
-            if ($this->Nama->Visible && $this->Nama->Required) {
-                if (!$this->Nama->IsDetailKey && EmptyValue($this->Nama->FormValue)) {
-                    $this->Nama->addErrorMessage(str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
+            if ($this->SizeID->Visible && $this->SizeID->Required) {
+                if (!$this->SizeID->IsDetailKey && EmptyValue($this->SizeID->FormValue)) {
+                    $this->SizeID->addErrorMessage(str_replace("%s", $this->SizeID->caption(), $this->SizeID->RequiredErrorMessage));
                 }
             }
-            if ($this->Nomor_Telepon->Visible && $this->Nomor_Telepon->Required) {
-                if (!$this->Nomor_Telepon->IsDetailKey && EmptyValue($this->Nomor_Telepon->FormValue)) {
-                    $this->Nomor_Telepon->addErrorMessage(str_replace("%s", $this->Nomor_Telepon->caption(), $this->Nomor_Telepon->RequiredErrorMessage));
-                }
-            }
-            if ($this->Contact_Person->Visible && $this->Contact_Person->Required) {
-                if (!$this->Contact_Person->IsDetailKey && EmptyValue($this->Contact_Person->FormValue)) {
-                    $this->Contact_Person->addErrorMessage(str_replace("%s", $this->Contact_Person->caption(), $this->Contact_Person->RequiredErrorMessage));
+            if ($this->Ukuran->Visible && $this->Ukuran->Required) {
+                if (!$this->Ukuran->IsDetailKey && EmptyValue($this->Ukuran->FormValue)) {
+                    $this->Ukuran->addErrorMessage(str_replace("%s", $this->Ukuran->caption(), $this->Ukuran->RequiredErrorMessage));
                 }
             }
 
@@ -920,28 +889,45 @@ class CustomerAdd extends Customer
         return $validateForm;
     }
 
-    // Add record
-    protected function addRow($rsold = null)
+    // Update record based on key values
+    protected function editRow()
     {
-        global $Language, $Security;
+        global $Security, $Language;
+        $oldKeyFilter = $this->getRecordFilter();
+        $filter = $this->applyUserIDFilters($oldKeyFilter);
+        $conn = $this->getConnection();
+
+        // Load old row
+        $this->CurrentFilter = $filter;
+        $sql = $this->getCurrentSql();
+        $rsold = $conn->fetchAssociative($sql);
+        if (!$rsold) {
+            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+            return false; // Update Failed
+        } else {
+            // Load old values
+            $this->loadDbValues($rsold);
+        }
 
         // Get new row
-        $rsnew = $this->getAddRow();
+        $rsnew = $this->getEditRow($rsold);
 
         // Update current values
         $this->setCurrentValues($rsnew);
-        $conn = $this->getConnection();
 
-        // Load db values from old row
-        $this->loadDbValues($rsold);
-
-        // Call Row Inserting event
-        $insertRow = $this->rowInserting($rsold, $rsnew);
-        if ($insertRow) {
-            $addRow = $this->insert($rsnew);
-            if ($addRow) {
-            } elseif (!EmptyValue($this->DbErrorMessage)) { // Show database error
-                $this->setFailureMessage($this->DbErrorMessage);
+        // Call Row Updating event
+        $updateRow = $this->rowUpdating($rsold, $rsnew);
+        if ($updateRow) {
+            if (count($rsnew) > 0) {
+                $this->CurrentFilter = $filter; // Set up current filter
+                $editRow = $this->update($rsnew, "", $rsold);
+                if (!$editRow && !EmptyValue($this->DbErrorMessage)) { // Show database error
+                    $this->setFailureMessage($this->DbErrorMessage);
+                }
+            } else {
+                $editRow = true; // No field to update
+            }
+            if ($editRow) {
             }
         } else {
             if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
@@ -950,59 +936,48 @@ class CustomerAdd extends Customer
                 $this->setFailureMessage($this->CancelMessage);
                 $this->CancelMessage = "";
             } else {
-                $this->setFailureMessage($Language->phrase("InsertCancelled"));
+                $this->setFailureMessage($Language->phrase("UpdateCancelled"));
             }
-            $addRow = false;
+            $editRow = false;
         }
-        if ($addRow) {
-            // Call Row Inserted event
-            $this->rowInserted($rsold, $rsnew);
+
+        // Call Row_Updated event
+        if ($editRow) {
+            $this->rowUpdated($rsold, $rsnew);
         }
 
         // Write JSON response
-        if (IsJsonResponse() && $addRow) {
+        if (IsJsonResponse() && $editRow) {
             $row = $this->getRecordsFromRecordset([$rsnew], true);
             $table = $this->TableVar;
-            WriteJson(["success" => true, "action" => Config("API_ADD_ACTION"), $table => $row]);
+            WriteJson(["success" => true, "action" => Config("API_EDIT_ACTION"), $table => $row]);
         }
-        return $addRow;
+        return $editRow;
     }
 
     /**
-     * Get add row
+     * Get edit row
      *
      * @return array
      */
-    protected function getAddRow()
+    protected function getEditRow($rsold)
     {
         global $Security;
         $rsnew = [];
 
-        // Nama
-        $this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, false);
-
-        // Nomor_Telepon
-        $this->Nomor_Telepon->setDbValueDef($rsnew, $this->Nomor_Telepon->CurrentValue, false);
-
-        // Contact_Person
-        $this->Contact_Person->setDbValueDef($rsnew, $this->Contact_Person->CurrentValue, false);
+        // Ukuran
+        $this->Ukuran->setDbValueDef($rsnew, $this->Ukuran->CurrentValue, $this->Ukuran->ReadOnly);
         return $rsnew;
     }
 
     /**
-     * Restore add form from row
+     * Restore edit form from row
      * @param array $row Row
      */
-    protected function restoreAddFormFromRow($row)
+    protected function restoreEditFormFromRow($row)
     {
-        if (isset($row['Nama'])) { // Nama
-            $this->Nama->setFormValue($row['Nama']);
-        }
-        if (isset($row['Nomor_Telepon'])) { // Nomor_Telepon
-            $this->Nomor_Telepon->setFormValue($row['Nomor_Telepon']);
-        }
-        if (isset($row['Contact_Person'])) { // Contact_Person
-            $this->Contact_Person->setFormValue($row['Contact_Person']);
+        if (isset($row['Ukuran'])) { // Ukuran
+            $this->Ukuran->CurrentValue = $row['Ukuran'];
         }
     }
 
@@ -1012,9 +987,9 @@ class CustomerAdd extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
-        $pageId = ($this->isCopy()) ? "Copy" : "Add";
-        $Breadcrumb->add("add", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
+        $pageId = "edit";
+        $Breadcrumb->add("edit", $pageId, $url);
     }
 
     // Setup lookup options
@@ -1057,6 +1032,40 @@ class CustomerAdd extends Customer
                 $fld->Lookup->Options = $ar;
             }
         }
+    }
+
+    // Set up starting record parameters
+    public function setupStartRecord()
+    {
+        if ($this->DisplayRecords == 0) {
+            return;
+        }
+        $pageNo = Get(Config("TABLE_PAGE_NUMBER"));
+        $startRec = Get(Config("TABLE_START_REC"));
+        $infiniteScroll = false;
+        $recordNo = $pageNo ?? $startRec; // Record number = page number or start record
+        if ($recordNo !== null && is_numeric($recordNo)) {
+            $this->StartRecord = $recordNo;
+        } else {
+            $this->StartRecord = $this->getStartRecordNumber();
+        }
+
+        // Check if correct start record counter
+        if (!is_numeric($this->StartRecord) || intval($this->StartRecord) <= 0) { // Avoid invalid start record counter
+            $this->StartRecord = 1; // Reset start record counter
+        } elseif ($this->StartRecord > $this->TotalRecords) { // Avoid starting record > total records
+            $this->StartRecord = (int)(($this->TotalRecords - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to last page first record
+        } elseif (($this->StartRecord - 1) % $this->DisplayRecords != 0) {
+            $this->StartRecord = (int)(($this->StartRecord - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to page boundary
+        }
+        if (!$infiniteScroll) {
+            $this->setStartRecordNumber($this->StartRecord);
+        }
+    }
+
+    // Get page count
+    public function pageCount() {
+        return ceil($this->TotalRecords / $this->DisplayRecords);
     }
 
     // Page Load event

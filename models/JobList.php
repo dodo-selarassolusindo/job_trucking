@@ -64,6 +64,14 @@ class JobList extends Job
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -145,7 +153,7 @@ class JobList extends Job
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
+        $this->JobID->Visible = false;
         $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
@@ -444,7 +452,7 @@ class JobList extends Job
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['JobID'];
         }
         return $key;
     }
@@ -457,7 +465,7 @@ class JobList extends Job
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->JobID->Visible = false;
         }
     }
 
@@ -887,6 +895,13 @@ class JobList extends Job
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
             }
+
+            // Audit trail on search
+            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+                $searchParm = ServerVar("QUERY_STRING");
+                $searchSql = $this->getSessionWhere();
+                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
+            }
         }
 
         // Set up list action columns
@@ -1273,7 +1288,7 @@ class JobList extends Job
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
+                $this->JobID->setSort("");
                 $this->Lokasi->setSort("");
                 $this->Tanggal->setSort("");
                 $this->Nomor->setSort("");
@@ -1479,7 +1494,7 @@ class JobList extends Job
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->JobID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1957,7 +1972,7 @@ class JobList extends Job
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->JobID->setDbValue($row['JobID']);
         $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
@@ -1970,7 +1985,7 @@ class JobList extends Job
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['JobID'] = $this->JobID->DefaultValue;
         $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
@@ -2017,7 +2032,7 @@ class JobList extends Job
 
         // Common render codes for all row types
 
-        // id
+        // JobID
 
         // Lokasi
 
@@ -2033,15 +2048,15 @@ class JobList extends Job
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // JobID
+            $this->JobID->ViewValue = $this->JobID->CurrentValue;
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
             if ($curVal != "") {
                 $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
                 if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
                     $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -2075,7 +2090,7 @@ class JobList extends Job
             if ($curVal != "") {
                 $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
                 if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchDataType(), "");
                     $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -2098,7 +2113,7 @@ class JobList extends Job
             if ($curVal != "") {
                 $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
                 if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchDataType(), "");
                     $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();

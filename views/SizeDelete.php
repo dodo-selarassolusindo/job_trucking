@@ -3,21 +3,21 @@
 namespace PHPMaker2024\prj_job_trucking;
 
 // Page object
-$ShipperDelete = &$Page;
+$SizeDelete = &$Page;
 ?>
 <script>
 var currentTable = <?= JsonEncode($Page->toClientVar()) ?>;
-ew.deepAssign(ew.vars, { tables: { shipper: currentTable } });
+ew.deepAssign(ew.vars, { tables: { size: currentTable } });
 var currentPageID = ew.PAGE_ID = "delete";
 var currentForm;
-var fshipperdelete;
+var fsizedelete;
 loadjs.ready(["wrapper", "head"], function () {
     let $ = jQuery;
     let fields = currentTable.fields;
 
     // Form object
     let form = new ew.FormBuilder()
-        .setId("fshipperdelete")
+        .setId("fsizedelete")
         .setPageId("delete")
         .build();
     window[form.id] = form;
@@ -34,12 +34,12 @@ loadjs.ready("head", function () {
 <?php
 $Page->showMessage();
 ?>
-<form name="fshipperdelete" id="fshipperdelete" class="ew-form ew-delete-form" action="<?= CurrentPageUrl(false) ?>" method="post" novalidate autocomplete="off">
+<form name="fsizedelete" id="fsizedelete" class="ew-form ew-delete-form" action="<?= CurrentPageUrl(false) ?>" method="post" novalidate autocomplete="off">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="shipper">
+<input type="hidden" name="t" value="size">
 <input type="hidden" name="action" id="action" value="delete">
 <?php foreach ($Page->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode(Config("COMPOSITE_KEY_SEPARATOR"), $key) : $key; ?>
@@ -50,17 +50,11 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->ShipperID->Visible) { // ShipperID ?>
-        <th class="<?= $Page->ShipperID->headerCellClass() ?>"><span id="elh_shipper_ShipperID" class="shipper_ShipperID"><?= $Page->ShipperID->caption() ?></span></th>
+<?php if ($Page->SizeID->Visible) { // SizeID ?>
+        <th class="<?= $Page->SizeID->headerCellClass() ?>"><span id="elh_size_SizeID" class="size_SizeID"><?= $Page->SizeID->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-        <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_shipper_Nama" class="shipper_Nama"><?= $Page->Nama->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
-        <th class="<?= $Page->Nomor_Telepon->headerCellClass() ?>"><span id="elh_shipper_Nomor_Telepon" class="shipper_Nomor_Telepon"><?= $Page->Nomor_Telepon->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
-        <th class="<?= $Page->Contact_Person->headerCellClass() ?>"><span id="elh_shipper_Contact_Person" class="shipper_Contact_Person"><?= $Page->Contact_Person->caption() ?></span></th>
+<?php if ($Page->Ukuran->Visible) { // Ukuran ?>
+        <th class="<?= $Page->Ukuran->headerCellClass() ?>"><span id="elh_size_Ukuran" class="size_Ukuran"><?= $Page->Ukuran->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -83,35 +77,19 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->ShipperID->Visible) { // ShipperID ?>
-        <td<?= $Page->ShipperID->cellAttributes() ?>>
+<?php if ($Page->SizeID->Visible) { // SizeID ?>
+        <td<?= $Page->SizeID->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->ShipperID->viewAttributes() ?>>
-<?= $Page->ShipperID->getViewValue() ?></span>
+<span<?= $Page->SizeID->viewAttributes() ?>>
+<?= $Page->SizeID->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->Nama->Visible) { // Nama ?>
-        <td<?= $Page->Nama->cellAttributes() ?>>
+<?php if ($Page->Ukuran->Visible) { // Ukuran ?>
+        <td<?= $Page->Ukuran->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->Nama->viewAttributes() ?>>
-<?= $Page->Nama->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->Nomor_Telepon->Visible) { // Nomor_Telepon ?>
-        <td<?= $Page->Nomor_Telepon->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->Nomor_Telepon->viewAttributes() ?>>
-<?= $Page->Nomor_Telepon->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->Contact_Person->Visible) { // Contact_Person ?>
-        <td<?= $Page->Contact_Person->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->Contact_Person->viewAttributes() ?>>
-<?= $Page->Contact_Person->getViewValue() ?></span>
+<span<?= $Page->Ukuran->viewAttributes() ?>>
+<?= $Page->Ukuran->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

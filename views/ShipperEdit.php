@@ -28,7 +28,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+            ["ShipperID", [fields.ShipperID.visible && fields.ShipperID.required ? ew.Validators.required(fields.ShipperID.caption) : null], fields.ShipperID.isInvalid],
             ["Nama", [fields.Nama.visible && fields.Nama.required ? ew.Validators.required(fields.Nama.caption) : null], fields.Nama.isInvalid],
             ["Nomor_Telepon", [fields.Nomor_Telepon.visible && fields.Nomor_Telepon.required ? ew.Validators.required(fields.Nomor_Telepon.caption) : null], fields.Nomor_Telepon.isInvalid],
             ["Contact_Person", [fields.Contact_Person.visible && fields.Contact_Person.required ? ew.Validators.required(fields.Contact_Person.caption) : null], fields.Contact_Person.isInvalid]
@@ -71,14 +71,14 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_shipper_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_shipper_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="shipper" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php if ($Page->ShipperID->Visible) { // ShipperID ?>
+    <div id="r_ShipperID"<?= $Page->ShipperID->rowAttributes() ?>>
+        <label id="elh_shipper_ShipperID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ShipperID->caption() ?><?= $Page->ShipperID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->ShipperID->cellAttributes() ?>>
+<span id="el_shipper_ShipperID">
+<span<?= $Page->ShipperID->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->ShipperID->getDisplayValue($Page->ShipperID->EditValue))) ?>"></span>
+<input type="hidden" data-table="shipper" data-field="x_ShipperID" data-hidden="1" name="x_ShipperID" id="x_ShipperID" value="<?= HtmlEncode($Page->ShipperID->CurrentValue) ?>">
 </span>
 </div></div>
     </div>

@@ -40,6 +40,14 @@ class JobDelete extends Job
     // CSS class/style
     public $CurrentPageName = "jobdelete";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class JobDelete extends Job
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
+        $this->JobID->Visible = false;
         $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
@@ -336,7 +344,7 @@ class JobDelete extends Job
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['JobID'];
         }
         return $key;
     }
@@ -349,7 +357,7 @@ class JobDelete extends Job
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->JobID->Visible = false;
         }
     }
     public $DbMasterFilter = "";
@@ -591,7 +599,7 @@ class JobDelete extends Job
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->JobID->setDbValue($row['JobID']);
         $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
@@ -604,7 +612,7 @@ class JobDelete extends Job
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['JobID'] = $this->JobID->DefaultValue;
         $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
@@ -626,7 +634,7 @@ class JobDelete extends Job
 
         // Common render codes for all row types
 
-        // id
+        // JobID
 
         // Lokasi
 
@@ -642,15 +650,15 @@ class JobDelete extends Job
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // JobID
+            $this->JobID->ViewValue = $this->JobID->CurrentValue;
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
             if ($curVal != "") {
                 $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
                 if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
                     $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -684,7 +692,7 @@ class JobDelete extends Job
             if ($curVal != "") {
                 $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
                 if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchDataType(), "");
                     $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -707,7 +715,7 @@ class JobDelete extends Job
             if ($curVal != "") {
                 $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
                 if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchDataType(), "");
                     $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -774,6 +782,9 @@ class JobDelete extends Job
         if ($this->UseTransaction) {
             $conn->beginTransaction();
         }
+        if ($this->AuditTrailOnDelete) {
+            $this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+        }
 
         // Clone old rows
         $rsold = $rows;
@@ -784,7 +795,7 @@ class JobDelete extends Job
             if ($thisKey != "") {
                 $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
             }
-            $thisKey .= $row['id'];
+            $thisKey .= $row['JobID'];
 
             // Call row deleting event
             $deleteRow = $this->rowDeleting($row);
@@ -833,9 +844,15 @@ class JobDelete extends Job
             if (count($failKeys) > 0) {
                 $this->setWarningMessage(str_replace("%k", explode(", ", $failKeys), $Language->phrase("DeleteRecordsFailed")));
             }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
+            }
         } else {
             if ($this->UseTransaction) { // Rollback transaction
                 $conn->rollback();
+            }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
             }
         }
 

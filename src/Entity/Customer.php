@@ -29,16 +29,16 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 class Customer extends AbstractEntity
 {
     public static array $propertyNames = [
-        'id' => 'id',
+        'CustomerID' => 'customerId',
         'Nama' => 'nama',
         'Nomor_Telepon' => 'nomorTelepon',
         'Contact_Person' => 'contactPerson',
     ];
 
     #[Id]
-    #[Column(type: "integer", unique: true)]
+    #[Column(name: "CustomerID", type: "integer", unique: true)]
     #[GeneratedValue]
-    private int $id;
+    private int $customerId;
 
     #[Column(name: "Nama", type: "string")]
     private string $nama;
@@ -49,14 +49,14 @@ class Customer extends AbstractEntity
     #[Column(name: "Contact_Person", type: "string")]
     private string $contactPerson;
 
-    public function getId(): int
+    public function getCustomerId(): int
     {
-        return $this->id;
+        return $this->customerId;
     }
 
-    public function setId(int $value): static
+    public function setCustomerId(int $value): static
     {
-        $this->id = $value;
+        $this->customerId = $value;
         return $this;
     }
 

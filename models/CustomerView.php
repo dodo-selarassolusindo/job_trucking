@@ -58,6 +58,14 @@ class CustomerView extends Customer
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -139,7 +147,7 @@ class CustomerView extends Customer
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->CustomerID->setVisibility();
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -168,8 +176,8 @@ class CustomerView extends Customer
         }
 
         // Set up record key
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->RecKey["id"] = $keyValue;
+        if (($keyValue = Get("CustomerID") ?? Route("CustomerID")) !== null) {
+            $this->RecKey["CustomerID"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
@@ -382,7 +390,7 @@ class CustomerView extends Customer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['CustomerID'];
         }
         return $key;
     }
@@ -395,7 +403,7 @@ class CustomerView extends Customer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->CustomerID->Visible = false;
         }
     }
 
@@ -540,15 +548,15 @@ class CustomerView extends Customer
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
-        } elseif (Post("id") !== null) {
-            $this->id->setFormValue(Post("id"));
-            $this->RecKey["id"] = $this->id->FormValue;
+        if (($keyValue = Get("CustomerID") ?? Route("CustomerID")) !== null) {
+            $this->CustomerID->setQueryStringValue($keyValue);
+            $this->RecKey["CustomerID"] = $this->CustomerID->QueryStringValue;
+        } elseif (Post("CustomerID") !== null) {
+            $this->CustomerID->setFormValue(Post("CustomerID"));
+            $this->RecKey["CustomerID"] = $this->CustomerID->FormValue;
         } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
+            $this->CustomerID->setQueryStringValue($keyValue);
+            $this->RecKey["CustomerID"] = $this->CustomerID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
             $returnUrl = "customerlist"; // Return to list
         }
@@ -729,7 +737,10 @@ class CustomerView extends Customer
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
+        $this->CustomerID->setDbValue($row['CustomerID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -739,7 +750,7 @@ class CustomerView extends Customer
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['CustomerID'] = $this->CustomerID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -764,7 +775,7 @@ class CustomerView extends Customer
 
         // Common render codes for all row types
 
-        // id
+        // CustomerID
 
         // Nama
 
@@ -774,8 +785,8 @@ class CustomerView extends Customer
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // CustomerID
+            $this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -786,9 +797,9 @@ class CustomerView extends Customer
             // Contact_Person
             $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // CustomerID
+            $this->CustomerID->HrefValue = "";
+            $this->CustomerID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

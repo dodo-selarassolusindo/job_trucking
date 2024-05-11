@@ -58,6 +58,14 @@ class LokasiView extends Lokasi
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -139,7 +147,7 @@ class LokasiView extends Lokasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->LokasiID->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -166,8 +174,8 @@ class LokasiView extends Lokasi
         }
 
         // Set up record key
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->RecKey["id"] = $keyValue;
+        if (($keyValue = Get("LokasiID") ?? Route("LokasiID")) !== null) {
+            $this->RecKey["LokasiID"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
@@ -380,7 +388,7 @@ class LokasiView extends Lokasi
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['LokasiID'];
         }
         return $key;
     }
@@ -393,7 +401,7 @@ class LokasiView extends Lokasi
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->LokasiID->Visible = false;
         }
     }
 
@@ -538,15 +546,15 @@ class LokasiView extends Lokasi
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
-        } elseif (Post("id") !== null) {
-            $this->id->setFormValue(Post("id"));
-            $this->RecKey["id"] = $this->id->FormValue;
+        if (($keyValue = Get("LokasiID") ?? Route("LokasiID")) !== null) {
+            $this->LokasiID->setQueryStringValue($keyValue);
+            $this->RecKey["LokasiID"] = $this->LokasiID->QueryStringValue;
+        } elseif (Post("LokasiID") !== null) {
+            $this->LokasiID->setFormValue(Post("LokasiID"));
+            $this->RecKey["LokasiID"] = $this->LokasiID->FormValue;
         } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
+            $this->LokasiID->setQueryStringValue($keyValue);
+            $this->RecKey["LokasiID"] = $this->LokasiID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
             $returnUrl = "lokasilist"; // Return to list
         }
@@ -727,7 +735,10 @@ class LokasiView extends Lokasi
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -735,7 +746,7 @@ class LokasiView extends Lokasi
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['LokasiID'] = $this->LokasiID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -758,21 +769,21 @@ class LokasiView extends Lokasi
 
         // Common render codes for all row types
 
-        // id
+        // LokasiID
 
         // Nama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // LokasiID
+            $this->LokasiID->HrefValue = "";
+            $this->LokasiID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

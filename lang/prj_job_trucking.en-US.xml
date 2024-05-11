@@ -11,6 +11,9 @@
     <menu id="16">
       <phrase id="menutext" value="Master" />
     </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Size" />
+    </menu>
     <menu id="7">
       <phrase id="menutext" value="Lokasi" />
     </menu>
@@ -21,7 +24,7 @@
       <phrase id="menutext" value="Shipper" />
     </menu>
     <menu id="2">
-      <phrase id="menutext" value="User" />
+      <phrase id="menutext" value="Pengguna" />
     </menu>
     <menu id="17">
       <phrase id="menutext" value="Setting" />
@@ -30,16 +33,16 @@
       <phrase id="menutext" value="Hak Akses" />
     </menu>
     <menu id="1">
-      <phrase id="menutext" value="audittrail" />
+      <phrase id="menutext" value="Log Activity" />
     </menu>
     <menu id="3">
-      <phrase id="menutext" value="userlevelpermissions" />
+      <phrase id="menutext" value="Detail" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="Beranda 0" />
     </menu>
     <table id="audittrail">
-      <phrase id="tblcaption" value="audittrail" />
+      <phrase id="tblcaption" value="Log Activity" />
       <field id="id">
         <phrase id="fldcaption" value="Id" />
       </field>
@@ -72,7 +75,7 @@
       </field>
     </table>
     <table id="employees">
-      <phrase id="tblcaption" value="User" />
+      <phrase id="tblcaption" value="Pengguna" />
       <field id="employeeid">
         <phrase id="fldcaption" value="Employee ID" />
       </field>
@@ -164,7 +167,7 @@
       </field>
     </table>
     <table id="userlevelpermissions">
-      <phrase id="tblcaption" value="userlevelpermissions" />
+      <phrase id="tblcaption" value="Detail" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="userlevelid" />
       </field>
@@ -191,7 +194,7 @@
       <phrase id="tblcaption" value="Job" />
       <phrase id="tblpagecaption1" value="Umum" />
       <phrase id="tblpagecaption2" value="Detail" />
-      <field id="id">
+      <field id="jobid">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="lokasi">
@@ -215,7 +218,7 @@
     </table>
     <table id="lokasi">
       <phrase id="tblcaption" value="Lokasi" />
-      <field id="id">
+      <field id="lokasiid">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="nama">
@@ -224,7 +227,7 @@
     </table>
     <table id="customer">
       <phrase id="tblcaption" value="Customer" />
-      <field id="id">
+      <field id="customerid">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="nama">
@@ -239,7 +242,7 @@
     </table>
     <table id="shipper">
       <phrase id="tblcaption" value="Shipper" />
-      <field id="id">
+      <field id="shipperid">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="nama">
@@ -254,6 +257,15 @@
     </table>
     <table id="beranda_0">
       <phrase id="tblcaption" value="Beranda 0" />
+    </table>
+    <table id="size">
+      <phrase id="tblcaption" value="Size" />
+      <field id="sizeid">
+        <phrase id="fldcaption" value="Size ID" />
+      </field>
+      <field id="ukuran">
+        <phrase id="fldcaption" value="Ukuran" />
+      </field>
     </table>
   </project>
 </ew-language>

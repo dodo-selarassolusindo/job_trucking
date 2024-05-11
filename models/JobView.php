@@ -58,6 +58,14 @@ class JobView extends Job
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -139,7 +147,7 @@ class JobView extends Job
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->JobID->setVisibility();
         $this->Lokasi->setVisibility();
         $this->Tanggal->setVisibility();
         $this->Nomor->setVisibility();
@@ -171,8 +179,8 @@ class JobView extends Job
         }
 
         // Set up record key
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->RecKey["id"] = $keyValue;
+        if (($keyValue = Get("JobID") ?? Route("JobID")) !== null) {
+            $this->RecKey["JobID"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
@@ -385,7 +393,7 @@ class JobView extends Job
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['JobID'];
         }
         return $key;
     }
@@ -398,7 +406,7 @@ class JobView extends Job
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->JobID->Visible = false;
         }
     }
 
@@ -552,15 +560,15 @@ class JobView extends Job
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
-        } elseif (Post("id") !== null) {
-            $this->id->setFormValue(Post("id"));
-            $this->RecKey["id"] = $this->id->FormValue;
+        if (($keyValue = Get("JobID") ?? Route("JobID")) !== null) {
+            $this->JobID->setQueryStringValue($keyValue);
+            $this->RecKey["JobID"] = $this->JobID->QueryStringValue;
+        } elseif (Post("JobID") !== null) {
+            $this->JobID->setFormValue(Post("JobID"));
+            $this->RecKey["JobID"] = $this->JobID->FormValue;
         } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-            $this->id->setQueryStringValue($keyValue);
-            $this->RecKey["id"] = $this->id->QueryStringValue;
+            $this->JobID->setQueryStringValue($keyValue);
+            $this->RecKey["JobID"] = $this->JobID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
             $returnUrl = "joblist"; // Return to list
         }
@@ -741,7 +749,10 @@ class JobView extends Job
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
+        $this->JobID->setDbValue($row['JobID']);
         $this->Lokasi->setDbValue($row['Lokasi']);
         $this->Tanggal->setDbValue($row['Tanggal']);
         $this->Nomor->setDbValue($row['Nomor']);
@@ -754,7 +765,7 @@ class JobView extends Job
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['JobID'] = $this->JobID->DefaultValue;
         $row['Lokasi'] = $this->Lokasi->DefaultValue;
         $row['Tanggal'] = $this->Tanggal->DefaultValue;
         $row['Nomor'] = $this->Nomor->DefaultValue;
@@ -782,7 +793,7 @@ class JobView extends Job
 
         // Common render codes for all row types
 
-        // id
+        // JobID
 
         // Lokasi
 
@@ -798,15 +809,15 @@ class JobView extends Job
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // JobID
+            $this->JobID->ViewValue = $this->JobID->CurrentValue;
 
             // Lokasi
             $curVal = strval($this->Lokasi->CurrentValue);
             if ($curVal != "") {
                 $this->Lokasi->ViewValue = $this->Lokasi->lookupCacheOption($curVal);
                 if ($this->Lokasi->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->Lokasi->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
                     $sqlWrk = $this->Lokasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -840,7 +851,7 @@ class JobView extends Job
             if ($curVal != "") {
                 $this->Customer->ViewValue = $this->Customer->lookupCacheOption($curVal);
                 if ($this->Customer->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchExpression(), "=", $curVal, $this->Customer->Lookup->getTable()->Fields["CustomerID"]->searchDataType(), "");
                     $sqlWrk = $this->Customer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();
@@ -863,7 +874,7 @@ class JobView extends Job
             if ($curVal != "") {
                 $this->Shipper->ViewValue = $this->Shipper->lookupCacheOption($curVal);
                 if ($this->Shipper->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $filterWrk = SearchFilter($this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchExpression(), "=", $curVal, $this->Shipper->Lookup->getTable()->Fields["ShipperID"]->searchDataType(), "");
                     $sqlWrk = $this->Shipper->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $conn = Conn();
                     $config = $conn->getConfiguration();

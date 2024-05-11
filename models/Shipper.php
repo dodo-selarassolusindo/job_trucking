@@ -33,6 +33,14 @@ class Shipper extends DbTable
     public $OffsetColumnClass = "col-sm-10 offset-sm-2";
     public $TableLeftColumnClass = "w-col-2";
 
+    // Audit trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Ajax / Modal
     public $UseAjaxActions = false;
     public $ModalSearch = false;
@@ -46,7 +54,7 @@ class Shipper extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $id;
+    public $ShipperID;
     public $Nama;
     public $Nomor_Telepon;
     public $Contact_Person;
@@ -93,35 +101,36 @@ class Shipper extends DbTable
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UseAjaxActions = $this->UseAjaxActions || Config("USE_AJAX_ACTIONS");
+        $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // id
-        $this->id = new DbField(
+        // ShipperID
+        $this->ShipperID = new DbField(
             $this, // Table
-            'x_id', // Variable name
-            'id', // Name
-            '`id`', // Expression
-            '`id`', // Basic search expression
+            'x_ShipperID', // Variable name
+            'ShipperID', // Name
+            '`ShipperID`', // Expression
+            '`ShipperID`', // Basic search expression
             3, // Type
             11, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`id`', // Virtual expression
+            '`ShipperID`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'NO' // Edit Tag
         );
-        $this->id->InputTextType = "text";
-        $this->id->Raw = true;
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['id'] = &$this->id;
+        $this->ShipperID->InputTextType = "text";
+        $this->ShipperID->Raw = true;
+        $this->ShipperID->IsAutoIncrement = true; // Autoincrement field
+        $this->ShipperID->IsPrimaryKey = true; // Primary key field
+        $this->ShipperID->Nullable = false; // NOT NULL field
+        $this->ShipperID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->ShipperID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['ShipperID'] = &$this->ShipperID;
 
         // Nama
         $this->Nama = new DbField(
@@ -605,8 +614,11 @@ class Shipper extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->ShipperID->setDbValue($conn->lastInsertId());
+            $rs['ShipperID'] = $this->ShipperID->DbValue;
+            if ($this->AuditTrailOnAdd) {
+                $this->writeAuditTrailOnAdd($rs);
+            }
         }
         return $result;
     }
@@ -659,9 +671,17 @@ class Shipper extends DbTable
 
         // Return auto increment field
         if ($success) {
-            if (!isset($rs['id']) && !EmptyValue($this->id->CurrentValue)) {
-                $rs['id'] = $this->id->CurrentValue;
+            if (!isset($rs['ShipperID']) && !EmptyValue($this->ShipperID->CurrentValue)) {
+                $rs['ShipperID'] = $this->ShipperID->CurrentValue;
             }
+        }
+        if ($success && $this->AuditTrailOnEdit && $rsold) {
+            $rsaudit = $rs;
+            $fldname = 'ShipperID';
+            if (!array_key_exists($fldname, $rsaudit)) {
+                $rsaudit[$fldname] = $rsold[$fldname];
+            }
+            $this->writeAuditTrailOnEdit($rsold, $rsaudit);
         }
         return $success;
     }
@@ -682,8 +702,8 @@ class Shipper extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('ShipperID', $rs)) {
+                AddFilter($where, QuotedName('ShipperID', $this->Dbid) . '=' . QuotedValue($rs['ShipperID'], $this->ShipperID->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -704,6 +724,9 @@ class Shipper extends DbTable
                 $this->DbErrorMessage = $e->getMessage();
             }
         }
+        if ($success && $this->AuditTrailOnDelete) {
+            $this->writeAuditTrailOnDelete($rs);
+        }
         return $success;
     }
 
@@ -713,7 +736,7 @@ class Shipper extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
+        $this->ShipperID->DbValue = $row['ShipperID'];
         $this->Nama->DbValue = $row['Nama'];
         $this->Nomor_Telepon->DbValue = $row['Nomor_Telepon'];
         $this->Contact_Person->DbValue = $row['Contact_Person'];
@@ -728,14 +751,14 @@ class Shipper extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`ShipperID` = @ShipperID@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->ShipperID->CurrentValue : $this->ShipperID->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -753,9 +776,9 @@ class Shipper extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->ShipperID->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->ShipperID->OldValue = $keys[0];
             }
         }
     }
@@ -765,9 +788,9 @@ class Shipper extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('ShipperID', $row) ? $row['ShipperID'] : null;
         } else {
-            $val = !EmptyValue($this->id->OldValue) && !$current ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = !EmptyValue($this->ShipperID->OldValue) && !$current ? $this->ShipperID->OldValue : $this->ShipperID->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -775,7 +798,7 @@ class Shipper extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@ShipperID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -917,7 +940,7 @@ class Shipper extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . VarToJson($this->id->CurrentValue, "number");
+        $json .= "\"ShipperID\":" . VarToJson($this->ShipperID->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -928,8 +951,8 @@ class Shipper extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->ShipperID->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->ShipperID->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1005,7 +1028,7 @@ class Shipper extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("ShipperID") ?? Route("ShipperID")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1049,9 +1072,9 @@ class Shipper extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->ShipperID->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->ShipperID->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1076,7 +1099,7 @@ class Shipper extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
+        $this->ShipperID->setDbValue($row['ShipperID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -1110,7 +1133,7 @@ class Shipper extends DbTable
 
         // Common render codes
 
-        // id
+        // ShipperID
 
         // Nama
 
@@ -1118,8 +1141,8 @@ class Shipper extends DbTable
 
         // Contact_Person
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
+        // ShipperID
+        $this->ShipperID->ViewValue = $this->ShipperID->CurrentValue;
 
         // Nama
         $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -1130,9 +1153,9 @@ class Shipper extends DbTable
         // Contact_Person
         $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-        // id
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // ShipperID
+        $this->ShipperID->HrefValue = "";
+        $this->ShipperID->TooltipValue = "";
 
         // Nama
         $this->Nama->HrefValue = "";
@@ -1161,9 +1184,9 @@ class Shipper extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditValue = $this->id->CurrentValue;
+        // ShipperID
+        $this->ShipperID->setupEditAttributes();
+        $this->ShipperID->EditValue = $this->ShipperID->CurrentValue;
 
         // Nama
         $this->Nama->setupEditAttributes();
@@ -1217,12 +1240,12 @@ class Shipper extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->ShipperID);
                     $doc->exportCaption($this->Nama);
                     $doc->exportCaption($this->Nomor_Telepon);
                     $doc->exportCaption($this->Contact_Person);
                 } else {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->ShipperID);
                     $doc->exportCaption($this->Nama);
                     $doc->exportCaption($this->Nomor_Telepon);
                     $doc->exportCaption($this->Contact_Person);
@@ -1252,12 +1275,12 @@ class Shipper extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->ShipperID);
                         $doc->exportField($this->Nama);
                         $doc->exportField($this->Nomor_Telepon);
                         $doc->exportField($this->Contact_Person);
                     } else {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->ShipperID);
                         $doc->exportField($this->Nama);
                         $doc->exportField($this->Nomor_Telepon);
                         $doc->exportField($this->Contact_Person);
@@ -1283,6 +1306,122 @@ class Shipper extends DbTable
 
         // No binary fields
         return false;
+    }
+
+    // Write audit trail start/end for grid update
+    public function writeAuditTrailDummy($typ)
+    {
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'shipper');
+    }
+
+    // Write audit trail (add page)
+    public function writeAuditTrailOnAdd(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnAdd) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['ShipperID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $newvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo Field
+                    $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML Field
+                    $newvalue = "[XML]";
+                } else {
+                    $newvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "A", 'shipper', $fldname, $key, "", $newvalue);
+            }
+        }
+    }
+
+    // Write audit trail (edit page)
+    public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnEdit) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rsold['ShipperID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rsnew) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && array_key_exists($fldname, $rsold) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->DataType == DataType::DATE) { // DateTime field
+                    $modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
+                } else {
+                    $modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+                }
+                if ($modified) {
+                    if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                        $oldvalue = $Language->phrase("PasswordMask");
+                        $newvalue = $Language->phrase("PasswordMask");
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                        $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsold[$fldname] : "[MEMO]";
+                        $newvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rsnew[$fldname] : "[MEMO]";
+                    } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                        $oldvalue = "[XML]";
+                        $newvalue = "[XML]";
+                    } else {
+                        $oldvalue = $rsold[$fldname];
+                        $newvalue = $rsnew[$fldname];
+                    }
+                    WriteAuditLog($usr, "U", 'shipper', $fldname, $key, $oldvalue, $newvalue);
+                }
+            }
+        }
+    }
+
+    // Write audit trail (delete page)
+    public function writeAuditTrailOnDelete(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnDelete) {
+            return;
+        }
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['ShipperID'];
+
+        // Write audit trail
+        $usr = CurrentUserIdentifier();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DataType::BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                    $oldvalue = $Language->phrase("PasswordMask");
+                } elseif ($this->Fields[$fldname]->DataType == DataType::MEMO) { // Memo field
+                    $oldvalue = Config("AUDIT_TRAIL_TO_DATABASE") ? $rs[$fldname] : "[MEMO]";
+                } elseif ($this->Fields[$fldname]->DataType == DataType::XML) { // XML field
+                    $oldvalue = "[XML]";
+                } else {
+                    $oldvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "D", 'shipper', $fldname, $key, $oldvalue);
+            }
+        }
     }
 
     // Table level events

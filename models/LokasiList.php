@@ -64,6 +64,14 @@ class LokasiList extends Lokasi
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -145,7 +153,7 @@ class LokasiList extends Lokasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->LokasiID->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -439,7 +447,7 @@ class LokasiList extends Lokasi
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['LokasiID'];
         }
         return $key;
     }
@@ -452,7 +460,7 @@ class LokasiList extends Lokasi
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->LokasiID->Visible = false;
         }
     }
 
@@ -877,6 +885,13 @@ class LokasiList extends Lokasi
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
             }
+
+            // Audit trail on search
+            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+                $searchParm = ServerVar("QUERY_STRING");
+                $searchSql = $this->getSessionWhere();
+                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
+            }
         }
 
         // Set up list action columns
@@ -1023,7 +1038,7 @@ class LokasiList extends Lokasi
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->LokasiID->AdvancedSearch->toJson(), ","); // Field LokasiID
         $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1064,13 +1079,13 @@ class LokasiList extends Lokasi
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
+        // Field LokasiID
+        $this->LokasiID->AdvancedSearch->SearchValue = @$filter["x_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchOperator = @$filter["z_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchCondition = @$filter["v_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchValue2 = @$filter["y_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchOperator2 = @$filter["w_LokasiID"];
+        $this->LokasiID->AdvancedSearch->save();
 
         // Field Nama
         $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
@@ -1197,7 +1212,7 @@ class LokasiList extends Lokasi
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
+            $this->updateSort($this->LokasiID); // LokasiID
             $this->updateSort($this->Nama); // Nama
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1223,7 +1238,7 @@ class LokasiList extends Lokasi
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
+                $this->LokasiID->setSort("");
                 $this->Nama->setSort("");
             }
 
@@ -1424,7 +1439,7 @@ class LokasiList extends Lokasi
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->LokasiID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1462,7 +1477,7 @@ class LokasiList extends Lokasi
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
+            $this->createColumnOption($option, "LokasiID");
             $this->createColumnOption($option, "Nama");
         }
 
@@ -1898,7 +1913,7 @@ class LokasiList extends Lokasi
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -1906,7 +1921,7 @@ class LokasiList extends Lokasi
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['LokasiID'] = $this->LokasiID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -1948,21 +1963,21 @@ class LokasiList extends Lokasi
 
         // Common render codes for all row types
 
-        // id
+        // LokasiID
 
         // Nama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // LokasiID
+            $this->LokasiID->HrefValue = "";
+            $this->LokasiID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";

@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "beranda0controller";
+    public $CurrentPageName = "sizedelete";
 
     // Page headings
     public $Heading = "";

@@ -50,8 +50,8 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_customer_id" class="customer_id"><?= $Page->id->caption() ?></span></th>
+<?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+        <th class="<?= $Page->CustomerID->headerCellClass() ?>"><span id="elh_customer_CustomerID" class="customer_CustomerID"><?= $Page->CustomerID->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_customer_Nama" class="customer_Nama"><?= $Page->Nama->caption() ?></span></th>
@@ -83,11 +83,11 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
+<?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+        <td<?= $Page->CustomerID->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<span<?= $Page->CustomerID->viewAttributes() ?>>
+<?= $Page->CustomerID->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

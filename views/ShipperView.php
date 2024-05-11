@@ -51,13 +51,13 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="shipper">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_shipper_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_shipper_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<?php if ($Page->ShipperID->Visible) { // ShipperID ?>
+    <tr id="r_ShipperID"<?= $Page->ShipperID->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_shipper_ShipperID"><?= $Page->ShipperID->caption() ?></span></td>
+        <td data-name="ShipperID"<?= $Page->ShipperID->cellAttributes() ?>>
+<span id="el_shipper_ShipperID">
+<span<?= $Page->ShipperID->viewAttributes() ?>>
+<?= $Page->ShipperID->getViewValue() ?></span>
 </span>
 </td>
     </tr>

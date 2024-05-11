@@ -283,7 +283,7 @@ loadjs.ready("fjobedit", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
-    <input type="hidden" data-table="job" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+    <input type="hidden" data-table="job" data-field="x_JobID" data-hidden="1" name="x_JobID" id="x_JobID" value="<?= HtmlEncode($Page->JobID->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fjobedit"><?= $Language->phrase("SaveBtn") ?></button>

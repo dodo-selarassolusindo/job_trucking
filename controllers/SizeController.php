@@ -13,40 +13,40 @@ use PHPMaker2024\prj_job_trucking\Attributes\Patch;
 use PHPMaker2024\prj_job_trucking\Attributes\Post;
 use PHPMaker2024\prj_job_trucking\Attributes\Put;
 
-class ShipperController extends ControllerBase
+class SizeController extends ControllerBase
 {
     // list
-    #[Map(["GET","POST","OPTIONS"], "/shipperlist[/{ShipperID}]", [PermissionMiddleware::class], "list.shipper")]
+    #[Map(["GET","POST","OPTIONS"], "/sizelist[/{SizeID}]", [PermissionMiddleware::class], "list.size")]
     public function list(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "ShipperList");
+        return $this->runPage($request, $response, $args, "SizeList");
     }
 
     // add
-    #[Map(["GET","POST","OPTIONS"], "/shipperadd[/{ShipperID}]", [PermissionMiddleware::class], "add.shipper")]
+    #[Map(["GET","POST","OPTIONS"], "/sizeadd[/{SizeID}]", [PermissionMiddleware::class], "add.size")]
     public function add(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "ShipperAdd");
+        return $this->runPage($request, $response, $args, "SizeAdd");
     }
 
     // view
-    #[Map(["GET","POST","OPTIONS"], "/shipperview[/{ShipperID}]", [PermissionMiddleware::class], "view.shipper")]
+    #[Map(["GET","POST","OPTIONS"], "/sizeview[/{SizeID}]", [PermissionMiddleware::class], "view.size")]
     public function view(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "ShipperView");
+        return $this->runPage($request, $response, $args, "SizeView");
     }
 
     // edit
-    #[Map(["GET","POST","OPTIONS"], "/shipperedit[/{ShipperID}]", [PermissionMiddleware::class], "edit.shipper")]
+    #[Map(["GET","POST","OPTIONS"], "/sizeedit[/{SizeID}]", [PermissionMiddleware::class], "edit.size")]
     public function edit(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "ShipperEdit");
+        return $this->runPage($request, $response, $args, "SizeEdit");
     }
 
     // delete
-    #[Map(["GET","POST","OPTIONS"], "/shipperdelete[/{ShipperID}]", [PermissionMiddleware::class], "delete.shipper")]
+    #[Map(["GET","POST","OPTIONS"], "/sizedelete[/{SizeID}]", [PermissionMiddleware::class], "delete.size")]
     public function delete(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "ShipperDelete");
+        return $this->runPage($request, $response, $args, "SizeDelete");
     }
 }

@@ -40,6 +40,14 @@ class LokasiDelete extends Lokasi
     // CSS class/style
     public $CurrentPageName = "lokasidelete";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class LokasiDelete extends Lokasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->LokasiID->setVisibility();
         $this->Nama->setVisibility();
     }
 
@@ -331,7 +339,7 @@ class LokasiDelete extends Lokasi
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['LokasiID'];
         }
         return $key;
     }
@@ -344,7 +352,7 @@ class LokasiDelete extends Lokasi
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->LokasiID->Visible = false;
         }
     }
     public $DbMasterFilter = "";
@@ -581,7 +589,7 @@ class LokasiDelete extends Lokasi
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -589,7 +597,7 @@ class LokasiDelete extends Lokasi
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['LokasiID'] = $this->LokasiID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -606,21 +614,21 @@ class LokasiDelete extends Lokasi
 
         // Common render codes for all row types
 
-        // id
+        // LokasiID
 
         // Nama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // LokasiID
+            $this->LokasiID->HrefValue = "";
+            $this->LokasiID->TooltipValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -651,6 +659,9 @@ class LokasiDelete extends Lokasi
         if ($this->UseTransaction) {
             $conn->beginTransaction();
         }
+        if ($this->AuditTrailOnDelete) {
+            $this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+        }
 
         // Clone old rows
         $rsold = $rows;
@@ -661,7 +672,7 @@ class LokasiDelete extends Lokasi
             if ($thisKey != "") {
                 $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
             }
-            $thisKey .= $row['id'];
+            $thisKey .= $row['LokasiID'];
 
             // Call row deleting event
             $deleteRow = $this->rowDeleting($row);
@@ -710,9 +721,15 @@ class LokasiDelete extends Lokasi
             if (count($failKeys) > 0) {
                 $this->setWarningMessage(str_replace("%k", explode(", ", $failKeys), $Language->phrase("DeleteRecordsFailed")));
             }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
+            }
         } else {
             if ($this->UseTransaction) { // Rollback transaction
                 $conn->rollback();
+            }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
             }
         }
 

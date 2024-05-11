@@ -40,6 +40,14 @@ class CustomerEdit extends Customer
     // CSS class/style
     public $CurrentPageName = "customeredit";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class CustomerEdit extends Customer
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->CustomerID->setVisibility();
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -357,7 +365,7 @@ class CustomerEdit extends Customer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['CustomerID'];
         }
         return $key;
     }
@@ -370,7 +378,7 @@ class CustomerEdit extends Customer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->CustomerID->Visible = false;
         }
     }
 
@@ -524,12 +532,12 @@ class CustomerEdit extends Customer
         if (IsApi()) {
             // Load key values
             $loaded = true;
-            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-                $this->id->setOldValue($this->id->QueryStringValue);
-            } elseif (Post("id") !== null) {
-                $this->id->setFormValue(Post("id"));
-                $this->id->setOldValue($this->id->FormValue);
+            if (($keyValue = Get("CustomerID") ?? Key(0) ?? Route(2)) !== null) {
+                $this->CustomerID->setQueryStringValue($keyValue);
+                $this->CustomerID->setOldValue($this->CustomerID->QueryStringValue);
+            } elseif (Post("CustomerID") !== null) {
+                $this->CustomerID->setFormValue(Post("CustomerID"));
+                $this->CustomerID->setOldValue($this->CustomerID->FormValue);
             } else {
                 $loaded = false; // Unable to load key
             }
@@ -560,11 +568,11 @@ class CustomerEdit extends Customer
 
                 // Load key from QueryString
                 $loadByQuery = false;
-                if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                    $this->id->setQueryStringValue($keyValue);
+                if (($keyValue = Get("CustomerID") ?? Route("CustomerID")) !== null) {
+                    $this->CustomerID->setQueryStringValue($keyValue);
                     $loadByQuery = true;
                 } else {
-                    $this->id->CurrentValue = null;
+                    $this->CustomerID->CurrentValue = null;
                 }
             }
 
@@ -693,10 +701,10 @@ class CustomerEdit extends Customer
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+        // Check field name 'CustomerID' first before field var 'x_CustomerID'
+        $val = $CurrentForm->hasValue("CustomerID") ? $CurrentForm->getValue("CustomerID") : $CurrentForm->getValue("x_CustomerID");
+        if (!$this->CustomerID->IsDetailKey) {
+            $this->CustomerID->setFormValue($val);
         }
 
         // Check field name 'Nama' first before field var 'x_Nama'
@@ -734,7 +742,7 @@ class CustomerEdit extends Customer
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+        $this->CustomerID->CurrentValue = $this->CustomerID->FormValue;
         $this->Nama->CurrentValue = $this->Nama->FormValue;
         $this->Nomor_Telepon->CurrentValue = $this->Nomor_Telepon->FormValue;
         $this->Contact_Person->CurrentValue = $this->Contact_Person->FormValue;
@@ -778,7 +786,7 @@ class CustomerEdit extends Customer
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->CustomerID->setDbValue($row['CustomerID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -788,7 +796,7 @@ class CustomerEdit extends Customer
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['CustomerID'] = $this->CustomerID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -826,8 +834,8 @@ class CustomerEdit extends Customer
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // CustomerID
+        $this->CustomerID->RowCssClass = "row";
 
         // Nama
         $this->Nama->RowCssClass = "row";
@@ -840,8 +848,8 @@ class CustomerEdit extends Customer
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // CustomerID
+            $this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;
@@ -852,8 +860,8 @@ class CustomerEdit extends Customer
             // Contact_Person
             $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
+            // CustomerID
+            $this->CustomerID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -864,9 +872,9 @@ class CustomerEdit extends Customer
             // Contact_Person
             $this->Contact_Person->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
+            // CustomerID
+            $this->CustomerID->setupEditAttributes();
+            $this->CustomerID->EditValue = $this->CustomerID->CurrentValue;
 
             // Nama
             $this->Nama->setupEditAttributes();
@@ -894,8 +902,8 @@ class CustomerEdit extends Customer
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
+            // CustomerID
+            $this->CustomerID->HrefValue = "";
 
             // Nama
             $this->Nama->HrefValue = "";
@@ -926,9 +934,9 @@ class CustomerEdit extends Customer
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            if ($this->CustomerID->Visible && $this->CustomerID->Required) {
+                if (!$this->CustomerID->IsDetailKey && EmptyValue($this->CustomerID->FormValue)) {
+                    $this->CustomerID->addErrorMessage(str_replace("%s", $this->CustomerID->caption(), $this->CustomerID->RequiredErrorMessage));
                 }
             }
             if ($this->Nama->Visible && $this->Nama->Required) {

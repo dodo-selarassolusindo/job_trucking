@@ -41,7 +41,9 @@ $USER_LEVEL_PRIVS = [["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}audittrail","-2","0
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}shipper","-2","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}shipper","0","0"],
     ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda_0.php","-2","0"],
-    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda_0.php","0","0"]];
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}beranda_0.php","0","0"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size","-2","0"],
+    ["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}size","0","0"]];
 
 /**
  * Tables
@@ -54,13 +56,14 @@ $USER_LEVEL_PRIVS = [["{DB904388-BBCA-46DF-8766-6547B7E1D6C1}audittrail","-2","0
  * [4] string Project ID
  * [5] string URL (for OthersController::index)
  */
-$USER_LEVEL_TABLES = [["audittrail","audittrail","audittrail",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","audittraillist"],
-    ["employees","employees","User",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","employeeslist"],
-    ["userlevelpermissions","userlevelpermissions","userlevelpermissions",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelpermissionslist"],
+$USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","audittraillist"],
+    ["employees","employees","Pengguna",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","employeeslist"],
+    ["userlevelpermissions","userlevelpermissions","Detail",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelpermissionslist"],
     ["userlevels","userlevels","Hak Akses",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","userlevelslist"],
     ["beranda.php","beranda","Beranda",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda"],
     ["job","job","Job",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","joblist"],
     ["lokasi","lokasi","Lokasi",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","lokasilist"],
     ["customer","customer","Customer",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","customerlist"],
     ["shipper","shipper","Shipper",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","shipperlist"],
-    ["beranda_0.php","beranda_0","Beranda 0",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda0"]];
+    ["beranda_0.php","beranda_0","Beranda 0",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","beranda0"],
+    ["size","size","Size",true,"{DB904388-BBCA-46DF-8766-6547B7E1D6C1}","sizelist"]];

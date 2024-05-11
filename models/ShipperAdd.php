@@ -40,6 +40,14 @@ class ShipperAdd extends Shipper
     // CSS class/style
     public $CurrentPageName = "shipperadd";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class ShipperAdd extends Shipper
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
+        $this->ShipperID->Visible = false;
         $this->Nama->setVisibility();
         $this->Nomor_Telepon->setVisibility();
         $this->Contact_Person->setVisibility();
@@ -357,7 +365,7 @@ class ShipperAdd extends Shipper
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['ShipperID'];
         }
         return $key;
     }
@@ -370,7 +378,7 @@ class ShipperAdd extends Shipper
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->ShipperID->Visible = false;
         }
     }
 
@@ -526,8 +534,8 @@ class ShipperAdd extends Shipper
             $postBack = true;
         } else {
             // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
+            if (($keyValue = Get("ShipperID") ?? Route("ShipperID")) !== null) {
+                $this->ShipperID->setQueryStringValue($keyValue);
             }
             $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $this->CopyRecord = !EmptyValue($this->OldKey);
@@ -695,8 +703,8 @@ class ShipperAdd extends Shipper
             }
         }
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        // Check field name 'ShipperID' first before field var 'x_ShipperID'
+        $val = $CurrentForm->hasValue("ShipperID") ? $CurrentForm->getValue("ShipperID") : $CurrentForm->getValue("x_ShipperID");
     }
 
     // Restore form values
@@ -746,7 +754,7 @@ class ShipperAdd extends Shipper
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->ShipperID->setDbValue($row['ShipperID']);
         $this->Nama->setDbValue($row['Nama']);
         $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
         $this->Contact_Person->setDbValue($row['Contact_Person']);
@@ -756,7 +764,7 @@ class ShipperAdd extends Shipper
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['ShipperID'] = $this->ShipperID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
         $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
@@ -794,8 +802,8 @@ class ShipperAdd extends Shipper
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // ShipperID
+        $this->ShipperID->RowCssClass = "row";
 
         // Nama
         $this->Nama->RowCssClass = "row";
@@ -808,8 +816,8 @@ class ShipperAdd extends Shipper
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // ShipperID
+            $this->ShipperID->ViewValue = $this->ShipperID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;

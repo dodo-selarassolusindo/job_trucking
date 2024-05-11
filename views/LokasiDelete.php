@@ -50,8 +50,8 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_lokasi_id" class="lokasi_id"><?= $Page->id->caption() ?></span></th>
+<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+        <th class="<?= $Page->LokasiID->headerCellClass() ?>"><span id="elh_lokasi_LokasiID" class="lokasi_LokasiID"><?= $Page->LokasiID->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th class="<?= $Page->Nama->headerCellClass() ?>"><span id="elh_lokasi_Nama" class="lokasi_Nama"><?= $Page->Nama->caption() ?></span></th>
@@ -77,11 +77,11 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
+<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+        <td<?= $Page->LokasiID->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<span<?= $Page->LokasiID->viewAttributes() ?>>
+<?= $Page->LokasiID->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

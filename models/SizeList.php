@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class AudittrailList extends Audittrail
+class SizeList extends Size
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class AudittrailList extends Audittrail
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "AudittrailList";
+    public $PageObjName = "SizeList";
 
     // View file path
     public $View = null;
@@ -38,13 +38,13 @@ class AudittrailList extends Audittrail
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "faudittraillist";
+    public $FormName = "fsizelist";
     public $FormActionName = "";
     public $FormBlankRowName = "";
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "audittraillist";
+    public $CurrentPageName = "sizelist";
 
     // Page URLs
     public $AddUrl;
@@ -153,16 +153,8 @@ class AudittrailList extends Audittrail
     // Set field visibility
     public function setVisibility()
     {
-        $this->Id->setVisibility();
-        $this->DateTime->setVisibility();
-        $this->Script->setVisibility();
-        $this->User->setVisibility();
-        $this->_Action->setVisibility();
-        $this->_Table->setVisibility();
-        $this->Field->setVisibility();
-        $this->KeyValue->Visible = false;
-        $this->OldValue->Visible = false;
-        $this->NewValue->Visible = false;
+        $this->SizeID->setVisibility();
+        $this->Ukuran->setVisibility();
     }
 
     // Constructor
@@ -173,8 +165,8 @@ class AudittrailList extends Audittrail
         $this->FormActionName = Config("FORM_ROW_ACTION_NAME");
         $this->FormBlankRowName = Config("FORM_BLANK_ROW_NAME");
         $this->FormKeyCountName = Config("FORM_KEY_COUNT_NAME");
-        $this->TableVar = 'audittrail';
-        $this->TableName = 'audittrail';
+        $this->TableVar = 'size';
+        $this->TableName = 'size';
 
         // Table CSS class
         $this->TableClass = "table table-bordered table-hover table-sm ew-table";
@@ -194,26 +186,26 @@ class AudittrailList extends Audittrail
         // Language object
         $Language = Container("app.language");
 
-        // Table object (audittrail)
-        if (!isset($GLOBALS["audittrail"]) || $GLOBALS["audittrail"]::class == PROJECT_NAMESPACE . "audittrail") {
-            $GLOBALS["audittrail"] = &$this;
+        // Table object (size)
+        if (!isset($GLOBALS["size"]) || $GLOBALS["size"]::class == PROJECT_NAMESPACE . "size") {
+            $GLOBALS["size"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "audittrailadd";
+        $this->AddUrl = "sizeadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "audittraildelete";
-        $this->MultiUpdateUrl = "audittrailupdate";
+        $this->MultiDeleteUrl = "sizedelete";
+        $this->MultiUpdateUrl = "sizeupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'audittrail');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size');
         }
 
         // Start timer
@@ -364,7 +356,7 @@ class AudittrailList extends Audittrail
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "audittrailview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "sizeview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -455,7 +447,7 @@ class AudittrailList extends Audittrail
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['Id'];
+            $key .= @$ar['SizeID'];
         }
         return $key;
     }
@@ -468,7 +460,7 @@ class AudittrailList extends Audittrail
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->Id->Visible = false;
+            $this->SizeID->Visible = false;
         }
     }
 
@@ -705,7 +697,7 @@ class AudittrailList extends Audittrail
 
         // Update form name to avoid conflict
         if ($this->IsModal) {
-            $this->FormName = "faudittrailgrid";
+            $this->FormName = "fsizegrid";
         }
 
         // Set up page action
@@ -1046,16 +1038,8 @@ class AudittrailList extends Audittrail
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->Id->AdvancedSearch->toJson(), ","); // Field Id
-        $filterList = Concat($filterList, $this->DateTime->AdvancedSearch->toJson(), ","); // Field DateTime
-        $filterList = Concat($filterList, $this->Script->AdvancedSearch->toJson(), ","); // Field Script
-        $filterList = Concat($filterList, $this->User->AdvancedSearch->toJson(), ","); // Field User
-        $filterList = Concat($filterList, $this->_Action->AdvancedSearch->toJson(), ","); // Field Action
-        $filterList = Concat($filterList, $this->_Table->AdvancedSearch->toJson(), ","); // Field Table
-        $filterList = Concat($filterList, $this->Field->AdvancedSearch->toJson(), ","); // Field Field
-        $filterList = Concat($filterList, $this->KeyValue->AdvancedSearch->toJson(), ","); // Field KeyValue
-        $filterList = Concat($filterList, $this->OldValue->AdvancedSearch->toJson(), ","); // Field OldValue
-        $filterList = Concat($filterList, $this->NewValue->AdvancedSearch->toJson(), ","); // Field NewValue
+        $filterList = Concat($filterList, $this->SizeID->AdvancedSearch->toJson(), ","); // Field SizeID
+        $filterList = Concat($filterList, $this->Ukuran->AdvancedSearch->toJson(), ","); // Field Ukuran
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1076,7 +1060,7 @@ class AudittrailList extends Audittrail
     {
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            Profile()->setSearchFilters("faudittrailsrch", $filters);
+            Profile()->setSearchFilters("fsizesrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1095,85 +1079,21 @@ class AudittrailList extends Audittrail
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field Id
-        $this->Id->AdvancedSearch->SearchValue = @$filter["x_Id"];
-        $this->Id->AdvancedSearch->SearchOperator = @$filter["z_Id"];
-        $this->Id->AdvancedSearch->SearchCondition = @$filter["v_Id"];
-        $this->Id->AdvancedSearch->SearchValue2 = @$filter["y_Id"];
-        $this->Id->AdvancedSearch->SearchOperator2 = @$filter["w_Id"];
-        $this->Id->AdvancedSearch->save();
+        // Field SizeID
+        $this->SizeID->AdvancedSearch->SearchValue = @$filter["x_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchOperator = @$filter["z_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchCondition = @$filter["v_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchValue2 = @$filter["y_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchOperator2 = @$filter["w_SizeID"];
+        $this->SizeID->AdvancedSearch->save();
 
-        // Field DateTime
-        $this->DateTime->AdvancedSearch->SearchValue = @$filter["x_DateTime"];
-        $this->DateTime->AdvancedSearch->SearchOperator = @$filter["z_DateTime"];
-        $this->DateTime->AdvancedSearch->SearchCondition = @$filter["v_DateTime"];
-        $this->DateTime->AdvancedSearch->SearchValue2 = @$filter["y_DateTime"];
-        $this->DateTime->AdvancedSearch->SearchOperator2 = @$filter["w_DateTime"];
-        $this->DateTime->AdvancedSearch->save();
-
-        // Field Script
-        $this->Script->AdvancedSearch->SearchValue = @$filter["x_Script"];
-        $this->Script->AdvancedSearch->SearchOperator = @$filter["z_Script"];
-        $this->Script->AdvancedSearch->SearchCondition = @$filter["v_Script"];
-        $this->Script->AdvancedSearch->SearchValue2 = @$filter["y_Script"];
-        $this->Script->AdvancedSearch->SearchOperator2 = @$filter["w_Script"];
-        $this->Script->AdvancedSearch->save();
-
-        // Field User
-        $this->User->AdvancedSearch->SearchValue = @$filter["x_User"];
-        $this->User->AdvancedSearch->SearchOperator = @$filter["z_User"];
-        $this->User->AdvancedSearch->SearchCondition = @$filter["v_User"];
-        $this->User->AdvancedSearch->SearchValue2 = @$filter["y_User"];
-        $this->User->AdvancedSearch->SearchOperator2 = @$filter["w_User"];
-        $this->User->AdvancedSearch->save();
-
-        // Field Action
-        $this->_Action->AdvancedSearch->SearchValue = @$filter["x__Action"];
-        $this->_Action->AdvancedSearch->SearchOperator = @$filter["z__Action"];
-        $this->_Action->AdvancedSearch->SearchCondition = @$filter["v__Action"];
-        $this->_Action->AdvancedSearch->SearchValue2 = @$filter["y__Action"];
-        $this->_Action->AdvancedSearch->SearchOperator2 = @$filter["w__Action"];
-        $this->_Action->AdvancedSearch->save();
-
-        // Field Table
-        $this->_Table->AdvancedSearch->SearchValue = @$filter["x__Table"];
-        $this->_Table->AdvancedSearch->SearchOperator = @$filter["z__Table"];
-        $this->_Table->AdvancedSearch->SearchCondition = @$filter["v__Table"];
-        $this->_Table->AdvancedSearch->SearchValue2 = @$filter["y__Table"];
-        $this->_Table->AdvancedSearch->SearchOperator2 = @$filter["w__Table"];
-        $this->_Table->AdvancedSearch->save();
-
-        // Field Field
-        $this->Field->AdvancedSearch->SearchValue = @$filter["x_Field"];
-        $this->Field->AdvancedSearch->SearchOperator = @$filter["z_Field"];
-        $this->Field->AdvancedSearch->SearchCondition = @$filter["v_Field"];
-        $this->Field->AdvancedSearch->SearchValue2 = @$filter["y_Field"];
-        $this->Field->AdvancedSearch->SearchOperator2 = @$filter["w_Field"];
-        $this->Field->AdvancedSearch->save();
-
-        // Field KeyValue
-        $this->KeyValue->AdvancedSearch->SearchValue = @$filter["x_KeyValue"];
-        $this->KeyValue->AdvancedSearch->SearchOperator = @$filter["z_KeyValue"];
-        $this->KeyValue->AdvancedSearch->SearchCondition = @$filter["v_KeyValue"];
-        $this->KeyValue->AdvancedSearch->SearchValue2 = @$filter["y_KeyValue"];
-        $this->KeyValue->AdvancedSearch->SearchOperator2 = @$filter["w_KeyValue"];
-        $this->KeyValue->AdvancedSearch->save();
-
-        // Field OldValue
-        $this->OldValue->AdvancedSearch->SearchValue = @$filter["x_OldValue"];
-        $this->OldValue->AdvancedSearch->SearchOperator = @$filter["z_OldValue"];
-        $this->OldValue->AdvancedSearch->SearchCondition = @$filter["v_OldValue"];
-        $this->OldValue->AdvancedSearch->SearchValue2 = @$filter["y_OldValue"];
-        $this->OldValue->AdvancedSearch->SearchOperator2 = @$filter["w_OldValue"];
-        $this->OldValue->AdvancedSearch->save();
-
-        // Field NewValue
-        $this->NewValue->AdvancedSearch->SearchValue = @$filter["x_NewValue"];
-        $this->NewValue->AdvancedSearch->SearchOperator = @$filter["z_NewValue"];
-        $this->NewValue->AdvancedSearch->SearchCondition = @$filter["v_NewValue"];
-        $this->NewValue->AdvancedSearch->SearchValue2 = @$filter["y_NewValue"];
-        $this->NewValue->AdvancedSearch->SearchOperator2 = @$filter["w_NewValue"];
-        $this->NewValue->AdvancedSearch->save();
+        // Field Ukuran
+        $this->Ukuran->AdvancedSearch->SearchValue = @$filter["x_Ukuran"];
+        $this->Ukuran->AdvancedSearch->SearchOperator = @$filter["z_Ukuran"];
+        $this->Ukuran->AdvancedSearch->SearchCondition = @$filter["v_Ukuran"];
+        $this->Ukuran->AdvancedSearch->SearchValue2 = @$filter["y_Ukuran"];
+        $this->Ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_Ukuran"];
+        $this->Ukuran->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1213,14 +1133,7 @@ class AudittrailList extends Audittrail
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->Script;
-        $searchFlds[] = &$this->User;
-        $searchFlds[] = &$this->_Action;
-        $searchFlds[] = &$this->_Table;
-        $searchFlds[] = &$this->Field;
-        $searchFlds[] = &$this->KeyValue;
-        $searchFlds[] = &$this->OldValue;
-        $searchFlds[] = &$this->NewValue;
+        $searchFlds[] = &$this->Ukuran;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1299,13 +1212,8 @@ class AudittrailList extends Audittrail
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->Id); // Id
-            $this->updateSort($this->DateTime); // DateTime
-            $this->updateSort($this->Script); // Script
-            $this->updateSort($this->User); // User
-            $this->updateSort($this->_Action); // Action
-            $this->updateSort($this->_Table); // Table
-            $this->updateSort($this->Field); // Field
+            $this->updateSort($this->SizeID); // SizeID
+            $this->updateSort($this->Ukuran); // Ukuran
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1330,16 +1238,8 @@ class AudittrailList extends Audittrail
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->Id->setSort("");
-                $this->DateTime->setSort("");
-                $this->Script->setSort("");
-                $this->User->setSort("");
-                $this->_Action->setSort("");
-                $this->_Table->setSort("");
-                $this->Field->setSort("");
-                $this->KeyValue->setSort("");
-                $this->OldValue->setSort("");
-                $this->NewValue->setSort("");
+                $this->SizeID->setSort("");
+                $this->Ukuran->setSort("");
             }
 
             // Reset start position
@@ -1363,6 +1263,24 @@ class AudittrailList extends Audittrail
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
+        $item->OnLeft = true;
+
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = true;
+
+        // "copy"
+        $item = &$this->ListOptions->add("copy");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canAdd();
+        $item->OnLeft = true;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
         $item->OnLeft = true;
 
         // List actions
@@ -1428,9 +1346,51 @@ class AudittrailList extends Audittrail
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
                 if ($this->ModalView && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"audittrail\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"size\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+                }
+            } else {
+                $opt->Body = "";
+            }
+
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                if ($this->ModalEdit && !IsMobile()) {
+                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"size\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
+                } else {
+                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+                }
+            } else {
+                $opt->Body = "";
+            }
+
+            // "copy"
+            $opt = $this->ListOptions["copy"];
+            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
+            if ($Security->canAdd()) {
+                if ($this->ModalAdd && !IsMobile()) {
+                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"size\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
+                } else {
+                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
+                }
+            } else {
+                $opt->Body = "";
+            }
+
+            // "delete"
+            $opt = $this->ListOptions["delete"];
+            if ($Security->canDelete()) {
+                $deleteCaption = $Language->phrase("DeleteLink");
+                $deleteTitle = HtmlTitle($deleteCaption);
+                if ($this->UseAjaxActions) {
+                    $opt->Body = "<a class=\"ew-row-link ew-delete\" data-ew-action=\"inline\" data-action=\"delete\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" data-key= \"" . HtmlEncode($this->getKey(true)) . "\" data-url=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $deleteCaption . "</a>";
+                } else {
+                    $opt->Body = "<a class=\"ew-row-link ew-delete\"" .
+                        ($this->InlineDelete ? " data-ew-action=\"inline-delete\"" : "") .
+                        " title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $deleteCaption . "</a>";
                 }
             } else {
                 $opt->Body = "";
@@ -1453,12 +1413,12 @@ class AudittrailList extends Audittrail
                         $icon = ($listAction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listAction->Icon)) . "\" data-caption=\"" . $title . "\"></i> " : "";
                         $link = $disabled
                             ? "<li><div class=\"alert alert-light\">" . $icon . " " . $caption . "</div></li>"
-                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"faudittraillist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttrs() . ">" . $icon . " " . $caption . "</button></li>";
+                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fsizelist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttrs() . ">" . $icon . " " . $caption . "</button></li>";
                         $links[] = $link;
                         if ($body == "") { // Setup first button
                             $body = $disabled
                             ? "<div class=\"alert alert-light\">" . $icon . " " . $caption . "</div>"
-                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"faudittraillist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttrs() . ">" . $icon . " " . $caption . "</button>";
+                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fsizelist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttrs() . ">" . $icon . " " . $caption . "</button>";
                         }
                     }
                 }
@@ -1479,7 +1439,7 @@ class AudittrailList extends Audittrail
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->Id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->SizeID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1498,6 +1458,17 @@ class AudittrailList extends Audittrail
     {
         global $Language, $Security;
         $options = &$this->OtherOptions;
+        $option = $options["addedit"];
+
+        // Add
+        $item = &$option->add("add");
+        $addcaption = HtmlTitle($Language->phrase("AddLink"));
+        if ($this->ModalAdd && !IsMobile()) {
+            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"size\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
+        } else {
+            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
+        }
+        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
         // Show column list for column visibility
@@ -1506,13 +1477,8 @@ class AudittrailList extends Audittrail
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "Id");
-            $this->createColumnOption($option, "DateTime");
-            $this->createColumnOption($option, "Script");
-            $this->createColumnOption($option, "User");
-            $this->createColumnOption($option, "Action");
-            $this->createColumnOption($option, "Table");
-            $this->createColumnOption($option, "Field");
+            $this->createColumnOption($option, "SizeID");
+            $this->createColumnOption($option, "Ukuran");
         }
 
         // Set up custom actions
@@ -1537,10 +1503,10 @@ class AudittrailList extends Audittrail
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"faudittrailsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fsizesrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"faudittrailsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fsizesrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1600,7 +1566,7 @@ class AudittrailList extends Audittrail
                 $item = &$option->add("custom_" . $listAction->Action);
                 $caption = $listAction->Caption;
                 $icon = ($listAction->Icon != "") ? '<i class="' . HtmlEncode($listAction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="faudittraillist"' . $listAction->toDataAttrs() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fsizelist"' . $listAction->toDataAttrs() . '>' . $icon . '</button>';
                 $item->Visible = $listAction->Allowed;
             }
         }
@@ -1767,7 +1733,7 @@ class AudittrailList extends Audittrail
 
                 // Set row properties
                 $this->resetAttributes();
-                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_audittrail", "data-rowtype" => RowType::ADD]);
+                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_size", "data-rowtype" => RowType::ADD]);
                 $this->RowAttrs->appendClass("ew-template");
                 // Render row
                 $this->RowType = RowType::ADD;
@@ -1828,7 +1794,7 @@ class AudittrailList extends Audittrail
         $this->RowAttrs->merge([
             "data-rowindex" => $this->RowCount,
             "data-key" => $this->getKey(true),
-            "id" => "r" . $this->RowCount . "_audittrail",
+            "id" => "r" . $this->RowCount . "_size",
             "data-rowtype" => $this->RowType,
             "data-inline" => ($this->isAdd() || $this->isCopy() || $this->isEdit()) ? "true" : "false", // Inline-Add/Copy/Edit
             "class" => ($this->RowCount % 2 != 1) ? "ew-table-alt-row" : "",
@@ -1947,32 +1913,16 @@ class AudittrailList extends Audittrail
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->Id->setDbValue($row['Id']);
-        $this->DateTime->setDbValue($row['DateTime']);
-        $this->Script->setDbValue($row['Script']);
-        $this->User->setDbValue($row['User']);
-        $this->_Action->setDbValue($row['Action']);
-        $this->_Table->setDbValue($row['Table']);
-        $this->Field->setDbValue($row['Field']);
-        $this->KeyValue->setDbValue($row['KeyValue']);
-        $this->OldValue->setDbValue($row['OldValue']);
-        $this->NewValue->setDbValue($row['NewValue']);
+        $this->SizeID->setDbValue($row['SizeID']);
+        $this->Ukuran->setDbValue($row['Ukuran']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['Id'] = $this->Id->DefaultValue;
-        $row['DateTime'] = $this->DateTime->DefaultValue;
-        $row['Script'] = $this->Script->DefaultValue;
-        $row['User'] = $this->User->DefaultValue;
-        $row['Action'] = $this->_Action->DefaultValue;
-        $row['Table'] = $this->_Table->DefaultValue;
-        $row['Field'] = $this->Field->DefaultValue;
-        $row['KeyValue'] = $this->KeyValue->DefaultValue;
-        $row['OldValue'] = $this->OldValue->DefaultValue;
-        $row['NewValue'] = $this->NewValue->DefaultValue;
+        $row['SizeID'] = $this->SizeID->DefaultValue;
+        $row['Ukuran'] = $this->Ukuran->DefaultValue;
         return $row;
     }
 
@@ -2013,77 +1963,25 @@ class AudittrailList extends Audittrail
 
         // Common render codes for all row types
 
-        // Id
+        // SizeID
 
-        // DateTime
-
-        // Script
-
-        // User
-
-        // Action
-
-        // Table
-
-        // Field
-
-        // KeyValue
-
-        // OldValue
-
-        // NewValue
+        // Ukuran
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // Id
-            $this->Id->ViewValue = $this->Id->CurrentValue;
+            // SizeID
+            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
 
-            // DateTime
-            $this->DateTime->ViewValue = $this->DateTime->CurrentValue;
-            $this->DateTime->ViewValue = FormatDateTime($this->DateTime->ViewValue, $this->DateTime->formatPattern());
+            // Ukuran
+            $this->Ukuran->ViewValue = $this->Ukuran->CurrentValue;
 
-            // Script
-            $this->Script->ViewValue = $this->Script->CurrentValue;
+            // SizeID
+            $this->SizeID->HrefValue = "";
+            $this->SizeID->TooltipValue = "";
 
-            // User
-            $this->User->ViewValue = $this->User->CurrentValue;
-
-            // Action
-            $this->_Action->ViewValue = $this->_Action->CurrentValue;
-
-            // Table
-            $this->_Table->ViewValue = $this->_Table->CurrentValue;
-
-            // Field
-            $this->Field->ViewValue = $this->Field->CurrentValue;
-
-            // Id
-            $this->Id->HrefValue = "";
-            $this->Id->TooltipValue = "";
-
-            // DateTime
-            $this->DateTime->HrefValue = "";
-            $this->DateTime->TooltipValue = "";
-
-            // Script
-            $this->Script->HrefValue = "";
-            $this->Script->TooltipValue = "";
-
-            // User
-            $this->User->HrefValue = "";
-            $this->User->TooltipValue = "";
-
-            // Action
-            $this->_Action->HrefValue = "";
-            $this->_Action->TooltipValue = "";
-
-            // Table
-            $this->_Table->HrefValue = "";
-            $this->_Table->TooltipValue = "";
-
-            // Field
-            $this->Field->HrefValue = "";
-            $this->Field->TooltipValue = "";
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
+            $this->Ukuran->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2102,7 +2000,7 @@ class AudittrailList extends Audittrail
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"faudittrailsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fsizesrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button

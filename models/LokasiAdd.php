@@ -40,6 +40,14 @@ class LokasiAdd extends Lokasi
     // CSS class/style
     public $CurrentPageName = "lokasiadd";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -121,7 +129,7 @@ class LokasiAdd extends Lokasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
+        $this->LokasiID->Visible = false;
         $this->Nama->setVisibility();
     }
 
@@ -355,7 +363,7 @@ class LokasiAdd extends Lokasi
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['LokasiID'];
         }
         return $key;
     }
@@ -368,7 +376,7 @@ class LokasiAdd extends Lokasi
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->LokasiID->Visible = false;
         }
     }
 
@@ -524,8 +532,8 @@ class LokasiAdd extends Lokasi
             $postBack = true;
         } else {
             // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
+            if (($keyValue = Get("LokasiID") ?? Route("LokasiID")) !== null) {
+                $this->LokasiID->setQueryStringValue($keyValue);
             }
             $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $this->CopyRecord = !EmptyValue($this->OldKey);
@@ -673,8 +681,8 @@ class LokasiAdd extends Lokasi
             }
         }
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        // Check field name 'LokasiID' first before field var 'x_LokasiID'
+        $val = $CurrentForm->hasValue("LokasiID") ? $CurrentForm->getValue("LokasiID") : $CurrentForm->getValue("x_LokasiID");
     }
 
     // Restore form values
@@ -722,7 +730,7 @@ class LokasiAdd extends Lokasi
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
+        $this->LokasiID->setDbValue($row['LokasiID']);
         $this->Nama->setDbValue($row['Nama']);
     }
 
@@ -730,7 +738,7 @@ class LokasiAdd extends Lokasi
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
+        $row['LokasiID'] = $this->LokasiID->DefaultValue;
         $row['Nama'] = $this->Nama->DefaultValue;
         return $row;
     }
@@ -766,16 +774,16 @@ class LokasiAdd extends Lokasi
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // LokasiID
+        $this->LokasiID->RowCssClass = "row";
 
         // Nama
         $this->Nama->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // LokasiID
+            $this->LokasiID->ViewValue = $this->LokasiID->CurrentValue;
 
             // Nama
             $this->Nama->ViewValue = $this->Nama->CurrentValue;

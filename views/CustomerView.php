@@ -51,13 +51,13 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="customer">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_customer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<?php if ($Page->CustomerID->Visible) { // CustomerID ?>
+    <tr id="r_CustomerID"<?= $Page->CustomerID->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_CustomerID"><?= $Page->CustomerID->caption() ?></span></td>
+        <td data-name="CustomerID"<?= $Page->CustomerID->cellAttributes() ?>>
+<span id="el_customer_CustomerID">
+<span<?= $Page->CustomerID->viewAttributes() ?>>
+<?= $Page->CustomerID->getViewValue() ?></span>
 </span>
 </td>
     </tr>

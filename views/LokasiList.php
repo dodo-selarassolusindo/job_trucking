@@ -147,8 +147,8 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_lokasi_id" class="lokasi_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+        <th data-name="LokasiID" class="<?= $Page->LokasiID->headerCellClass() ?>"><div id="elh_lokasi_LokasiID" class="lokasi_LokasiID"><?= $Page->renderFieldHeader($Page->LokasiID) ?></div></th>
 <?php } ?>
 <?php if ($Page->Nama->Visible) { // Nama ?>
         <th data-name="Nama" class="<?= $Page->Nama->headerCellClass() ?>"><div id="elh_lokasi_Nama" class="lokasi_Nama"><?= $Page->renderFieldHeader($Page->Nama) ?></div></th>
@@ -180,11 +180,11 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_lokasi_id" class="el_lokasi_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+    <?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+        <td data-name="LokasiID"<?= $Page->LokasiID->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_lokasi_LokasiID" class="el_lokasi_LokasiID">
+<span<?= $Page->LokasiID->viewAttributes() ?>>
+<?= $Page->LokasiID->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

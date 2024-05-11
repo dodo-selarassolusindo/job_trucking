@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class CustomerDelete extends Customer
+class SizeDelete extends Size
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class CustomerDelete extends Customer
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "CustomerDelete";
+    public $PageObjName = "SizeDelete";
 
     // View file path
     public $View = null;
@@ -38,7 +38,7 @@ class CustomerDelete extends Customer
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "customerdelete";
+    public $CurrentPageName = "sizedelete";
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -129,10 +129,8 @@ class CustomerDelete extends Customer
     // Set field visibility
     public function setVisibility()
     {
-        $this->CustomerID->setVisibility();
-        $this->Nama->setVisibility();
-        $this->Nomor_Telepon->setVisibility();
-        $this->Contact_Person->setVisibility();
+        $this->SizeID->setVisibility();
+        $this->Ukuran->setVisibility();
     }
 
     // Constructor
@@ -140,8 +138,8 @@ class CustomerDelete extends Customer
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'customer';
-        $this->TableName = 'customer';
+        $this->TableVar = 'size';
+        $this->TableName = 'size';
 
         // Table CSS class
         $this->TableClass = "table table-bordered table-hover table-sm ew-table";
@@ -152,14 +150,14 @@ class CustomerDelete extends Customer
         // Language object
         $Language = Container("app.language");
 
-        // Table object (customer)
-        if (!isset($GLOBALS["customer"]) || $GLOBALS["customer"]::class == PROJECT_NAMESPACE . "customer") {
-            $GLOBALS["customer"] = &$this;
+        // Table object (size)
+        if (!isset($GLOBALS["size"]) || $GLOBALS["size"]::class == PROJECT_NAMESPACE . "size") {
+            $GLOBALS["size"] = &$this;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'customer');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'size');
         }
 
         // Start timer
@@ -341,7 +339,7 @@ class CustomerDelete extends Customer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['CustomerID'];
+            $key .= @$ar['SizeID'];
         }
         return $key;
     }
@@ -354,7 +352,7 @@ class CustomerDelete extends Customer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->CustomerID->Visible = false;
+            $this->SizeID->Visible = false;
         }
     }
     public $DbMasterFilter = "";
@@ -416,7 +414,7 @@ class CustomerDelete extends Customer
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("customerlist"); // Prevent SQL injection, return to list
+            $this->terminate("sizelist"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -470,7 +468,7 @@ class CustomerDelete extends Customer
             $this->Recordset = $this->loadRecordset();
             if ($this->TotalRecords <= 0) { // No record found, exit
                 $this->Recordset?->free();
-                $this->terminate("customerlist"); // Return to list
+                $this->terminate("sizelist"); // Return to list
                 return;
             }
         }
@@ -591,20 +589,16 @@ class CustomerDelete extends Customer
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->CustomerID->setDbValue($row['CustomerID']);
-        $this->Nama->setDbValue($row['Nama']);
-        $this->Nomor_Telepon->setDbValue($row['Nomor_Telepon']);
-        $this->Contact_Person->setDbValue($row['Contact_Person']);
+        $this->SizeID->setDbValue($row['SizeID']);
+        $this->Ukuran->setDbValue($row['Ukuran']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['CustomerID'] = $this->CustomerID->DefaultValue;
-        $row['Nama'] = $this->Nama->DefaultValue;
-        $row['Nomor_Telepon'] = $this->Nomor_Telepon->DefaultValue;
-        $row['Contact_Person'] = $this->Contact_Person->DefaultValue;
+        $row['SizeID'] = $this->SizeID->DefaultValue;
+        $row['Ukuran'] = $this->Ukuran->DefaultValue;
         return $row;
     }
 
@@ -620,43 +614,25 @@ class CustomerDelete extends Customer
 
         // Common render codes for all row types
 
-        // CustomerID
+        // SizeID
 
-        // Nama
-
-        // Nomor_Telepon
-
-        // Contact_Person
+        // Ukuran
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // CustomerID
-            $this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+            // SizeID
+            $this->SizeID->ViewValue = $this->SizeID->CurrentValue;
 
-            // Nama
-            $this->Nama->ViewValue = $this->Nama->CurrentValue;
+            // Ukuran
+            $this->Ukuran->ViewValue = $this->Ukuran->CurrentValue;
 
-            // Nomor_Telepon
-            $this->Nomor_Telepon->ViewValue = $this->Nomor_Telepon->CurrentValue;
+            // SizeID
+            $this->SizeID->HrefValue = "";
+            $this->SizeID->TooltipValue = "";
 
-            // Contact_Person
-            $this->Contact_Person->ViewValue = $this->Contact_Person->CurrentValue;
-
-            // CustomerID
-            $this->CustomerID->HrefValue = "";
-            $this->CustomerID->TooltipValue = "";
-
-            // Nama
-            $this->Nama->HrefValue = "";
-            $this->Nama->TooltipValue = "";
-
-            // Nomor_Telepon
-            $this->Nomor_Telepon->HrefValue = "";
-            $this->Nomor_Telepon->TooltipValue = "";
-
-            // Contact_Person
-            $this->Contact_Person->HrefValue = "";
-            $this->Contact_Person->TooltipValue = "";
+            // Ukuran
+            $this->Ukuran->HrefValue = "";
+            $this->Ukuran->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -696,7 +672,7 @@ class CustomerDelete extends Customer
             if ($thisKey != "") {
                 $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
             }
-            $thisKey .= $row['CustomerID'];
+            $thisKey .= $row['SizeID'];
 
             // Call row deleting event
             $deleteRow = $this->rowDeleting($row);
@@ -775,7 +751,7 @@ class CustomerDelete extends Customer
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("customerlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("sizelist"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }
