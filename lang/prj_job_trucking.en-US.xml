@@ -24,7 +24,7 @@
       <phrase id="menutext" value="Container" />
     </menu>
     <menu id="5">
-      <phrase id="menutext" value="Lokasi" />
+      <phrase id="menutext" value="Destination" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="Customer" />
@@ -251,7 +251,7 @@
       </field>
     </table>
     <table id="lokasi">
-      <phrase id="tblcaption" value="Lokasi" />
+      <phrase id="tblcaption" value="Destination" />
       <field id="lokasiid">
         <phrase id="fldcaption" value="Lokasi ID" />
       </field>

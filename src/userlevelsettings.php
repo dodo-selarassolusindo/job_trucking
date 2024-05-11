@@ -70,7 +70,7 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["employees","employees","Users",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","employeeslist"],
     ["exportlog","exportlog","Log Export",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","exportloglist"],
     ["job","job","Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joblist"],
-    ["lokasi","lokasi","Lokasi",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
+    ["lokasi","lokasi","Destination",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
     ["shipper","shipper","Shipper",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","shipperlist"],
     ["size","size","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizelist"],
     ["size_type","size_type","Container",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","sizetypelist"],
