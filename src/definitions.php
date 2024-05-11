@@ -91,6 +91,7 @@ return [
     "exportlog" => \DI\create(Exportlog::class),
     "beranda" => \DI\create(Beranda::class),
     "size2" => \DI\create(Size2::class),
+    "size3" => \DI\create(Size3::class),
 
     // User table
     "usertable" => \DI\get("employees"),

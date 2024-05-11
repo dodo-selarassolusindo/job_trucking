@@ -8,6 +8,9 @@
     <menu id="16">
       <phrase id="menutext" value="Size" />
     </menu>
+    <menu id="17">
+      <phrase id="menutext" value="Cargo Size" />
+    </menu>
     <menu id="12">
       <phrase id="menutext" value="Master" />
     </menu>
@@ -297,6 +300,9 @@
     </table>
     <table id="size2">
       <phrase id="tblcaption" value="Size" />
+    </table>
+    <table id="size3">
+      <phrase id="tblcaption" value="Cargo Size" />
     </table>
   </project>
 </ew-language>
