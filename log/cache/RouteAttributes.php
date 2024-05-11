@@ -59,6 +59,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -355,6 +360,31 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -401,6 +431,11 @@
                 '/sizeview[/{SizeID}]',
                 '/sizeedit[/{SizeID}]',
                 '/sizedelete[/{SizeID}]',
+                '/sizetypelist[/{Size_Type_ID}]',
+                '/sizetypeadd[/{Size_Type_ID}]',
+                '/sizetypeview[/{Size_Type_ID}]',
+                '/sizetypeedit[/{Size_Type_ID}]',
+                '/sizetypedelete[/{Size_Type_ID}]',
                 '/typelist[/{TypeID}]',
                 '/typeadd[/{TypeID}]',
                 '/typeview[/{TypeID}]',
@@ -462,6 +497,11 @@
                 'PHPMaker2024\\prj_job_trucking\\SizeController:view',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:edit',
                 'PHPMaker2024\\prj_job_trucking\\SizeController:delete',
+                'PHPMaker2024\\prj_job_trucking\\SizeTypeController:list',
+                'PHPMaker2024\\prj_job_trucking\\SizeTypeController:add',
+                'PHPMaker2024\\prj_job_trucking\\SizeTypeController:view',
+                'PHPMaker2024\\prj_job_trucking\\SizeTypeController:edit',
+                'PHPMaker2024\\prj_job_trucking\\SizeTypeController:delete',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:list',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:add',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:view',
@@ -654,6 +694,21 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -700,6 +755,11 @@
                 'view.size',
                 'edit.size',
                 'delete.size',
+                'list.size_type',
+                'add.size_type',
+                'view.size_type',
+                'edit.size_type',
+                'delete.size_type',
                 'list.type',
                 'add.type',
                 'view.type',
@@ -717,6 +777,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -839,6 +904,11 @@
         $o[56],
         $o[57],
         $o[58],
+        $o[59],
+        $o[60],
+        $o[61],
+        $o[62],
+        $o[63],
     ],
     []
 );

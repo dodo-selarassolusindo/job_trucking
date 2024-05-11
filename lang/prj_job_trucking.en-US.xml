@@ -20,6 +20,9 @@
     <menu id="18">
       <phrase id="menutext" value="Type" />
     </menu>
+    <menu id="19">
+      <phrase id="menutext" value="Container" />
+    </menu>
     <menu id="5">
       <phrase id="menutext" value="Lokasi" />
     </menu>
@@ -278,6 +281,18 @@
       </field>
       <field id="ukuran">
         <phrase id="fldcaption" value="Ukuran" />
+      </field>
+    </table>
+    <table id="size_type">
+      <phrase id="tblcaption" value="Container" />
+      <field id="size_type_id">
+        <phrase id="fldcaption" value="Size Type ID" />
+      </field>
+      <field id="sizeid">
+        <phrase id="fldcaption" value="Size ID" />
+      </field>
+      <field id="typeid">
+        <phrase id="fldcaption" value="Type ID" />
       </field>
     </table>
     <table id="size2">

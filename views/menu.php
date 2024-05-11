@@ -8,6 +8,7 @@ $topMenu->addMenuItem(11, "mi_beranda", $Language->menuPhrase("11", "MenuText"),
 $topMenu->addMenuItem(12, "mci_Master", $Language->menuPhrase("12", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "sizelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size'), false, false, "", "", true, false);
 $topMenu->addMenuItem(18, "mi_type", $Language->menuPhrase("18", "MenuText"), "typelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}type'), false, false, "", "", true, false);
+$topMenu->addMenuItem(19, "mi_size_type", $Language->menuPhrase("19", "MenuText"), "sizetypelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size_type'), false, false, "", "", true, false);
 $topMenu->addMenuItem(5, "mi_lokasi", $Language->menuPhrase("5", "MenuText"), "lokasilist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi'), false, false, "", "", true, false);
 $topMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, false);
 $topMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, false);
@@ -26,6 +27,7 @@ $sideMenu->addMenuItem(11, "mi_beranda", $Language->menuPhrase("11", "MenuText")
 $sideMenu->addMenuItem(12, "mci_Master", $Language->menuPhrase("12", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_size", $Language->menuPhrase("7", "MenuText"), "sizelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(18, "mi_type", $Language->menuPhrase("18", "MenuText"), "typelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}type'), false, false, "", "", true, true);
+$sideMenu->addMenuItem(19, "mi_size_type", $Language->menuPhrase("19", "MenuText"), "sizetypelist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}size_type'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(5, "mi_lokasi", $Language->menuPhrase("5", "MenuText"), "lokasilist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, true);

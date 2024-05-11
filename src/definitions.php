@@ -88,6 +88,7 @@ return [
     "lokasi" => \DI\create(Lokasi::class),
     "shipper" => \DI\create(Shipper::class),
     "size" => \DI\create(Size::class),
+    "size_type" => \DI\create(SizeType::class),
     "size2" => \DI\create(Size2::class),
     "size3" => \DI\create(Size3::class),
     "type" => \DI\create(Type::class),
