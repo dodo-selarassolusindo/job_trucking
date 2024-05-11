@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "size2controller";
+    public $CurrentPageName = "beranda0controller";
 
     // Page headings
     public $Heading = "";
