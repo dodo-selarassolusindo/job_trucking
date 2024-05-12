@@ -71,7 +71,7 @@ function Language_Load()
         'Job :: '
         . $_GET['job']
         . ' - Ukuran :: '
-        . htmlspecialchars($_GET['ukuran'], ENT_QUOTES, 'UTF-8')
+        . addslashes($_GET['ukuran'])
     );
 }
 
