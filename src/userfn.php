@@ -67,8 +67,8 @@ function Language_Load()
     $this->setTablePhrase('size3', 'TblCaption', 'Job List :: ' . $_GET['job']);
     $ukuran = ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size']);
     $this->setTablePhrase(
-        'type2',
-        'TblCaption',
+        'type2', 
+        'TblCaption', 
         'Job '
         . $_GET['job']
         . ' - Size '
@@ -181,14 +181,6 @@ function Container_Build($builder)
     //        return new MyService2();
     //    }
     // ]);
-}
-
-function getUkuran()
-{
-  global $conn;
-    $ukuran = ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'', $conn);
-    // $ukuran = '20"';
-    return $ukuran;
 }
 
 // Add listeners
