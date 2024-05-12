@@ -70,7 +70,7 @@ function Language_Load()
         'TblCaption', 
         'Job :: '
         . $_GET['job']
-        . ' - Ukuran :: '
+        . ' - '
         . $_GET['ukuran']
     );
 }
