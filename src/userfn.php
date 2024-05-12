@@ -68,14 +68,13 @@ function Language_Load()
     // $ukuran = ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size']);
     $ukuran = ExecuteScalar('select Ukuran from size where SizeID = 1');
     $this->setTablePhrase(
-        'type2', 
-        'TblCaption', 
+        'type2',
+        'TblCaption',
         'Job '
         . $_GET['job']
         . ' - Size '
-        );
-        // . ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'')
-    // );
+        . ExecuteScalar('select Ukuran from size where SizeID = 1')
+    );
 }
 
 function MenuItem_Adding($item)
