@@ -16,7 +16,7 @@ $r = ExecuteRows($q);
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>
-    
+
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-warning' : 'bg-danger' ?>">
         <div class="inner">
             <h3 class="text-center"><?= $row['Ukuran'] ?></h3>
@@ -32,6 +32,6 @@ $r = ExecuteRows($q);
 <?php } ?>
 
 <div class="small-box bg-info">
-    <a href="beranda" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Kembali</a>
+    <a href="javascript:history.back()" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Kembali</a>
 </div>
 <?= GetDebugMessage() ?>
