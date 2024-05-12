@@ -18,22 +18,21 @@ $r = ExecuteRows($q);
 <?php foreach($r as $row) { ?>
 
     <?php
-    $order = ExecuteScalar('select count(JobOrderID) as rec_num from job_order where Job2ID = '.$row['Job2ID']);
-    if ($order == 0) {
+    $job_num = ExecuteScalar('select count(JobOrderID) as rec_num from job_order where Job2ID = '.$row['Job2ID']);
+    if ($job_num == 0) {
         // continue;
     } else {
-    ?>
-
-    <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
-        <div class="inner">
-            <h3 class="text-center"><?= $row['Nama'] ?></h3>
-            <p>&nbsp;</p>
+    ?>    
+        <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
+            <div class="inner">
+                <h3 class="text-center"><?= $row['Nama'] ?></h3>
+                <p>Ada <?= $job_num ?> Job</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-bag"></i>
+            </div>
+            <a href="size3?job=<?= $row['Nama'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
-        <div class="icon">
-            <i class="ion ion-bag"></i>
-        </div>
-        <a href="size3?job=<?= $row['Nama'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
-    </div>
     <?php } ?>
     <?php $rec_num++ ?>
 
