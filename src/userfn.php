@@ -68,11 +68,11 @@ function Language_Load()
     $this->setTablePhrase(
         'type2', 
         'TblCaption', 
-        'Job ' . 
-        $_GET['job'] . 
-        ' - Size ' . 
-        ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'')
-    );
+        'Job '
+        . $_GET['job']
+        . ' - Size ');
+        // . ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'')
+    // );
 }
 
 function MenuItem_Adding($item)
