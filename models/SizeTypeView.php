@@ -150,6 +150,7 @@ class SizeTypeView extends SizeType
         $this->Size_Type_ID->setVisibility();
         $this->SizeID->setVisibility();
         $this->TypeID->setVisibility();
+        $this->TypeNama->setVisibility();
     }
 
     // Constructor
@@ -746,6 +747,7 @@ class SizeTypeView extends SizeType
         $this->Size_Type_ID->setDbValue($row['Size_Type_ID']);
         $this->SizeID->setDbValue($row['SizeID']);
         $this->TypeID->setDbValue($row['TypeID']);
+        $this->TypeNama->setDbValue($row['TypeNama']);
     }
 
     // Return a row with default values
@@ -755,6 +757,7 @@ class SizeTypeView extends SizeType
         $row['Size_Type_ID'] = $this->Size_Type_ID->DefaultValue;
         $row['SizeID'] = $this->SizeID->DefaultValue;
         $row['TypeID'] = $this->TypeID->DefaultValue;
+        $row['TypeNama'] = $this->TypeNama->DefaultValue;
         return $row;
     }
 
@@ -781,6 +784,8 @@ class SizeTypeView extends SizeType
         // SizeID
 
         // TypeID
+
+        // TypeNama
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -833,6 +838,9 @@ class SizeTypeView extends SizeType
                 $this->TypeID->ViewValue = null;
             }
 
+            // TypeNama
+            $this->TypeNama->ViewValue = $this->TypeNama->CurrentValue;
+
             // Size_Type_ID
             $this->Size_Type_ID->HrefValue = "";
             $this->Size_Type_ID->TooltipValue = "";
@@ -844,6 +852,10 @@ class SizeTypeView extends SizeType
             // TypeID
             $this->TypeID->HrefValue = "";
             $this->TypeID->TooltipValue = "";
+
+            // TypeNama
+            $this->TypeNama->HrefValue = "";
+            $this->TypeNama->TooltipValue = "";
         }
 
         // Call Row Rendered event

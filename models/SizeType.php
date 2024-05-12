@@ -57,6 +57,7 @@ class SizeType extends DbTable
     public $Size_Type_ID;
     public $SizeID;
     public $TypeID;
+    public $TypeNama;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -191,6 +192,29 @@ class SizeType extends DbTable
         $this->TypeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TypeID'] = &$this->TypeID;
 
+        // TypeNama
+        $this->TypeNama = new DbField(
+            $this, // Table
+            'x_TypeNama', // Variable name
+            'TypeNama', // Name
+            '(select Nama from type where TypeID = TypeID)', // Expression
+            '(select Nama from type where TypeID = TypeID)', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '(select Nama from type where TypeID = TypeID)', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->TypeNama->InputTextType = "text";
+        $this->TypeNama->IsCustom = true; // Custom field
+        $this->TypeNama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['TypeNama'] = &$this->TypeNama;
+
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
         $this->CacheProfile = new \Doctrine\DBAL\Cache\QueryCacheProfile(0, $this->TableVar);
@@ -282,20 +306,7 @@ class SizeType extends DbTable
     // Get list of fields
     private function sqlSelectFields()
     {
-        $useFieldNames = false;
-        $fieldNames = [];
-        $platform = $this->getConnection()->getDatabasePlatform();
-        foreach ($this->Fields as $field) {
-            $expr = $field->Expression;
-            $customExpr = $field->CustomDataType?->convertToPHPValueSQL($expr, $platform) ?? $expr;
-            if ($customExpr != $expr) {
-                $fieldNames[] = $customExpr . " AS " . QuotedName($field->Name, $this->Dbid);
-                $useFieldNames = true;
-            } else {
-                $fieldNames[] = $expr;
-            }
-        }
-        return $useFieldNames ? implode(", ", $fieldNames) : "*";
+        return "*, (select Nama from type where TypeID = TypeID) AS `TypeNama`";
     }
 
     // Get SELECT clause (for backward compatibility)
@@ -726,6 +737,7 @@ class SizeType extends DbTable
         $this->Size_Type_ID->DbValue = $row['Size_Type_ID'];
         $this->SizeID->DbValue = $row['SizeID'];
         $this->TypeID->DbValue = $row['TypeID'];
+        $this->TypeNama->DbValue = $row['TypeNama'];
     }
 
     // Delete uploaded files
@@ -1088,6 +1100,7 @@ class SizeType extends DbTable
         $this->Size_Type_ID->setDbValue($row['Size_Type_ID']);
         $this->SizeID->setDbValue($row['SizeID']);
         $this->TypeID->setDbValue($row['TypeID']);
+        $this->TypeNama->setDbValue($row['TypeNama']);
     }
 
     // Render list content
@@ -1123,6 +1136,8 @@ class SizeType extends DbTable
         // SizeID
 
         // TypeID
+
+        // TypeNama
 
         // Size_Type_ID
         $this->Size_Type_ID->ViewValue = $this->Size_Type_ID->CurrentValue;
@@ -1173,6 +1188,9 @@ class SizeType extends DbTable
             $this->TypeID->ViewValue = null;
         }
 
+        // TypeNama
+        $this->TypeNama->ViewValue = $this->TypeNama->CurrentValue;
+
         // Size_Type_ID
         $this->Size_Type_ID->HrefValue = "";
         $this->Size_Type_ID->TooltipValue = "";
@@ -1184,6 +1202,10 @@ class SizeType extends DbTable
         // TypeID
         $this->TypeID->HrefValue = "";
         $this->TypeID->TooltipValue = "";
+
+        // TypeNama
+        $this->TypeNama->HrefValue = "";
+        $this->TypeNama->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1211,6 +1233,14 @@ class SizeType extends DbTable
         // TypeID
         $this->TypeID->setupEditAttributes();
         $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
+
+        // TypeNama
+        $this->TypeNama->setupEditAttributes();
+        if (!$this->TypeNama->Raw) {
+            $this->TypeNama->CurrentValue = HtmlDecode($this->TypeNama->CurrentValue);
+        }
+        $this->TypeNama->EditValue = $this->TypeNama->CurrentValue;
+        $this->TypeNama->PlaceHolder = RemoveHtml($this->TypeNama->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1243,10 +1273,12 @@ class SizeType extends DbTable
                     $doc->exportCaption($this->Size_Type_ID);
                     $doc->exportCaption($this->SizeID);
                     $doc->exportCaption($this->TypeID);
+                    $doc->exportCaption($this->TypeNama);
                 } else {
                     $doc->exportCaption($this->Size_Type_ID);
                     $doc->exportCaption($this->SizeID);
                     $doc->exportCaption($this->TypeID);
+                    $doc->exportCaption($this->TypeNama);
                 }
                 $doc->endExportRow();
             }
@@ -1276,10 +1308,12 @@ class SizeType extends DbTable
                         $doc->exportField($this->Size_Type_ID);
                         $doc->exportField($this->SizeID);
                         $doc->exportField($this->TypeID);
+                        $doc->exportField($this->TypeNama);
                     } else {
                         $doc->exportField($this->Size_Type_ID);
                         $doc->exportField($this->SizeID);
                         $doc->exportField($this->TypeID);
+                        $doc->exportField($this->TypeNama);
                     }
                     $doc->endExportRow($rowCnt);
                 }

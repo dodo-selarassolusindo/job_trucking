@@ -378,6 +378,9 @@
       <field id="typeid">
         <phrase id="fldcaption" value="Type ID" />
       </field>
+      <field id="typenama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
     </table>
     <table id="size2">
       <phrase id="tblcaption" value="Size" />

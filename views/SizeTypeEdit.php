@@ -30,7 +30,8 @@ loadjs.ready(["wrapper", "head"], function () {
         .setFields([
             ["Size_Type_ID", [fields.Size_Type_ID.visible && fields.Size_Type_ID.required ? ew.Validators.required(fields.Size_Type_ID.caption) : null], fields.Size_Type_ID.isInvalid],
             ["SizeID", [fields.SizeID.visible && fields.SizeID.required ? ew.Validators.required(fields.SizeID.caption) : null], fields.SizeID.isInvalid],
-            ["TypeID", [fields.TypeID.visible && fields.TypeID.required ? ew.Validators.required(fields.TypeID.caption) : null], fields.TypeID.isInvalid]
+            ["TypeID", [fields.TypeID.visible && fields.TypeID.required ? ew.Validators.required(fields.TypeID.caption) : null], fields.TypeID.isInvalid],
+            ["TypeNama", [fields.TypeNama.visible && fields.TypeNama.required ? ew.Validators.required(fields.TypeNama.caption) : null], fields.TypeNama.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -156,6 +157,18 @@ loadjs.ready("fsize_typeedit", function() {
     ew.createModalLookup(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->TypeNama->Visible) { // TypeNama ?>
+    <div id="r_TypeNama"<?= $Page->TypeNama->rowAttributes() ?>>
+        <label id="elh_size_type_TypeNama" for="x_TypeNama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->TypeNama->caption() ?><?= $Page->TypeNama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->TypeNama->cellAttributes() ?>>
+<span id="el_size_type_TypeNama">
+<input type="<?= $Page->TypeNama->getInputTextType() ?>" name="x_TypeNama" id="x_TypeNama" data-table="size_type" data-field="x_TypeNama" value="<?= $Page->TypeNama->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->TypeNama->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TypeNama->formatPattern()) ?>"<?= $Page->TypeNama->editAttributes() ?> aria-describedby="x_TypeNama_help">
+<?= $Page->TypeNama->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->TypeNama->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

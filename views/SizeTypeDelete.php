@@ -59,6 +59,9 @@ $Page->showMessage();
 <?php if ($Page->TypeID->Visible) { // TypeID ?>
         <th class="<?= $Page->TypeID->headerCellClass() ?>"><span id="elh_size_type_TypeID" class="size_type_TypeID"><?= $Page->TypeID->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->TypeNama->Visible) { // TypeNama ?>
+        <th class="<?= $Page->TypeNama->headerCellClass() ?>"><span id="elh_size_type_TypeNama" class="size_type_TypeNama"><?= $Page->TypeNama->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -101,6 +104,14 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->TypeID->viewAttributes() ?>>
 <?= $Page->TypeID->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->TypeNama->Visible) { // TypeNama ?>
+        <td<?= $Page->TypeNama->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->TypeNama->viewAttributes() ?>>
+<?= $Page->TypeNama->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

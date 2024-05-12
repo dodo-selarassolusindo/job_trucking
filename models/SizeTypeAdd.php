@@ -132,6 +132,7 @@ class SizeTypeAdd extends SizeType
         $this->Size_Type_ID->Visible = false;
         $this->SizeID->setVisibility();
         $this->TypeID->setVisibility();
+        $this->TypeNama->setVisibility();
     }
 
     // Constructor
@@ -696,6 +697,16 @@ class SizeTypeAdd extends SizeType
             }
         }
 
+        // Check field name 'TypeNama' first before field var 'x_TypeNama'
+        $val = $CurrentForm->hasValue("TypeNama") ? $CurrentForm->getValue("TypeNama") : $CurrentForm->getValue("x_TypeNama");
+        if (!$this->TypeNama->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->TypeNama->Visible = false; // Disable update for API request
+            } else {
+                $this->TypeNama->setFormValue($val);
+            }
+        }
+
         // Check field name 'Size_Type_ID' first before field var 'x_Size_Type_ID'
         $val = $CurrentForm->hasValue("Size_Type_ID") ? $CurrentForm->getValue("Size_Type_ID") : $CurrentForm->getValue("x_Size_Type_ID");
     }
@@ -706,6 +717,7 @@ class SizeTypeAdd extends SizeType
         global $CurrentForm;
         $this->SizeID->CurrentValue = $this->SizeID->FormValue;
         $this->TypeID->CurrentValue = $this->TypeID->FormValue;
+        $this->TypeNama->CurrentValue = $this->TypeNama->FormValue;
     }
 
     /**
@@ -749,6 +761,7 @@ class SizeTypeAdd extends SizeType
         $this->Size_Type_ID->setDbValue($row['Size_Type_ID']);
         $this->SizeID->setDbValue($row['SizeID']);
         $this->TypeID->setDbValue($row['TypeID']);
+        $this->TypeNama->setDbValue($row['TypeNama']);
     }
 
     // Return a row with default values
@@ -758,6 +771,7 @@ class SizeTypeAdd extends SizeType
         $row['Size_Type_ID'] = $this->Size_Type_ID->DefaultValue;
         $row['SizeID'] = $this->SizeID->DefaultValue;
         $row['TypeID'] = $this->TypeID->DefaultValue;
+        $row['TypeNama'] = $this->TypeNama->DefaultValue;
         return $row;
     }
 
@@ -800,6 +814,9 @@ class SizeTypeAdd extends SizeType
 
         // TypeID
         $this->TypeID->RowCssClass = "row";
+
+        // TypeNama
+        $this->TypeNama->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -852,11 +869,17 @@ class SizeTypeAdd extends SizeType
                 $this->TypeID->ViewValue = null;
             }
 
+            // TypeNama
+            $this->TypeNama->ViewValue = $this->TypeNama->CurrentValue;
+
             // SizeID
             $this->SizeID->HrefValue = "";
 
             // TypeID
             $this->TypeID->HrefValue = "";
+
+            // TypeNama
+            $this->TypeNama->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
             // SizeID
             $curVal = trim(strval($this->SizeID->CurrentValue));
@@ -928,6 +951,14 @@ class SizeTypeAdd extends SizeType
             }
             $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
 
+            // TypeNama
+            $this->TypeNama->setupEditAttributes();
+            if (!$this->TypeNama->Raw) {
+                $this->TypeNama->CurrentValue = HtmlDecode($this->TypeNama->CurrentValue);
+            }
+            $this->TypeNama->EditValue = HtmlEncode($this->TypeNama->CurrentValue);
+            $this->TypeNama->PlaceHolder = RemoveHtml($this->TypeNama->caption());
+
             // Add refer script
 
             // SizeID
@@ -935,6 +966,9 @@ class SizeTypeAdd extends SizeType
 
             // TypeID
             $this->TypeID->HrefValue = "";
+
+            // TypeNama
+            $this->TypeNama->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -964,6 +998,11 @@ class SizeTypeAdd extends SizeType
             if ($this->TypeID->Visible && $this->TypeID->Required) {
                 if (!$this->TypeID->IsDetailKey && EmptyValue($this->TypeID->FormValue)) {
                     $this->TypeID->addErrorMessage(str_replace("%s", $this->TypeID->caption(), $this->TypeID->RequiredErrorMessage));
+                }
+            }
+            if ($this->TypeNama->Visible && $this->TypeNama->Required) {
+                if (!$this->TypeNama->IsDetailKey && EmptyValue($this->TypeNama->FormValue)) {
+                    $this->TypeNama->addErrorMessage(str_replace("%s", $this->TypeNama->caption(), $this->TypeNama->RequiredErrorMessage));
                 }
             }
 
@@ -1042,6 +1081,9 @@ class SizeTypeAdd extends SizeType
 
         // TypeID
         $this->TypeID->setDbValueDef($rsnew, $this->TypeID->CurrentValue, false);
+
+        // TypeNama
+        $this->TypeNama->setDbValueDef($rsnew, $this->TypeNama->CurrentValue, false);
         return $rsnew;
     }
 
@@ -1056,6 +1098,9 @@ class SizeTypeAdd extends SizeType
         }
         if (isset($row['TypeID'])) { // TypeID
             $this->TypeID->setFormValue($row['TypeID']);
+        }
+        if (isset($row['TypeNama'])) { // TypeNama
+            $this->TypeNama->setFormValue($row['TypeNama']);
         }
     }
 

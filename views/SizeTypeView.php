@@ -84,6 +84,17 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->TypeNama->Visible) { // TypeNama ?>
+    <tr id="r_TypeNama"<?= $Page->TypeNama->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_size_type_TypeNama"><?= $Page->TypeNama->caption() ?></span></td>
+        <td data-name="TypeNama"<?= $Page->TypeNama->cellAttributes() ?>>
+<span id="el_size_type_TypeNama">
+<span<?= $Page->TypeNama->viewAttributes() ?>>
+<?= $Page->TypeNama->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 </main>
