@@ -21,7 +21,7 @@ $q = '
 $r = ExecuteRows($q);
 ?>
 
-Size <?= $_GET['size'] ?>
+Job <?= $_GET['job'] ?> - Size <?= ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'') ?>
 
 <?php $rec_num = 0 ?>
 
