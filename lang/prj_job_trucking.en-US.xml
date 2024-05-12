@@ -48,10 +48,10 @@
       <phrase id="menutext" value="Shipper" />
     </menu>
     <menu id="4">
-      <phrase id="menutext" value="Job Order (Semua)" />
+      <phrase id="menutext" value="Job Order 0 (Semua)" />
     </menu>
     <menu id="41">
-      <phrase id="menutext" value="Job Order 2 (Semua)" />
+      <phrase id="menutext" value="Job Order (Semua)" />
     </menu>
     <menu id="13">
       <phrase id="menutext" value="Report" />
@@ -257,7 +257,7 @@
       </field>
     </table>
     <table id="job">
-      <phrase id="tblcaption" value="Job Order (Semua)" />
+      <phrase id="tblcaption" value="Job Order 0 (Semua)" />
       <field id="jobid">
         <phrase id="fldcaption" value="Job ID" />
       </field>
@@ -281,7 +281,7 @@
       </field>
     </table>
     <table id="job_order">
-      <phrase id="tblcaption" value="Job Order 2 (Semua)" />
+      <phrase id="tblcaption" value="Job Order (Semua)" />
       <field id="joborderid">
         <phrase id="fldcaption" value="Job Order ID" />
       </field>
