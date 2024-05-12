@@ -66,9 +66,9 @@ function Language_Load()
     //$this->setPhraseClass("MyID", "fa-solid fa-xxx ew-icon"); // Refer to https://fontawesome.com/icons?d=gallery&m=free [^] for icon name
     $this->setTablePhrase('size3', 'TblCaption', 'Job ' . $_GET['job']);
     // $db = &DbHelper();
-    $size = $db->ExecuteScalar(
-      'select Ukuran from size where SizeID = '.$_GET['size'].''
-    );
+    // $size = $db->ExecuteScalar(
+    //   'select Ukuran from size where SizeID = '.$_GET['size'].''
+    // );
     $this->setTablePhrase(
         'type2',
         'TblCaption',
