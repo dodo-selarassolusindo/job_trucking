@@ -22,11 +22,11 @@ $r = ExecuteRows($q);
     if ($job_num == 0) {
         // continue;
     } else {
-    ?>    
+    ?>
         <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
             <div class="inner">
                 <h3 class="text-center"><?= $row['Nama'] ?></h3>
-                <p>Ada <?= $job_num ?> Job</p>
+                <p class="text-center">Ada <?= $job_num ?> Job</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
