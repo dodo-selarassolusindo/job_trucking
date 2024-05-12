@@ -16,7 +16,7 @@ $r = ExecuteRows($q);
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>
-    
+
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-warning' : 'bg-danger' ?>">
         <div class="inner">
             <h3 class="text-center"><?= $row['Ukuran'] ?></h3>
@@ -25,7 +25,7 @@ $r = ExecuteRows($q);
         <div class="icon">
             <i class="ion ion-bag"></i>
         </div>
-        <a href="type2?job=<?= $_GET['job'] ?>&size=<?= $row['SizeID'] ?>&ukuran=<?= $row['Ukuran'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="type2?job=<?= $_GET['job'] ?>&size=<?= $row['SizeID'] ?>&ukuran=<?= addslashes($row['Ukuran']) ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <?php $rec_num++ ?>
 
