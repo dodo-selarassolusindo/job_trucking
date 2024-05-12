@@ -13,8 +13,6 @@ $q = 'select * from size';
 $r = ExecuteRows($q);
 ?>
 
-Job <?= $_GET['job'] ?>
-
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>

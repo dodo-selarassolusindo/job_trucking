@@ -73,7 +73,7 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
  * [5] string URL (for OthersController::index)
  */
 $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","audittraillist"],
-    ["beranda.php","beranda","Daftar Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","beranda"],
+    ["beranda.php","beranda","Job List",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","beranda"],
     ["customer","customer","Customer",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","customerlist"],
     ["depo","depo","Depo",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","depolist"],
     ["employees","employees","Users",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","employeeslist"],

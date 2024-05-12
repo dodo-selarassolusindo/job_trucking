@@ -21,8 +21,6 @@ $q = '
 $r = ExecuteRows($q);
 ?>
 
-Job <?= $_GET['job'] ?> - Size <?= ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'') ?>
-
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>
