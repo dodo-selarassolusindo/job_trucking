@@ -71,7 +71,7 @@ function Language_Load()
         'Job '
         . $_GET['job']
         . ' - Size '
-        . htmlspecialchars(ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].''), ENT_QUOTES, 'UTF-8')
+        // . htmlspecialchars(ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].''), ENT_QUOTES, 'UTF-8')
     );
 }
 
