@@ -79,7 +79,7 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["employees","employees","Users",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","employeeslist"],
     ["exportlog","exportlog","Log Export",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","exportloglist"],
     ["job","job","Job (Order)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joblist"],
-    ["job2","job2","Job (Master)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","job2list"],
+    ["job2","job2","Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","job2list"],
     ["lokasi","lokasi","Destination",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
     ["pelabuhan","pelabuhan","Pelabuhan",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","pelabuhanlist"],
     ["shipper","shipper","Shipper",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","shipperlist"],

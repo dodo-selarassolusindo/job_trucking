@@ -18,7 +18,7 @@
       <phrase id="menutext" value="Master" />
     </menu>
     <menu id="22">
-      <phrase id="menutext" value="Job (Master)" />
+      <phrase id="menutext" value="Job" />
     </menu>
     <menu id="39">
       <phrase id="menutext" value="Container" />
@@ -278,7 +278,7 @@
       </field>
     </table>
     <table id="job2">
-      <phrase id="tblcaption" value="Job (Master)" />
+      <phrase id="tblcaption" value="Job" />
       <field id="job2id">
         <phrase id="fldcaption" value="Job 2ID" />
       </field>
