@@ -64,13 +64,15 @@ function Language_Load()
     // Example:
     //$this->setPhrase("MyID", "MyValue"); // Refer to language file for the actual phrase id
     //$this->setPhraseClass("MyID", "fa-solid fa-xxx ew-icon"); // Refer to https://fontawesome.com/icons?d=gallery&m=free [^] for icon name
-    $this->setTablePhrase('size3', 'TblCaption', 'Job :: ' . $_GET['job']);
+    $this->setTablePhrase('size3', 'TblCaption', 'Job List :: ' . $_GET['job']);
     $this->setTablePhrase(
         'type2', 
         'TblCaption', 
         'Job '
         . $_GET['job']
-        . ' - Size ');
+        . ' - Size '
+        . getUkuran()
+        );
         // . ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'')
     // );
 }
@@ -179,6 +181,12 @@ function Container_Build($builder)
     //        return new MyService2();
     //    }
     // ]);
+}
+
+function getUkuran()
+{
+    $ukuran = ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'');
+    return $ukuran;
 }
 
 // Add listeners
