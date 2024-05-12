@@ -65,19 +65,14 @@ function Language_Load()
     //$this->setPhrase("MyID", "MyValue"); // Refer to language file for the actual phrase id
     //$this->setPhraseClass("MyID", "fa-solid fa-xxx ew-icon"); // Refer to https://fontawesome.com/icons?d=gallery&m=free [^] for icon name
     $this->setTablePhrase('size3', 'TblCaption', 'Job ' . $_GET['job']);
-    // $db = &DbHelper();
-    // $size = $this->ExecuteScalar(
-    //   'select Ukuran from size where SizeID = '.$_GET['size'].''
-    // );
     $this->setTablePhrase(
-        'type2',
-        'TblCaption',
+        'type2', 
+        'TblCaption', 
         'Job '
         . $_GET['job']
-        . ' - Size '
-        . htmlspecialchars('40"', ENT_QUOTES, 'UTF-8')
-        // . htmlspecialchars(ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].''), ENT_QUOTES, 'UTF-8')
-    );
+        . ' - Size ');
+        // . ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'')
+    // );
 }
 
 function MenuItem_Adding($item)

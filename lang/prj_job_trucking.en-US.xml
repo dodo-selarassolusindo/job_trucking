@@ -18,7 +18,7 @@
       <phrase id="menutext" value="Master" />
     </menu>
     <menu id="22">
-      <phrase id="menutext" value="Job" />
+      <phrase id="menutext" value="Job (Master)" />
     </menu>
     <menu id="39">
       <phrase id="menutext" value="Container" />
@@ -48,7 +48,7 @@
       <phrase id="menutext" value="Shipper" />
     </menu>
     <menu id="4">
-      <phrase id="menutext" value="Job" />
+      <phrase id="menutext" value="Job (Order)" />
     </menu>
     <menu id="13">
       <phrase id="menutext" value="Report" />
@@ -254,7 +254,7 @@
       </field>
     </table>
     <table id="job">
-      <phrase id="tblcaption" value="Job" />
+      <phrase id="tblcaption" value="Job (Order)" />
       <field id="jobid">
         <phrase id="fldcaption" value="Job ID" />
       </field>
@@ -278,7 +278,7 @@
       </field>
     </table>
     <table id="job2">
-      <phrase id="tblcaption" value="Job" />
+      <phrase id="tblcaption" value="Job (Master)" />
       <field id="job2id">
         <phrase id="fldcaption" value="Job 2ID" />
       </field>
