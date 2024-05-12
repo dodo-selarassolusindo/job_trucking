@@ -13,7 +13,7 @@ $q = 'select * from size';
 $r = ExecuteRows($q);
 ?>
 
-Job <?= $_GET['size'] ?>
+Job <?= $_GET['jenis'] ?>
 
 <?php $rec_num = 0 ?>
 
@@ -27,7 +27,7 @@ Job <?= $_GET['size'] ?>
         <div class="icon">
             <i class="ion ion-bag"></i>
         </div>
-        <a href="type2?size=<?= $row['SizeID'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="type2?size=<?= $row['Ukuran'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <?php $rec_num++ ?>
 

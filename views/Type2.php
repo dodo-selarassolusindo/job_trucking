@@ -29,7 +29,7 @@ Size <?= $_GET['size'] ?>
     
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
         <div class="inner">
-            <h3 class="text-center"><?= $row['Nama'] ?></h3>
+            <h4 class="text-center"><?= $row['Nama'] ?></h4>
             <!-- <p>&nbsp;</p> -->
         </div>
         <div class="icon">
