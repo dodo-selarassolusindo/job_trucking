@@ -18,12 +18,12 @@ $r = ExecuteRows($q);
 <?php foreach($r as $row) { ?>
 
     <?php
-    $order = ExecuteScalar('select count(JobOrderID) as rec_num from job_order where Job2ID = '.$row->Job2ID);
+    $order = ExecuteScalar('select count(JobOrderID) as rec_num from job_order where Job2ID = '.$row['Job2ID']);
     if ($order == 0) {
         // continue;
     } else {
     ?>
-    
+
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
         <div class="inner">
             <h3 class="text-center"><?= $row['Nama'] ?></h3>
