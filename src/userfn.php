@@ -71,7 +71,7 @@ function Language_Load()
         'Job :: '
         . $_GET['job']
         . ' - Ukuran :: '
-        . $_Get['ukuran']
+        . $_GET['ukuran']
     );
 }
 
