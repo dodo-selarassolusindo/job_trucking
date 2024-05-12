@@ -21,8 +21,8 @@ $topMenu->addMenuItem(13, "mci_Report", $Language->menuPhrase("13", "MenuText"),
 $topMenu->addMenuItem(1, "mi_audittrail", $Language->menuPhrase("1", "MenuText"), "audittraillist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail'), false, false, "", "", true, false);
 $topMenu->addMenuItem(10, "mi_exportlog", $Language->menuPhrase("10", "MenuText"), "exportloglist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}exportlog'), false, false, "", "", true, false);
 $topMenu->addMenuItem(15, "mci_Setting", $Language->menuPhrase("15", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
-$topMenu->addMenuItem(3, "mi_employees", $Language->menuPhrase("3", "MenuText"), "employeeslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}employees'), false, false, "", "", true, false);
 $topMenu->addMenuItem(9, "mi_userlevels", $Language->menuPhrase("9", "MenuText"), "userlevelslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels'), false, false, "", "", true, false);
+$topMenu->addMenuItem(3, "mi_employees", $Language->menuPhrase("3", "MenuText"), "employeeslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}employees'), false, false, "", "", true, false);
 echo $topMenu->toScript();
 
 // Sidebar menu
@@ -44,6 +44,6 @@ $sideMenu->addMenuItem(13, "mci_Report", $Language->menuPhrase("13", "MenuText")
 $sideMenu->addMenuItem(1, "mi_audittrail", $Language->menuPhrase("1", "MenuText"), "audittraillist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(10, "mi_exportlog", $Language->menuPhrase("10", "MenuText"), "exportloglist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}exportlog'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(15, "mci_Setting", $Language->menuPhrase("15", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
-$sideMenu->addMenuItem(3, "mi_employees", $Language->menuPhrase("3", "MenuText"), "employeeslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}employees'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(9, "mi_userlevels", $Language->menuPhrase("9", "MenuText"), "userlevelslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels'), false, false, "", "", true, true);
+$sideMenu->addMenuItem(3, "mi_employees", $Language->menuPhrase("3", "MenuText"), "employeeslist", 15, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}employees'), false, false, "", "", true, true);
 echo $sideMenu->toScript();

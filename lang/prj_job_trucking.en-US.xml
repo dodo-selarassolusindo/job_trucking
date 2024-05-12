@@ -62,14 +62,14 @@
     <menu id="15">
       <phrase id="menutext" value="Setting" />
     </menu>
-    <menu id="3">
-      <phrase id="menutext" value="Users" />
-    </menu>
     <menu id="9">
       <phrase id="menutext" value="Hak Akses" />
     </menu>
     <menu id="8">
       <phrase id="menutext" value="Hak Akses (Detail)" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="Users" />
     </menu>
     <table id="audittrail">
       <phrase id="tblcaption" value="Log Activity" />
