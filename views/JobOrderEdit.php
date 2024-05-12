@@ -149,6 +149,7 @@ loadjs.ready("fjob_orderedit", function() {
         data-modal-lookup="true"
         data-value-separator="<?= $Page->SizeID->displayValueSeparatorAttribute() ?>"
         data-placeholder="<?= HtmlEncode($Page->SizeID->getPlaceHolder()) ?>"
+        data-ew-action="update-options"
         <?= $Page->SizeID->editAttributes() ?>>
         <?= $Page->SizeID->selectOptionListHtml("x_SizeID") ?>
     </select>

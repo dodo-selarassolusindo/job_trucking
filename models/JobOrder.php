@@ -193,7 +193,7 @@ class JobOrder extends DbTable
         $this->SizeID->setSelectMultiple(false); // Select one
         $this->SizeID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->SizeID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', false, 'SizeID', ["Ukuran","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Ukuran`");
+        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', false, 'SizeID', ["Ukuran","","",""], '', '', [], ["x_TypeID"], [], [], [], [], false, '', '', "`Ukuran`");
         $this->SizeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->SizeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['SizeID'] = &$this->SizeID;
@@ -220,7 +220,7 @@ class JobOrder extends DbTable
         $this->TypeID->Raw = true;
         $this->TypeID->Nullable = false; // NOT NULL field
         $this->TypeID->Required = true; // Required field
-        $this->TypeID->Lookup = new Lookup($this->TypeID, 'type', false, 'TypeID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->TypeID->Lookup = new Lookup($this->TypeID, 'type', false, 'TypeID', ["Nama","","",""], '', '', ["x_SizeID"], [], ["TypeID"], ["x_TypeID"], [], [], false, '', '', "`Nama`");
         $this->TypeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->TypeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TypeID'] = &$this->TypeID;
