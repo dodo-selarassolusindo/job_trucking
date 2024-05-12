@@ -186,7 +186,7 @@ function Container_Build($builder)
 function getUkuran()
 {
     // $ukuran = ExecuteScalar('select Ukuran from size where SizeID = '.$_GET['size'].'');
-    $ukuran = '40"';
+    $ukuran = '20"';
     return $ukuran;
 }
 
