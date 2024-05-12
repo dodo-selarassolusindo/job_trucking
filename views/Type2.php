@@ -24,7 +24,7 @@ $r = ExecuteRows($q);
 <?php $rec_num = 0 ?>
 
 <?php foreach($r as $row) { ?>
-
+    
     <div class="small-box <?= $rec_num % 2 == 0 ? 'bg-info' : 'bg-success' ?>">
         <div class="inner">
             <h4 class="text-center"><?= $row['Nama'] ?></h4>
