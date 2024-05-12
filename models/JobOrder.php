@@ -220,7 +220,7 @@ class JobOrder extends DbTable
         $this->TypeID->Raw = true;
         $this->TypeID->Nullable = false; // NOT NULL field
         $this->TypeID->Required = true; // Required field
-        $this->TypeID->Lookup = new Lookup($this->TypeID, 'size_type', false, 'TypeID', ["TypeNama","","",""], '', '', ["x_SizeID"], [], ["SizeID"], ["x_SizeID"], [], [], false, '', '', "(select Nama from type where TypeID = TypeID)");
+        $this->TypeID->Lookup = new Lookup($this->TypeID, 'size_type', false, 'TypeID', ["TypeNama","","",""], '', '', ["x_SizeID"], [], ["SizeID"], ["x_SizeID"], [], [], false, '', '', "(select Nama from type where type.TypeID = size_type.TypeID)");
         $this->TypeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->TypeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TypeID'] = &$this->TypeID;

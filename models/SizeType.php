@@ -197,13 +197,13 @@ class SizeType extends DbTable
             $this, // Table
             'x_TypeNama', // Variable name
             'TypeNama', // Name
-            '(select Nama from type where TypeID = TypeID)', // Expression
-            '(select Nama from type where TypeID = TypeID)', // Basic search expression
+            '(select Nama from type where type.TypeID = size_type.TypeID)', // Expression
+            '(select Nama from type where type.TypeID = size_type.TypeID)', // Basic search expression
             200, // Type
             255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '(select Nama from type where TypeID = TypeID)', // Virtual expression
+            '(select Nama from type where type.TypeID = size_type.TypeID)', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
@@ -306,7 +306,7 @@ class SizeType extends DbTable
     // Get list of fields
     private function sqlSelectFields()
     {
-        return "*, (select Nama from type where TypeID = TypeID) AS `TypeNama`";
+        return "*, (select Nama from type where type.TypeID = size_type.TypeID) AS `TypeNama`";
     }
 
     // Get SELECT clause (for backward compatibility)
