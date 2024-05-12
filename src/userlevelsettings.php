@@ -36,6 +36,8 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}exportlog","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job","0","0"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job_order","-2","0"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job_order","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job2","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job2","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi","-2","0"],
@@ -54,12 +56,12 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}size3.php","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type","0","0"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","-2","72"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","-2","0"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","-2","72"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}type2.php","0","0"]];
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"]];
 
 /**
  * Tables
@@ -79,6 +81,7 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["employees","employees","Users",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","employeeslist"],
     ["exportlog","exportlog","Log Export",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","exportloglist"],
     ["job","job","Job Order (Semua)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joblist"],
+    ["job_order","job_order","Job Order 2 (Semua)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joborderlist"],
     ["job2","job2","Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","job2list"],
     ["lokasi","lokasi","Destination",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
     ["pelabuhan","pelabuhan","Pelabuhan",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","pelabuhanlist"],
@@ -88,6 +91,6 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["size2.php","size2","Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size2"],
     ["size3.php","size3","Container Size",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","size3"],
     ["type","type","Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","typelist"],
+    ["type2.php","type2","Container Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","type2"],
     ["userlevelpermissions","userlevelpermissions","Hak Akses (Detail)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelpermissionslist"],
-    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"],
-    ["type2.php","type2","Container Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","type2"]];
+    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"]];

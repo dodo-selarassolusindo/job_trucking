@@ -17,6 +17,7 @@ $topMenu->addMenuItem(21, "mi_depo", $Language->menuPhrase("21", "MenuText"), "d
 $topMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, false);
 $topMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, false);
 $topMenu->addMenuItem(4, "mi_job", $Language->menuPhrase("4", "MenuText"), "joblist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job'), false, false, "", "", true, false);
+$topMenu->addMenuItem(41, "mi_job_order", $Language->menuPhrase("41", "MenuText"), "joborderlist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job_order'), false, false, "", "", true, false);
 $topMenu->addMenuItem(13, "mci_Report", $Language->menuPhrase("13", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(1, "mi_audittrail", $Language->menuPhrase("1", "MenuText"), "audittraillist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail'), false, false, "", "", true, false);
 $topMenu->addMenuItem(10, "mi_exportlog", $Language->menuPhrase("10", "MenuText"), "exportloglist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}exportlog'), false, false, "", "", true, false);
@@ -40,6 +41,7 @@ $sideMenu->addMenuItem(21, "mi_depo", $Language->menuPhrase("21", "MenuText"), "
 $sideMenu->addMenuItem(2, "mi_customer", $Language->menuPhrase("2", "MenuText"), "customerlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}customer'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_shipper", $Language->menuPhrase("6", "MenuText"), "shipperlist", 12, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}shipper'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(4, "mi_job", $Language->menuPhrase("4", "MenuText"), "joblist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job'), false, false, "", "", true, true);
+$sideMenu->addMenuItem(41, "mi_job_order", $Language->menuPhrase("41", "MenuText"), "joborderlist", -1, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}job_order'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(13, "mci_Report", $Language->menuPhrase("13", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(1, "mi_audittrail", $Language->menuPhrase("1", "MenuText"), "audittraillist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail'), false, false, "", "", true, true);
 $sideMenu->addMenuItem(10, "mi_exportlog", $Language->menuPhrase("10", "MenuText"), "exportloglist", 13, "", AllowListMenu('{E946C152-A6FA-4AD7-93DD-22C0E875338D}exportlog'), false, false, "", "", true, true);

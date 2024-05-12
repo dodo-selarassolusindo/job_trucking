@@ -50,6 +50,9 @@
     <menu id="4">
       <phrase id="menutext" value="Job Order (Semua)" />
     </menu>
+    <menu id="41">
+      <phrase id="menutext" value="Job Order 2 (Semua)" />
+    </menu>
     <menu id="13">
       <phrase id="menutext" value="Report" />
     </menu>
@@ -277,6 +280,39 @@
         <phrase id="fldcaption" value="Lokasi" />
       </field>
     </table>
+    <table id="job_order">
+      <phrase id="tblcaption" value="Job Order 2 (Semua)" />
+      <field id="joborderid">
+        <phrase id="fldcaption" value="Job Order ID" />
+      </field>
+      <field id="job2id">
+        <phrase id="fldcaption" value="Job 2ID" />
+      </field>
+      <field id="sizeid">
+        <phrase id="fldcaption" value="Size ID" />
+      </field>
+      <field id="typeid">
+        <phrase id="fldcaption" value="Type ID" />
+      </field>
+      <field id="tanggal">
+        <phrase id="fldcaption" value="Tanggal" />
+      </field>
+      <field id="lokasiid">
+        <phrase id="fldcaption" value="Lokasi ID" />
+      </field>
+      <field id="pelabuhanid">
+        <phrase id="fldcaption" value="Pelabuhan ID" />
+      </field>
+      <field id="bl_extra">
+        <phrase id="fldcaption" value="BL Extra" />
+      </field>
+      <field id="depoid">
+        <phrase id="fldcaption" value="Depo ID" />
+      </field>
+      <field id="ongkos">
+        <phrase id="fldcaption" value="Ongkos" />
+      </field>
+    </table>
     <table id="job2">
       <phrase id="tblcaption" value="Job" />
       <field id="job2id">
@@ -358,6 +394,9 @@
         <phrase id="fldcaption" value="Nama" />
       </field>
     </table>
+    <table id="type2">
+      <phrase id="tblcaption" value="Container Type" />
+    </table>
     <table id="userlevelpermissions">
       <phrase id="tblcaption" value="Hak Akses (Detail)" />
       <field id="userlevelid">
@@ -378,9 +417,6 @@
       <field id="userlevelname">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
-    </table>
-    <table id="type2">
-      <phrase id="tblcaption" value="Container Type" />
     </table>
   </project>
 </ew-language>

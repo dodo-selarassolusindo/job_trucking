@@ -40,6 +40,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_job_trucking\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
@@ -85,6 +90,31 @@
     [
         'PHPMaker2024\\prj_job_trucking\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -513,6 +543,11 @@
                 '/jobview[/{JobID}]',
                 '/jobedit[/{JobID}]',
                 '/jobdelete[/{JobID}]',
+                '/joborderlist[/{JobOrderID}]',
+                '/joborderadd[/{JobOrderID}]',
+                '/joborderview[/{JobOrderID}]',
+                '/joborderedit[/{JobOrderID}]',
+                '/joborderdelete[/{JobOrderID}]',
                 '/lokasilist[/{LokasiID}]',
                 '/lokasiadd[/{LokasiID}]',
                 '/lokasiview[/{LokasiID}]',
@@ -595,6 +630,11 @@
                 'PHPMaker2024\\prj_job_trucking\\JobController:view',
                 'PHPMaker2024\\prj_job_trucking\\JobController:edit',
                 'PHPMaker2024\\prj_job_trucking\\JobController:delete',
+                'PHPMaker2024\\prj_job_trucking\\JobOrderController:list',
+                'PHPMaker2024\\prj_job_trucking\\JobOrderController:add',
+                'PHPMaker2024\\prj_job_trucking\\JobOrderController:view',
+                'PHPMaker2024\\prj_job_trucking\\JobOrderController:edit',
+                'PHPMaker2024\\prj_job_trucking\\JobOrderController:delete',
                 'PHPMaker2024\\prj_job_trucking\\LokasiController:list',
                 'PHPMaker2024\\prj_job_trucking\\LokasiController:add',
                 'PHPMaker2024\\prj_job_trucking\\LokasiController:view',
@@ -647,6 +687,21 @@
                 'PHPMaker2024\\prj_job_trucking\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
@@ -917,6 +972,11 @@
                 'view.job',
                 'edit.job',
                 'delete.job',
+                'list.job_order',
+                'add.job_order',
+                'view.job_order',
+                'edit.job_order',
+                'delete.job_order',
                 'list.lokasi',
                 'add.lokasi',
                 'view.lokasi',
@@ -969,6 +1029,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -1133,6 +1198,11 @@
         $o[77],
         $o[78],
         $o[79],
+        $o[80],
+        $o[81],
+        $o[82],
+        $o[83],
+        $o[84],
     ],
     []
 );

@@ -86,6 +86,7 @@ return [
     "employees" => \DI\create(Employees::class),
     "exportlog" => \DI\create(Exportlog::class),
     "job" => \DI\create(Job::class),
+    "job_order" => \DI\create(JobOrder::class),
     "job2" => \DI\create(Job2::class),
     "lokasi" => \DI\create(Lokasi::class),
     "pelabuhan" => \DI\create(Pelabuhan::class),
@@ -95,9 +96,9 @@ return [
     "size2" => \DI\create(Size2::class),
     "size3" => \DI\create(Size3::class),
     "type" => \DI\create(Type::class),
+    "type2" => \DI\create(Type2::class),
     "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
     "userlevels" => \DI\create(Userlevels::class),
-    "type2" => \DI\create(Type2::class),
 
     // User table
     "usertable" => \DI\get("employees"),

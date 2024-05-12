@@ -12,6 +12,7 @@ C:\xampp\htdocs\job_trucking\controllers\EmployeesController.php
 C:\xampp\htdocs\job_trucking\controllers\ExportlogController.php
 C:\xampp\htdocs\job_trucking\controllers\Job2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\JobController.php
+C:\xampp\htdocs\job_trucking\controllers\JobOrderController.php
 C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
 C:\xampp\htdocs\job_trucking\controllers\OthersController.php
 C:\xampp\htdocs\job_trucking\controllers\PelabuhanController.php
@@ -72,6 +73,12 @@ C:\xampp\htdocs\job_trucking\models\JobAdd.php
 C:\xampp\htdocs\job_trucking\models\JobDelete.php
 C:\xampp\htdocs\job_trucking\models\JobEdit.php
 C:\xampp\htdocs\job_trucking\models\JobList.php
+C:\xampp\htdocs\job_trucking\models\JobOrder.php
+C:\xampp\htdocs\job_trucking\models\JobOrderAdd.php
+C:\xampp\htdocs\job_trucking\models\JobOrderDelete.php
+C:\xampp\htdocs\job_trucking\models\JobOrderEdit.php
+C:\xampp\htdocs\job_trucking\models\JobOrderList.php
+C:\xampp\htdocs\job_trucking\models\JobOrderView.php
 C:\xampp\htdocs\job_trucking\models\JobView.php
 C:\xampp\htdocs\job_trucking\models\Login.php
 C:\xampp\htdocs\job_trucking\models\Logout.php
@@ -183,6 +190,7 @@ C:\xampp\htdocs\job_trucking\src\Entity\Employee.php
 C:\xampp\htdocs\job_trucking\src\Entity\Exportlog.php
 C:\xampp\htdocs\job_trucking\src\Entity\Job.php
 C:\xampp\htdocs\job_trucking\src\Entity\Job2.php
+C:\xampp\htdocs\job_trucking\src\Entity\JobOrder.php
 C:\xampp\htdocs\job_trucking\src\Entity\Lokasi.php
 C:\xampp\htdocs\job_trucking\src\Entity\Pelabuhan.php
 C:\xampp\htdocs\job_trucking\src\Entity\Shipper.php
@@ -309,6 +317,11 @@ C:\xampp\htdocs\job_trucking\views\JobAdd.php
 C:\xampp\htdocs\job_trucking\views\JobDelete.php
 C:\xampp\htdocs\job_trucking\views\JobEdit.php
 C:\xampp\htdocs\job_trucking\views\JobList.php
+C:\xampp\htdocs\job_trucking\views\JobOrderAdd.php
+C:\xampp\htdocs\job_trucking\views\JobOrderDelete.php
+C:\xampp\htdocs\job_trucking\views\JobOrderEdit.php
+C:\xampp\htdocs\job_trucking\views\JobOrderList.php
+C:\xampp\htdocs\job_trucking\views\JobOrderView.php
 C:\xampp\htdocs\job_trucking\views\JobView.php
 C:\xampp\htdocs\job_trucking\views\Login.php
 C:\xampp\htdocs\job_trucking\views\LokasiAdd.php
