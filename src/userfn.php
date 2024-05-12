@@ -71,7 +71,7 @@ function Language_Load()
         'Job :: '
         . $_GET['job']
         . ' - Ukuran :: '
-        . addslashes($_GET['ukuran'])
+        . $_GET['ukuran']
     );
 }
 
