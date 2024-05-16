@@ -38,7 +38,7 @@ $r = ExecuteRows($q);
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="size3?job=<?= $row['Nama'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="size3?job=<?= $row['Nama'] ?>&job2id=<?= $row['Job2ID'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     <?php } ?>
     <?php $rec_num++ ?>

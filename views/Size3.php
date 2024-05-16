@@ -25,6 +25,7 @@ $r = ExecuteRows($q);
             job_order
         where
             SizeID = ' . $row['SizeID']
+            . 'and Job2ID = ' . $_GET['job2id']
     );
     if ($job_num == 0) {
         // continue;
