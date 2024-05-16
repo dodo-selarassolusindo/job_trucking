@@ -18,7 +18,14 @@ $r = ExecuteRows($q);
 <?php foreach($r as $row) { ?>
 
     <?php
-    $job_num = ExecuteScalar('select count(JobOrderID) as rec_num from job_order where Job2ID = '.$row['Job2ID']);
+    $job_num = ExecuteScalar('
+        select
+            count(JobOrderID) as rec_num
+        from
+            job_order
+        where
+            Job2ID = ' . $row['Job2ID']
+    );
     if ($job_num == 0) {
         // continue;
     } else {
