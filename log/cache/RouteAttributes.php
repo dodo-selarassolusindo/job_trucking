@@ -45,6 +45,7 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_job_trucking\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
@@ -90,6 +91,11 @@
     [
         'PHPMaker2024\\prj_job_trucking\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -543,6 +549,7 @@
                 '/jobview[/{JobID}]',
                 '/jobedit[/{JobID}]',
                 '/jobdelete[/{JobID}]',
+                '/joborder2[/{params:.*}]',
                 '/joborderlist[/{JobOrderID}]',
                 '/joborderadd[/{JobOrderID}]',
                 '/joborderview[/{JobOrderID}]',
@@ -630,6 +637,7 @@
                 'PHPMaker2024\\prj_job_trucking\\JobController:view',
                 'PHPMaker2024\\prj_job_trucking\\JobController:edit',
                 'PHPMaker2024\\prj_job_trucking\\JobController:delete',
+                'PHPMaker2024\\prj_job_trucking\\JobOrder2Controller:custom',
                 'PHPMaker2024\\prj_job_trucking\\JobOrderController:list',
                 'PHPMaker2024\\prj_job_trucking\\JobOrderController:add',
                 'PHPMaker2024\\prj_job_trucking\\JobOrderController:view',
@@ -687,6 +695,9 @@
                 'PHPMaker2024\\prj_job_trucking\\UserlevelsController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
@@ -972,6 +983,7 @@
                 'view.job',
                 'edit.job',
                 'delete.job',
+                'custom.job_order2',
                 'list.job_order',
                 'add.job_order',
                 'view.job_order',
@@ -1029,6 +1041,7 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
                 [],
                 [],
                 [],
@@ -1203,6 +1216,7 @@
         $o[82],
         $o[83],
         $o[84],
+        $o[85],
     ],
     []
 );

@@ -1,4 +1,4 @@
-<ew-language date="2024/5/17" id="en-US" desc="English" author="e.World Technology Limited">
+<ew-language date="2024/5/19" id="en-US" desc="English" author="e.World Technology Limited">
   <project>
     <phrase id="bodytitle" value="Job Trucking" />
     <phrase id="footertext" value="&amp;copy;2024 ZigZag Technology Limited. All rights reserved." />
@@ -13,6 +13,9 @@
     </menu>
     <menu id="40">
       <phrase id="menutext" value="Container Type" />
+    </menu>
+    <menu id="42">
+      <phrase id="menutext" value="Container Job Order" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Master" />
@@ -420,6 +423,9 @@
       <field id="userlevelname">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
+    </table>
+    <table id="job_order2">
+      <phrase id="tblcaption" value="Container Job Order" />
     </table>
   </project>
 </ew-language>
