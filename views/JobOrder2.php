@@ -8,5 +8,6 @@ $Joborder2 = &$Page;
 <?php
 $Page->showMessage();
 ?>
-Hello - this detail page
+<?php echo 'Hello - this detail page' ?>
+
 <?= GetDebugMessage() ?>
