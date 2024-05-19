@@ -48,7 +48,7 @@ $r = ExecuteRows($q);
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="joborderlist" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="job_order2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     <?php } ?>
     <?php $rec_num++ ?>
