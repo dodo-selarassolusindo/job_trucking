@@ -1,3 +1,4 @@
+
 C:\xampp\htdocs\job_trucking\.htaccess
 C:\xampp\htdocs\job_trucking\api\.htaccess
 C:\xampp\htdocs\job_trucking\api\index.php
@@ -12,7 +13,6 @@ C:\xampp\htdocs\job_trucking\controllers\EmployeesController.php
 C:\xampp\htdocs\job_trucking\controllers\ExportlogController.php
 C:\xampp\htdocs\job_trucking\controllers\Job2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\JobController.php
-C:\xampp\htdocs\job_trucking\controllers\JobOrder2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\JobOrderController.php
 C:\xampp\htdocs\job_trucking\controllers\Joborder2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\LokasiController.php
@@ -76,7 +76,6 @@ C:\xampp\htdocs\job_trucking\models\JobDelete.php
 C:\xampp\htdocs\job_trucking\models\JobEdit.php
 C:\xampp\htdocs\job_trucking\models\JobList.php
 C:\xampp\htdocs\job_trucking\models\JobOrder.php
-C:\xampp\htdocs\job_trucking\models\JobOrder2.php
 C:\xampp\htdocs\job_trucking\models\JobOrderAdd.php
 C:\xampp\htdocs\job_trucking\models\JobOrderDelete.php
 C:\xampp\htdocs\job_trucking\models\JobOrderEdit.php
@@ -321,7 +320,6 @@ C:\xampp\htdocs\job_trucking\views\JobAdd.php
 C:\xampp\htdocs\job_trucking\views\JobDelete.php
 C:\xampp\htdocs\job_trucking\views\JobEdit.php
 C:\xampp\htdocs\job_trucking\views\JobList.php
-C:\xampp\htdocs\job_trucking\views\JobOrder2.php
 C:\xampp\htdocs\job_trucking\views\JobOrderAdd.php
 C:\xampp\htdocs\job_trucking\views\JobOrderDelete.php
 C:\xampp\htdocs\job_trucking\views\JobOrderEdit.php

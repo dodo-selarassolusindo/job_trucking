@@ -173,18 +173,18 @@
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
-            'pretty_version' => 'v6.10.0',
-            'version' => '6.10.0.0',
-            'reference' => 'a49db6f0a5033aef5143295342f1c95521b075ff',
+            'pretty_version' => 'v6.10.1',
+            'version' => '6.10.1.0',
+            'reference' => '500501c2ce893c824c801da135d02661199f60c5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'giggsey/libphonenumber-for-php' => array(
-            'pretty_version' => '8.13.36',
-            'version' => '8.13.36.0',
-            'reference' => '9ca4179e4332d21578cb29f0c0406f0a2b8803e3',
+            'pretty_version' => '8.13.37',
+            'version' => '8.13.37.0',
+            'reference' => '536c747ff1af433dddc615b26b9674047e013076',
             'type' => 'library',
             'install_path' => __DIR__ . '/../giggsey/libphonenumber-for-php',
             'aliases' => array(),
@@ -193,7 +193,7 @@
         'giggsey/libphonenumber-for-php-lite' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '8.13.36',
+                0 => '8.13.37',
             ),
         ),
         'giggsey/locale' => array(
