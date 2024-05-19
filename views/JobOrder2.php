@@ -3,10 +3,10 @@
 namespace PHPMaker2024\prj_job_trucking;
 
 // Page object
-$JobOrder2 = &$Page;
+$Joborder2 = &$Page;
 ?>
 <?php
 $Page->showMessage();
 ?>
-Hello
+Hello - this detail page
 <?= GetDebugMessage() ?>

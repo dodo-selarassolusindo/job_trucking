@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JobOrder2
+class Joborder2
 {
     use MessagesTrait;
 
@@ -32,7 +32,7 @@ class JobOrder2
     public $TableVar;
 
     // Page object name
-    public $PageObjName = "JobOrder2";
+    public $PageObjName = "Joborder2";
 
     // View file path
     public $View = null;
@@ -113,7 +113,7 @@ class JobOrder2
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_order2.php');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'joborder2.php');
         }
 
         // Start timer
@@ -279,8 +279,8 @@ class JobOrder2
     protected function setupBreadcrumb()
     {
         global $Breadcrumb, $Language;
-        $Breadcrumb = Breadcrumb::create("index")->add("custom", "job_order2", CurrentUrl(), "", "job_order2", true);
-        $this->Heading = $Language->tablePhrase("job_order2", "TblCaption");
+        $Breadcrumb = Breadcrumb::create("index")->add("custom", "joborder2", CurrentUrl(), "", "joborder2", true);
+        $this->Heading = $Language->tablePhrase("joborder2", "TblCaption");
     }
 
     // Page Load event

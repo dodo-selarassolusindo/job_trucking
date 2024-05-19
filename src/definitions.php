@@ -99,7 +99,7 @@ return [
     "type2" => \DI\create(Type2::class),
     "userlevelpermissions" => \DI\create(Userlevelpermissions::class),
     "userlevels" => \DI\create(Userlevels::class),
-    "job_order2" => \DI\create(JobOrder2::class),
+    "joborder2" => \DI\create(Joborder2::class),
 
     // User table
     "usertable" => \DI\get("employees"),

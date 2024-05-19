@@ -15,7 +15,7 @@
       <phrase id="menutext" value="Container Type" />
     </menu>
     <menu id="42">
-      <phrase id="menutext" value="Container Job Order" />
+      <phrase id="menutext" value="Container Detail Job" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Master" />
@@ -424,8 +424,8 @@
         <phrase id="fldcaption" value="userlevelname" />
       </field>
     </table>
-    <table id="job_order2">
-      <phrase id="tblcaption" value="Container Job Order" />
+    <table id="joborder2">
+      <phrase id="tblcaption" value="Container Detail Job" />
     </table>
   </project>
 </ew-language>
