@@ -427,6 +427,7 @@ class JobOrderDelete extends JobOrder
         $this->setupLookupOptions($this->DepoID);
         $this->setupLookupOptions($this->IsShow);
         $this->setupLookupOptions($this->IsOpen);
+        $this->setupLookupOptions($this->TakenByID);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -847,11 +848,34 @@ class JobOrderDelete extends JobOrder
             }
 
             // IsOpen
-            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+            if (strval($this->IsOpen->CurrentValue) != "") {
+                $this->IsOpen->ViewValue = $this->IsOpen->optionCaption($this->IsOpen->CurrentValue);
+            } else {
+                $this->IsOpen->ViewValue = null;
+            }
 
             // TakenByID
-            $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-            $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
+            $curVal = strval($this->TakenByID->CurrentValue);
+            if ($curVal != "") {
+                $this->TakenByID->ViewValue = $this->TakenByID->lookupCacheOption($curVal);
+                if ($this->TakenByID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchExpression(), "=", $curVal, $this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchDataType(), "");
+                    $sqlWrk = $this->TakenByID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->TakenByID->Lookup->renderViewRow($rswrk[0]);
+                        $this->TakenByID->ViewValue = $this->TakenByID->displayValue($arwrk);
+                    } else {
+                        $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->CurrentValue, $this->TakenByID->formatPattern());
+                    }
+                }
+            } else {
+                $this->TakenByID->ViewValue = null;
+            }
 
             // JobOrderID
             $this->JobOrderID->HrefValue = "";
@@ -1059,6 +1083,8 @@ class JobOrderDelete extends JobOrder
                 case "x_IsShow":
                     break;
                 case "x_IsOpen":
+                    break;
+                case "x_TakenByID":
                     break;
                 default:
                     $lookupFilter = "";

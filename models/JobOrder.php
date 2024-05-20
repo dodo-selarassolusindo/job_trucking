@@ -440,7 +440,7 @@ class JobOrder extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'RADIO' // Edit Tag
         );
         $this->IsOpen->InputTextType = "text";
         $this->IsOpen->Raw = true;
@@ -449,7 +449,7 @@ class JobOrder extends DbTable
         $this->IsOpen->Lookup = new Lookup($this->IsOpen, 'job_order', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->IsOpen->OptionCount = 2;
         $this->IsOpen->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->IsOpen->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->IsOpen->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['IsOpen'] = &$this->IsOpen;
 
         // TakenByID
@@ -468,14 +468,18 @@ class JobOrder extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->TakenByID->InputTextType = "text";
         $this->TakenByID->Raw = true;
         $this->TakenByID->Nullable = false; // NOT NULL field
         $this->TakenByID->Required = true; // Required field
+        $this->TakenByID->setSelectMultiple(false); // Select one
+        $this->TakenByID->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->TakenByID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->TakenByID->Lookup = new Lookup($this->TakenByID, 'taken_by', false, 'TakenByID', ["Nama","NomorHP","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Nama`, ''),'" . ValueSeparator(1, $this->TakenByID) . "',COALESCE(`NomorHP`,''))");
         $this->TakenByID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->TakenByID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->TakenByID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TakenByID'] = &$this->TakenByID;
 
         // Add Doctrine Cache
@@ -1613,11 +1617,34 @@ class JobOrder extends DbTable
         }
 
         // IsOpen
-        $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+        if (strval($this->IsOpen->CurrentValue) != "") {
+            $this->IsOpen->ViewValue = $this->IsOpen->optionCaption($this->IsOpen->CurrentValue);
+        } else {
+            $this->IsOpen->ViewValue = null;
+        }
 
         // TakenByID
-        $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-        $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
+        $curVal = strval($this->TakenByID->CurrentValue);
+        if ($curVal != "") {
+            $this->TakenByID->ViewValue = $this->TakenByID->lookupCacheOption($curVal);
+            if ($this->TakenByID->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchExpression(), "=", $curVal, $this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchDataType(), "");
+                $sqlWrk = $this->TakenByID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->TakenByID->Lookup->renderViewRow($rswrk[0]);
+                    $this->TakenByID->ViewValue = $this->TakenByID->displayValue($arwrk);
+                } else {
+                    $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->CurrentValue, $this->TakenByID->formatPattern());
+                }
+            }
+        } else {
+            $this->TakenByID->ViewValue = null;
+        }
 
         // JobOrderID
         $this->JobOrderID->HrefValue = "";
@@ -1741,17 +1768,12 @@ class JobOrder extends DbTable
         $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
 
         // IsOpen
-        $this->IsOpen->setupEditAttributes();
-        $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
+        $this->IsOpen->EditValue = $this->IsOpen->options(false);
         $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
 
         // TakenByID
         $this->TakenByID->setupEditAttributes();
-        $this->TakenByID->EditValue = $this->TakenByID->CurrentValue;
         $this->TakenByID->PlaceHolder = RemoveHtml($this->TakenByID->caption());
-        if (strval($this->TakenByID->EditValue) != "" && is_numeric($this->TakenByID->EditValue)) {
-            $this->TakenByID->EditValue = FormatNumber($this->TakenByID->EditValue, null);
-        }
 
         // Call Row Rendered event
         $this->rowRendered();

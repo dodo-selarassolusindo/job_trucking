@@ -538,6 +538,7 @@ class JobOrderEdit extends JobOrder
         $this->setupLookupOptions($this->DepoID);
         $this->setupLookupOptions($this->IsShow);
         $this->setupLookupOptions($this->IsOpen);
+        $this->setupLookupOptions($this->TakenByID);
 
         // Check modal
         if ($this->IsModal) {
@@ -833,7 +834,7 @@ class JobOrderEdit extends JobOrder
             if (IsApi() && $val === null) {
                 $this->IsOpen->Visible = false; // Disable update for API request
             } else {
-                $this->IsOpen->setFormValue($val, true, $validate);
+                $this->IsOpen->setFormValue($val);
             }
         }
 
@@ -843,7 +844,7 @@ class JobOrderEdit extends JobOrder
             if (IsApi() && $val === null) {
                 $this->TakenByID->Visible = false; // Disable update for API request
             } else {
-                $this->TakenByID->setFormValue($val, true, $validate);
+                $this->TakenByID->setFormValue($val);
             }
         }
     }
@@ -1175,11 +1176,34 @@ class JobOrderEdit extends JobOrder
             }
 
             // IsOpen
-            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+            if (strval($this->IsOpen->CurrentValue) != "") {
+                $this->IsOpen->ViewValue = $this->IsOpen->optionCaption($this->IsOpen->CurrentValue);
+            } else {
+                $this->IsOpen->ViewValue = null;
+            }
 
             // TakenByID
-            $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-            $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
+            $curVal = strval($this->TakenByID->CurrentValue);
+            if ($curVal != "") {
+                $this->TakenByID->ViewValue = $this->TakenByID->lookupCacheOption($curVal);
+                if ($this->TakenByID->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchExpression(), "=", $curVal, $this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchDataType(), "");
+                    $sqlWrk = $this->TakenByID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->TakenByID->Lookup->renderViewRow($rswrk[0]);
+                        $this->TakenByID->ViewValue = $this->TakenByID->displayValue($arwrk);
+                    } else {
+                        $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->CurrentValue, $this->TakenByID->formatPattern());
+                    }
+                }
+            } else {
+                $this->TakenByID->ViewValue = null;
+            }
 
             // JobOrderID
             $this->JobOrderID->HrefValue = "";
@@ -1451,17 +1475,43 @@ class JobOrderEdit extends JobOrder
             $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
 
             // IsOpen
-            $this->IsOpen->setupEditAttributes();
-            $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
+            $this->IsOpen->EditValue = $this->IsOpen->options(false);
             $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
 
             // TakenByID
-            $this->TakenByID->setupEditAttributes();
-            $this->TakenByID->EditValue = $this->TakenByID->CurrentValue;
-            $this->TakenByID->PlaceHolder = RemoveHtml($this->TakenByID->caption());
-            if (strval($this->TakenByID->EditValue) != "" && is_numeric($this->TakenByID->EditValue)) {
-                $this->TakenByID->EditValue = FormatNumber($this->TakenByID->EditValue, null);
+            $curVal = trim(strval($this->TakenByID->CurrentValue));
+            if ($curVal != "") {
+                $this->TakenByID->ViewValue = $this->TakenByID->lookupCacheOption($curVal);
+            } else {
+                $this->TakenByID->ViewValue = $this->TakenByID->Lookup !== null && is_array($this->TakenByID->lookupOptions()) && count($this->TakenByID->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->TakenByID->ViewValue !== null) { // Load from cache
+                $this->TakenByID->EditValue = array_values($this->TakenByID->lookupOptions());
+                if ($this->TakenByID->ViewValue == "") {
+                    $this->TakenByID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchExpression(), "=", $this->TakenByID->CurrentValue, $this->TakenByID->Lookup->getTable()->Fields["TakenByID"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->TakenByID->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->TakenByID->Lookup->renderViewRow($rswrk[0]);
+                    $this->TakenByID->ViewValue = $this->TakenByID->displayValue($arwrk);
+                } else {
+                    $this->TakenByID->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->TakenByID->EditValue = $arwrk;
+            }
+            $this->TakenByID->PlaceHolder = RemoveHtml($this->TakenByID->caption());
 
             // Edit refer script
 
@@ -1592,20 +1642,14 @@ class JobOrderEdit extends JobOrder
                 }
             }
             if ($this->IsOpen->Visible && $this->IsOpen->Required) {
-                if (!$this->IsOpen->IsDetailKey && EmptyValue($this->IsOpen->FormValue)) {
+                if ($this->IsOpen->FormValue == "") {
                     $this->IsOpen->addErrorMessage(str_replace("%s", $this->IsOpen->caption(), $this->IsOpen->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->IsOpen->FormValue)) {
-                $this->IsOpen->addErrorMessage($this->IsOpen->getErrorMessage(false));
             }
             if ($this->TakenByID->Visible && $this->TakenByID->Required) {
                 if (!$this->TakenByID->IsDetailKey && EmptyValue($this->TakenByID->FormValue)) {
                     $this->TakenByID->addErrorMessage(str_replace("%s", $this->TakenByID->caption(), $this->TakenByID->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->TakenByID->FormValue)) {
-                $this->TakenByID->addErrorMessage($this->TakenByID->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1817,6 +1861,8 @@ class JobOrderEdit extends JobOrder
                 case "x_IsShow":
                     break;
                 case "x_IsOpen":
+                    break;
+                case "x_TakenByID":
                     break;
                 default:
                     $lookupFilter = "";
