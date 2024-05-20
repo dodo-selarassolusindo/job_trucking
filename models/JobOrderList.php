@@ -784,8 +784,33 @@ class JobOrderList extends JobOrder
             $this->OtherOptions->hideAllOptions();
         }
 
+        // Get default search criteria
+        AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+        // Get basic search values
+        $this->loadBasicSearchValues();
+
+        // Process filter list
+        if ($this->processFilterList()) {
+            $this->terminate();
+            return;
+        }
+
+        // Restore search parms from Session if not searching / reset / export
+        if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+            $this->restoreSearchParms();
+        }
+
+        // Call Recordset SearchValidated event
+        $this->recordsetSearchValidated();
+
         // Set up sorting order
         $this->setupSortOrder();
+
+        // Get basic search criteria
+        if (!$this->hasInvalidFields()) {
+            $srchBasic = $this->basicSearchWhere();
+        }
 
         // Restore display records
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
@@ -793,6 +818,35 @@ class JobOrderList extends JobOrder
         } else {
             $this->DisplayRecords = 20; // Load default
             $this->setRecordsPerPage($this->DisplayRecords); // Save default to Session
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms() && !$query) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere(); // Save to session
+            }
+        }
+
+        // Build search criteria
+        if ($query) {
+            AddFilter($this->SearchWhere, $query);
+        } else {
+            AddFilter($this->SearchWhere, $srchAdvanced);
+            AddFilter($this->SearchWhere, $srchBasic);
+        }
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json" && !$query) {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -855,6 +909,13 @@ class JobOrderList extends JobOrder
                 } else {
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
+            }
+
+            // Audit trail on search
+            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+                $searchParm = ServerVar("QUERY_STRING");
+                $searchSql = $this->getSessionWhere();
+                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
             }
         }
 
@@ -996,6 +1057,270 @@ class JobOrderList extends JobOrder
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->JobOrderID->AdvancedSearch->toJson(), ","); // Field JobOrderID
+        $filterList = Concat($filterList, $this->Job2ID->AdvancedSearch->toJson(), ","); // Field Job2ID
+        $filterList = Concat($filterList, $this->SizeID->AdvancedSearch->toJson(), ","); // Field SizeID
+        $filterList = Concat($filterList, $this->TypeID->AdvancedSearch->toJson(), ","); // Field TypeID
+        $filterList = Concat($filterList, $this->Tanggal->AdvancedSearch->toJson(), ","); // Field Tanggal
+        $filterList = Concat($filterList, $this->LokasiID->AdvancedSearch->toJson(), ","); // Field LokasiID
+        $filterList = Concat($filterList, $this->PelabuhanID->AdvancedSearch->toJson(), ","); // Field PelabuhanID
+        $filterList = Concat($filterList, $this->BL_Extra->AdvancedSearch->toJson(), ","); // Field BL_Extra
+        $filterList = Concat($filterList, $this->DepoID->AdvancedSearch->toJson(), ","); // Field DepoID
+        $filterList = Concat($filterList, $this->Ongkos->AdvancedSearch->toJson(), ","); // Field Ongkos
+        $filterList = Concat($filterList, $this->IsShow->AdvancedSearch->toJson(), ","); // Field IsShow
+        $filterList = Concat($filterList, $this->IsOpen->AdvancedSearch->toJson(), ","); // Field IsOpen
+        $filterList = Concat($filterList, $this->TakenByID->AdvancedSearch->toJson(), ","); // Field TakenByID
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            Profile()->setSearchFilters("fjob_ordersrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field JobOrderID
+        $this->JobOrderID->AdvancedSearch->SearchValue = @$filter["x_JobOrderID"];
+        $this->JobOrderID->AdvancedSearch->SearchOperator = @$filter["z_JobOrderID"];
+        $this->JobOrderID->AdvancedSearch->SearchCondition = @$filter["v_JobOrderID"];
+        $this->JobOrderID->AdvancedSearch->SearchValue2 = @$filter["y_JobOrderID"];
+        $this->JobOrderID->AdvancedSearch->SearchOperator2 = @$filter["w_JobOrderID"];
+        $this->JobOrderID->AdvancedSearch->save();
+
+        // Field Job2ID
+        $this->Job2ID->AdvancedSearch->SearchValue = @$filter["x_Job2ID"];
+        $this->Job2ID->AdvancedSearch->SearchOperator = @$filter["z_Job2ID"];
+        $this->Job2ID->AdvancedSearch->SearchCondition = @$filter["v_Job2ID"];
+        $this->Job2ID->AdvancedSearch->SearchValue2 = @$filter["y_Job2ID"];
+        $this->Job2ID->AdvancedSearch->SearchOperator2 = @$filter["w_Job2ID"];
+        $this->Job2ID->AdvancedSearch->save();
+
+        // Field SizeID
+        $this->SizeID->AdvancedSearch->SearchValue = @$filter["x_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchOperator = @$filter["z_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchCondition = @$filter["v_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchValue2 = @$filter["y_SizeID"];
+        $this->SizeID->AdvancedSearch->SearchOperator2 = @$filter["w_SizeID"];
+        $this->SizeID->AdvancedSearch->save();
+
+        // Field TypeID
+        $this->TypeID->AdvancedSearch->SearchValue = @$filter["x_TypeID"];
+        $this->TypeID->AdvancedSearch->SearchOperator = @$filter["z_TypeID"];
+        $this->TypeID->AdvancedSearch->SearchCondition = @$filter["v_TypeID"];
+        $this->TypeID->AdvancedSearch->SearchValue2 = @$filter["y_TypeID"];
+        $this->TypeID->AdvancedSearch->SearchOperator2 = @$filter["w_TypeID"];
+        $this->TypeID->AdvancedSearch->save();
+
+        // Field Tanggal
+        $this->Tanggal->AdvancedSearch->SearchValue = @$filter["x_Tanggal"];
+        $this->Tanggal->AdvancedSearch->SearchOperator = @$filter["z_Tanggal"];
+        $this->Tanggal->AdvancedSearch->SearchCondition = @$filter["v_Tanggal"];
+        $this->Tanggal->AdvancedSearch->SearchValue2 = @$filter["y_Tanggal"];
+        $this->Tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_Tanggal"];
+        $this->Tanggal->AdvancedSearch->save();
+
+        // Field LokasiID
+        $this->LokasiID->AdvancedSearch->SearchValue = @$filter["x_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchOperator = @$filter["z_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchCondition = @$filter["v_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchValue2 = @$filter["y_LokasiID"];
+        $this->LokasiID->AdvancedSearch->SearchOperator2 = @$filter["w_LokasiID"];
+        $this->LokasiID->AdvancedSearch->save();
+
+        // Field PelabuhanID
+        $this->PelabuhanID->AdvancedSearch->SearchValue = @$filter["x_PelabuhanID"];
+        $this->PelabuhanID->AdvancedSearch->SearchOperator = @$filter["z_PelabuhanID"];
+        $this->PelabuhanID->AdvancedSearch->SearchCondition = @$filter["v_PelabuhanID"];
+        $this->PelabuhanID->AdvancedSearch->SearchValue2 = @$filter["y_PelabuhanID"];
+        $this->PelabuhanID->AdvancedSearch->SearchOperator2 = @$filter["w_PelabuhanID"];
+        $this->PelabuhanID->AdvancedSearch->save();
+
+        // Field BL_Extra
+        $this->BL_Extra->AdvancedSearch->SearchValue = @$filter["x_BL_Extra"];
+        $this->BL_Extra->AdvancedSearch->SearchOperator = @$filter["z_BL_Extra"];
+        $this->BL_Extra->AdvancedSearch->SearchCondition = @$filter["v_BL_Extra"];
+        $this->BL_Extra->AdvancedSearch->SearchValue2 = @$filter["y_BL_Extra"];
+        $this->BL_Extra->AdvancedSearch->SearchOperator2 = @$filter["w_BL_Extra"];
+        $this->BL_Extra->AdvancedSearch->save();
+
+        // Field DepoID
+        $this->DepoID->AdvancedSearch->SearchValue = @$filter["x_DepoID"];
+        $this->DepoID->AdvancedSearch->SearchOperator = @$filter["z_DepoID"];
+        $this->DepoID->AdvancedSearch->SearchCondition = @$filter["v_DepoID"];
+        $this->DepoID->AdvancedSearch->SearchValue2 = @$filter["y_DepoID"];
+        $this->DepoID->AdvancedSearch->SearchOperator2 = @$filter["w_DepoID"];
+        $this->DepoID->AdvancedSearch->save();
+
+        // Field Ongkos
+        $this->Ongkos->AdvancedSearch->SearchValue = @$filter["x_Ongkos"];
+        $this->Ongkos->AdvancedSearch->SearchOperator = @$filter["z_Ongkos"];
+        $this->Ongkos->AdvancedSearch->SearchCondition = @$filter["v_Ongkos"];
+        $this->Ongkos->AdvancedSearch->SearchValue2 = @$filter["y_Ongkos"];
+        $this->Ongkos->AdvancedSearch->SearchOperator2 = @$filter["w_Ongkos"];
+        $this->Ongkos->AdvancedSearch->save();
+
+        // Field IsShow
+        $this->IsShow->AdvancedSearch->SearchValue = @$filter["x_IsShow"];
+        $this->IsShow->AdvancedSearch->SearchOperator = @$filter["z_IsShow"];
+        $this->IsShow->AdvancedSearch->SearchCondition = @$filter["v_IsShow"];
+        $this->IsShow->AdvancedSearch->SearchValue2 = @$filter["y_IsShow"];
+        $this->IsShow->AdvancedSearch->SearchOperator2 = @$filter["w_IsShow"];
+        $this->IsShow->AdvancedSearch->save();
+
+        // Field IsOpen
+        $this->IsOpen->AdvancedSearch->SearchValue = @$filter["x_IsOpen"];
+        $this->IsOpen->AdvancedSearch->SearchOperator = @$filter["z_IsOpen"];
+        $this->IsOpen->AdvancedSearch->SearchCondition = @$filter["v_IsOpen"];
+        $this->IsOpen->AdvancedSearch->SearchValue2 = @$filter["y_IsOpen"];
+        $this->IsOpen->AdvancedSearch->SearchOperator2 = @$filter["w_IsOpen"];
+        $this->IsOpen->AdvancedSearch->save();
+
+        // Field TakenByID
+        $this->TakenByID->AdvancedSearch->SearchValue = @$filter["x_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchOperator = @$filter["z_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchCondition = @$filter["v_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchValue2 = @$filter["y_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchOperator2 = @$filter["w_TakenByID"];
+        $this->TakenByID->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Show list of filters
+    public function showFilterList()
+    {
+        global $Language;
+
+        // Initialize
+        $filterList = "";
+        $captionClass = $this->isExport("email") ? "ew-filter-caption-email" : "ew-filter-caption";
+        $captionSuffix = $this->isExport("email") ? ": " : "";
+        if ($this->BasicSearch->Keyword != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $Language->phrase("BasicSearchKeyword") . "</span>" . $captionSuffix . $this->BasicSearch->Keyword . "</div>";
+        }
+
+        // Show Filters
+        if ($filterList != "") {
+            $message = "<div id=\"ew-filter-list\" class=\"callout callout-info d-table\"><div id=\"ew-current-filters\">" .
+                $Language->phrase("CurrentFilters") . "</div>" . $filterList . "</div>";
+            $this->messageShowing($message, "");
+            Write($message);
+        } else { // Output empty tag
+            Write("<div id=\"ew-filter-list\"></div>");
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    public function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+
+        // Fields to search
+        $searchFlds = [];
+        $searchFlds[] = &$this->Job2ID;
+        $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            $searchStr = GetQuickSearchFilter($searchFlds, $ar, $searchType, Config("BASIC_SEARCH_ANY_FIELDS"), $this->Dbid);
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+
+            // Clear rules for QueryBuilder
+            $this->setSessionRules("");
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -1039,6 +1364,11 @@ class JobOrderList extends JobOrder
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
@@ -1343,10 +1673,10 @@ class JobOrderList extends JobOrder
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fjob_ordersrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fjob_ordersrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1651,6 +1981,16 @@ class JobOrderList extends JobOrder
 
         // Render list options
         $this->renderListOptions();
+    }
+
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
     /**
@@ -2207,6 +2547,21 @@ class JobOrderList extends JobOrder
         $pageUrl = $this->pageUrl(false);
         $this->SearchOptions = new ListOptions(TagClassName: "ew-search-option");
 
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fjob_ordersrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        if ($this->UseCustomTemplate || !$this->UseAjaxActions) {
+            $item->Body = "<a class=\"btn btn-default ew-show-all\" role=\"button\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-show-all\" role=\"button\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" data-ew-action=\"refresh\" data-url=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        }
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
+
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
         $this->SearchOptions->UseButtonGroup = true;
@@ -2230,7 +2585,7 @@ class JobOrderList extends JobOrder
     // Check if any search fields
     public function hasSearchFields()
     {
-        return false;
+        return true;
     }
 
     // Render search options
