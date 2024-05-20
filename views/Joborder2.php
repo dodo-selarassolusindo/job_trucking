@@ -30,8 +30,10 @@ $r = ExecuteRows($q);
 
 <div class="col-md-12">
     <div class="card">
-        <div class="card-body">
-            <table class="table table-bordered table-sm">
+        <!-- <div class="card-body"> -->
+        <div class="card-body table-responsive p-0">
+            <!-- <table class="table table-bordered table-sm"> -->
+            <table class="table table-hover text-nowrap">
                 <thead>
                 <tr>
                     <th>Tanggal</th>
