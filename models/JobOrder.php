@@ -424,12 +424,15 @@ class JobOrder extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'RADIO' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->IsShow->InputTextType = "text";
         $this->IsShow->Raw = true;
         $this->IsShow->Nullable = false; // NOT NULL field
         $this->IsShow->Required = true; // Required field
+        $this->IsShow->setSelectMultiple(false); // Select one
+        $this->IsShow->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->IsShow->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->IsShow->UseFilter = true; // Table header filter
         $this->IsShow->Lookup = new Lookup($this->IsShow, 'job_order', true, 'IsShow', ["IsShow","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->IsShow->OptionCount = 2;
@@ -453,12 +456,15 @@ class JobOrder extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'RADIO' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->IsOpen->InputTextType = "text";
         $this->IsOpen->Raw = true;
         $this->IsOpen->Nullable = false; // NOT NULL field
         $this->IsOpen->Required = true; // Required field
+        $this->IsOpen->setSelectMultiple(false); // Select one
+        $this->IsOpen->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->IsOpen->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->IsOpen->UseFilter = true; // Table header filter
         $this->IsOpen->Lookup = new Lookup($this->IsOpen, 'job_order', true, 'IsOpen', ["IsOpen","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->IsOpen->OptionCount = 2;
@@ -1779,11 +1785,13 @@ class JobOrder extends DbTable
         }
 
         // IsShow
-        $this->IsShow->EditValue = $this->IsShow->options(false);
+        $this->IsShow->setupEditAttributes();
+        $this->IsShow->EditValue = $this->IsShow->options(true);
         $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
 
         // IsOpen
-        $this->IsOpen->EditValue = $this->IsOpen->options(false);
+        $this->IsOpen->setupEditAttributes();
+        $this->IsOpen->EditValue = $this->IsOpen->options(true);
         $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
 
         // TakenByID

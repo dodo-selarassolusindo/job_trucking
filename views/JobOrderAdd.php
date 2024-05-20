@@ -383,62 +383,90 @@ loadjs.ready("fjob_orderadd", function() {
 <?php } ?>
 <?php if ($Page->IsShow->Visible) { // IsShow ?>
     <div id="r_IsShow"<?= $Page->IsShow->rowAttributes() ?>>
-        <label id="elh_job_order_IsShow" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsShow->caption() ?><?= $Page->IsShow->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_job_order_IsShow" for="x_IsShow" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsShow->caption() ?><?= $Page->IsShow->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsShow->cellAttributes() ?>>
 <span id="el_job_order_IsShow">
-<template id="tp_x_IsShow">
-    <div class="form-check">
-        <input type="radio" class="form-check-input" data-table="job_order" data-field="x_IsShow" name="x_IsShow" id="x_IsShow"<?= $Page->IsShow->editAttributes() ?>>
-        <label class="form-check-label"></label>
-    </div>
-</template>
-<div id="dsl_x_IsShow" class="ew-item-list"></div>
-<selection-list hidden
-    id="x_IsShow"
-    name="x_IsShow"
-    value="<?= HtmlEncode($Page->IsShow->CurrentValue) ?>"
-    data-type="select-one"
-    data-template="tp_x_IsShow"
-    data-target="dsl_x_IsShow"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->IsShow->isInvalidClass() ?>"
-    data-table="job_order"
-    data-field="x_IsShow"
-    data-value-separator="<?= $Page->IsShow->displayValueSeparatorAttribute() ?>"
-    <?= $Page->IsShow->editAttributes() ?>></selection-list>
-<?= $Page->IsShow->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->IsShow->getErrorMessage() ?></div>
+    <select
+        id="x_IsShow"
+        name="x_IsShow"
+        class="form-select ew-select<?= $Page->IsShow->isInvalidClass() ?>"
+        <?php if (!$Page->IsShow->IsNativeSelect) { ?>
+        data-select2-id="fjob_orderadd_x_IsShow"
+        <?php } ?>
+        data-table="job_order"
+        data-field="x_IsShow"
+        data-value-separator="<?= $Page->IsShow->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->IsShow->getPlaceHolder()) ?>"
+        <?= $Page->IsShow->editAttributes() ?>>
+        <?= $Page->IsShow->selectOptionListHtml("x_IsShow") ?>
+    </select>
+    <?= $Page->IsShow->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->IsShow->getErrorMessage() ?></div>
+<?php if (!$Page->IsShow->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fjob_orderadd", function() {
+    var options = { name: "x_IsShow", selectId: "fjob_orderadd_x_IsShow" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fjob_orderadd.lists.IsShow?.lookupOptions.length) {
+        options.data = { id: "x_IsShow", form: "fjob_orderadd" };
+    } else {
+        options.ajax = { id: "x_IsShow", form: "fjob_orderadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.job_order.fields.IsShow.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->IsOpen->Visible) { // IsOpen ?>
     <div id="r_IsOpen"<?= $Page->IsOpen->rowAttributes() ?>>
-        <label id="elh_job_order_IsOpen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsOpen->caption() ?><?= $Page->IsOpen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_job_order_IsOpen" for="x_IsOpen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsOpen->caption() ?><?= $Page->IsOpen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsOpen->cellAttributes() ?>>
 <span id="el_job_order_IsOpen">
-<template id="tp_x_IsOpen">
-    <div class="form-check">
-        <input type="radio" class="form-check-input" data-table="job_order" data-field="x_IsOpen" name="x_IsOpen" id="x_IsOpen"<?= $Page->IsOpen->editAttributes() ?>>
-        <label class="form-check-label"></label>
-    </div>
-</template>
-<div id="dsl_x_IsOpen" class="ew-item-list"></div>
-<selection-list hidden
-    id="x_IsOpen"
-    name="x_IsOpen"
-    value="<?= HtmlEncode($Page->IsOpen->CurrentValue) ?>"
-    data-type="select-one"
-    data-template="tp_x_IsOpen"
-    data-target="dsl_x_IsOpen"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->IsOpen->isInvalidClass() ?>"
-    data-table="job_order"
-    data-field="x_IsOpen"
-    data-value-separator="<?= $Page->IsOpen->displayValueSeparatorAttribute() ?>"
-    <?= $Page->IsOpen->editAttributes() ?>></selection-list>
-<?= $Page->IsOpen->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->IsOpen->getErrorMessage() ?></div>
+    <select
+        id="x_IsOpen"
+        name="x_IsOpen"
+        class="form-select ew-select<?= $Page->IsOpen->isInvalidClass() ?>"
+        <?php if (!$Page->IsOpen->IsNativeSelect) { ?>
+        data-select2-id="fjob_orderadd_x_IsOpen"
+        <?php } ?>
+        data-table="job_order"
+        data-field="x_IsOpen"
+        data-value-separator="<?= $Page->IsOpen->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>"
+        <?= $Page->IsOpen->editAttributes() ?>>
+        <?= $Page->IsOpen->selectOptionListHtml("x_IsOpen") ?>
+    </select>
+    <?= $Page->IsOpen->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->IsOpen->getErrorMessage() ?></div>
+<?php if (!$Page->IsOpen->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fjob_orderadd", function() {
+    var options = { name: "x_IsOpen", selectId: "fjob_orderadd_x_IsOpen" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fjob_orderadd.lists.IsOpen?.lookupOptions.length) {
+        options.data = { id: "x_IsOpen", form: "fjob_orderadd" };
+    } else {
+        options.ajax = { id: "x_IsOpen", form: "fjob_orderadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.job_order.fields.IsOpen.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

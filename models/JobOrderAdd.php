@@ -1432,11 +1432,13 @@ class JobOrderAdd extends JobOrder
             }
 
             // IsShow
-            $this->IsShow->EditValue = $this->IsShow->options(false);
+            $this->IsShow->setupEditAttributes();
+            $this->IsShow->EditValue = $this->IsShow->options(true);
             $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
 
             // IsOpen
-            $this->IsOpen->EditValue = $this->IsOpen->options(false);
+            $this->IsOpen->setupEditAttributes();
+            $this->IsOpen->EditValue = $this->IsOpen->options(true);
             $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
 
             // TakenByID
@@ -1590,12 +1592,12 @@ class JobOrderAdd extends JobOrder
                 $this->Ongkos->addErrorMessage($this->Ongkos->getErrorMessage(false));
             }
             if ($this->IsShow->Visible && $this->IsShow->Required) {
-                if ($this->IsShow->FormValue == "") {
+                if (!$this->IsShow->IsDetailKey && EmptyValue($this->IsShow->FormValue)) {
                     $this->IsShow->addErrorMessage(str_replace("%s", $this->IsShow->caption(), $this->IsShow->RequiredErrorMessage));
                 }
             }
             if ($this->IsOpen->Visible && $this->IsOpen->Required) {
-                if ($this->IsOpen->FormValue == "") {
+                if (!$this->IsOpen->IsDetailKey && EmptyValue($this->IsOpen->FormValue)) {
                     $this->IsOpen->addErrorMessage(str_replace("%s", $this->IsOpen->caption(), $this->IsOpen->RequiredErrorMessage));
                 }
             }
