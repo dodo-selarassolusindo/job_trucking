@@ -12,8 +12,14 @@ $Page->showMessage();
 $q = '
     select
         jo.*
+        , lok.Nama as LokasiNama
+        , pel.Nama as PelabuhanNama
+        , dep.Nama as DepoNama
     from
         job_order jo
+        left join lokasi lok on jo.LokasiID = lok.LokasiID
+        left join pelabuhan pel on jo.PelabuhanID = pel.PelabuhanID
+        left join depo dep on jo.DepoID = dep.DepoID
     where
         Job2ID = ' . $_GET['job2id'] . '
         and SizeID = ' . $_GET['sizeid'] . '
@@ -26,6 +32,10 @@ $r = ExecuteRows($q);
     <thead>
         <tr>
             <th>Tanggal</th>
+            <th>Lokasi</th>
+            <th>Pelabuhan</th>
+            <th>BL Extra</th>
+            <th>Depo</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +45,10 @@ $r = ExecuteRows($q);
         ?>
         <tr>
             <td><?= $row['Tanggal'] ?></td>
+            <td><?= $row['LokasiNama'] ?></td>
+            <td><?= $row['PelabuhanNama'] ?></td>
+            <td><?= $row['BL_Extra'] ?></td>
+            <td><?= $row['DepoNama'] ?></td>
         </tr>
         <?php
         }
