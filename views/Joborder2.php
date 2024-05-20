@@ -30,41 +30,33 @@ $r = ExecuteRows($q);
 
 <div class="col-md-12">
     <div class="card">
-        <!--
-        <div class="card-header">
-        <h3 class="card-title">Bordered Table</h3>
-        </div>
-        -->
-        <!-- /.card-header -->
         <div class="card-body">
-        <table class="table table-bordered table-sm">
-            <thead>
-            <tr>
-                <!-- <th style="width: 10px">#</th> -->
-                <th>Tanggal</th>
-                <th>Lokasi</th>
-                <th>Pelabuhan</th>
-                <th>BL Extra</th>
-                <th>Depo</th>
-                <th>Ongkos</th>
-                <!-- <th style="width: 40px">Label</th> -->
-            </tr>
-            </thead>
-            <tbody>
-
-                <?php foreach($r as $row) { ?>
+            <table class="table table-bordered table-sm">
+                <thead>
                 <tr>
-                    <td><?= $row['Tanggal'] ?></td>
-                    <td><?= $row['LokasiNama'] ?></td>
-                    <td><?= $row['PelabuhanNama'] ?></td>
-                    <td><?= $row['BL_Extra'] ?></td>
-                    <td><?= $row['DepoNama'] ?></td>
-                    <td><a href="https://wa.me/6288996628963">CALL</a></td>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Pelabuhan</th>
+                    <th>BL Extra</th>
+                    <th>Depo</th>
+                    <th>Ongkos</th>
                 </tr>
-                <?php } ?>
+                </thead>
+                <tbody>
 
-            </tbody>
-        </table>
+                    <?php foreach($r as $row) { ?>
+                    <tr>
+                        <td><?= $row['Tanggal'] ?></td>
+                        <td><?= $row['LokasiNama'] ?></td>
+                        <td><?= $row['PelabuhanNama'] ?></td>
+                        <td><?= $row['BL_Extra'] ?></td>
+                        <td><?= $row['DepoNama'] ?></td>
+                        <td><a href="https://wa.me/6288996628963">CALL</a></td>
+                    </tr>
+                    <?php } ?>
+
+                </tbody>
+            </table>
         </div>
         <!-- /.card-body -->
     </div>
