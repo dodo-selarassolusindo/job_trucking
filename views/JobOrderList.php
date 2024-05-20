@@ -22,6 +22,22 @@ loadjs.ready(["wrapper", "head"], function () {
         .setPageId("list")
         .setSubmitWithFetch(<?= $Page->UseAjaxActions ? "true" : "false" ?>)
         .setFormKeyCountName("<?= $Page->FormKeyCountName ?>")
+
+        // Dynamic selection lists
+        .setLists({
+            "Job2ID": <?= $Page->Job2ID->toClientList($Page) ?>,
+            "SizeID": <?= $Page->SizeID->toClientList($Page) ?>,
+            "TypeID": <?= $Page->TypeID->toClientList($Page) ?>,
+            "Tanggal": <?= $Page->Tanggal->toClientList($Page) ?>,
+            "LokasiID": <?= $Page->LokasiID->toClientList($Page) ?>,
+            "PelabuhanID": <?= $Page->PelabuhanID->toClientList($Page) ?>,
+            "BL_Extra": <?= $Page->BL_Extra->toClientList($Page) ?>,
+            "DepoID": <?= $Page->DepoID->toClientList($Page) ?>,
+            "Ongkos": <?= $Page->Ongkos->toClientList($Page) ?>,
+            "IsShow": <?= $Page->IsShow->toClientList($Page) ?>,
+            "IsOpen": <?= $Page->IsOpen->toClientList($Page) ?>,
+            "TakenByID": <?= $Page->TakenByID->toClientList($Page) ?>,
+        })
         .build();
     window[form.id] = form;
     currentForm = form;
@@ -50,6 +66,9 @@ loadjs.ready("head", function () {
 <?php } ?>
 </div>
 <?php } ?>
+<?php if ($Page->ShowCurrentFilter) { ?>
+<?php $Page->showFilterList() ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <form name="fjob_ordersrch" id="fjob_ordersrch" class="ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>" novalidate autocomplete="off">
 <div id="fjob_ordersrch_search_panel" class="mb-2 mb-sm-0 <?= $Page->SearchPanelClass ?>"><!-- .ew-search-panel -->
@@ -70,8 +89,54 @@ loadjs.ready(["wrapper", "head"], function () {
         .setSubmitWithFetch(true)
 <?php } ?>
 
+        // Add fields
+        .addFields([
+        ])
+        // Validate form
+        .setValidate(
+            async function () {
+                if (!this.validateRequired)
+                    return true; // Ignore validation
+                let fobj = this.getForm();
+
+                // Validate fields
+                if (!this.validateFields())
+                    return false;
+
+                // Call Form_CustomValidate event
+                if (!(await this.customValidate?.(fobj) ?? true)) {
+                    this.focus();
+                    return false;
+                }
+                return true;
+            }
+        )
+
+        // Form_CustomValidate
+        .setCustomValidate(
+            function (fobj) { // DO NOT CHANGE THIS LINE! (except for adding "async" keyword)!
+                    // Your custom validation code here, return false if invalid.
+                    return true;
+                }
+        )
+
+        // Use JavaScript validation or not
+        .setValidateRequired(ew.CLIENT_VALIDATE)
+
         // Dynamic selection lists
         .setLists({
+            "Job2ID": <?= $Page->Job2ID->toClientList($Page) ?>,
+            "SizeID": <?= $Page->SizeID->toClientList($Page) ?>,
+            "TypeID": <?= $Page->TypeID->toClientList($Page) ?>,
+            "Tanggal": <?= $Page->Tanggal->toClientList($Page) ?>,
+            "LokasiID": <?= $Page->LokasiID->toClientList($Page) ?>,
+            "PelabuhanID": <?= $Page->PelabuhanID->toClientList($Page) ?>,
+            "BL_Extra": <?= $Page->BL_Extra->toClientList($Page) ?>,
+            "DepoID": <?= $Page->DepoID->toClientList($Page) ?>,
+            "Ongkos": <?= $Page->Ongkos->toClientList($Page) ?>,
+            "IsShow": <?= $Page->IsShow->toClientList($Page) ?>,
+            "IsOpen": <?= $Page->IsOpen->toClientList($Page) ?>,
+            "TakenByID": <?= $Page->TakenByID->toClientList($Page) ?>,
         })
 
         // Filters
@@ -86,26 +151,475 @@ loadjs.ready(["wrapper", "head"], function () {
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !($Page->CurrentAction && $Page->CurrentAction != "search") && $Page->hasSearchFields()) { ?>
 <div class="ew-extended-search container-fluid ps-2">
-<div class="row mb-0">
-    <div class="col-sm-auto px-0 pe-sm-2">
-        <div class="ew-basic-search input-group">
-            <input type="search" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control ew-basic-search-keyword" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>" aria-label="<?= HtmlEncode($Language->phrase("Search")) ?>">
-            <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" class="ew-basic-search-type" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
-            <button type="button" data-bs-toggle="dropdown" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false">
-                <span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end">
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "" ? " active" : "" ?>" form="fjob_ordersrch" data-ew-action="search-type"><?= $Language->phrase("QuickSearchAuto") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "=" ? " active" : "" ?>" form="fjob_ordersrch" data-ew-action="search-type" data-search-type="="><?= $Language->phrase("QuickSearchExact") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "AND" ? " active" : "" ?>" form="fjob_ordersrch" data-ew-action="search-type" data-search-type="AND"><?= $Language->phrase("QuickSearchAll") ?></button>
-                <button type="button" class="dropdown-item<?= $Page->BasicSearch->getType() == "OR" ? " active" : "" ?>" form="fjob_ordersrch" data-ew-action="search-type" data-search-type="OR"><?= $Language->phrase("QuickSearchAny") ?></button>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-auto mb-3">
-        <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
-    </div>
-</div>
+<div class="row mb-0<?= ($Page->SearchFieldsPerRow > 0) ? " row-cols-sm-" . $Page->SearchFieldsPerRow : "" ?>">
+<?php
+// Render search row
+$Page->RowType = RowType::SEARCH;
+$Page->resetAttributes();
+$Page->renderRow();
+?>
+<?php if ($Page->Job2ID->Visible) { // Job2ID ?>
+<?php
+if (!$Page->Job2ID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_Job2ID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->Job2ID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_Job2ID"
+            name="x_Job2ID[]"
+            class="form-control ew-select<?= $Page->Job2ID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_Job2ID"
+            data-table="job_order"
+            data-field="x_Job2ID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->Job2ID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->Job2ID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->Job2ID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->Job2ID->editAttributes() ?>>
+            <?= $Page->Job2ID->selectOptionListHtml("x_Job2ID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->Job2ID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_Job2ID",
+                selectId: "fjob_ordersrch_x_Job2ID",
+                ajax: { id: "x_Job2ID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.Job2ID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->SizeID->Visible) { // SizeID ?>
+<?php
+if (!$Page->SizeID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_SizeID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->SizeID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_SizeID"
+            name="x_SizeID[]"
+            class="form-control ew-select<?= $Page->SizeID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_SizeID"
+            data-table="job_order"
+            data-field="x_SizeID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->SizeID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->SizeID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->SizeID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->SizeID->editAttributes() ?>>
+            <?= $Page->SizeID->selectOptionListHtml("x_SizeID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->SizeID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_SizeID",
+                selectId: "fjob_ordersrch_x_SizeID",
+                ajax: { id: "x_SizeID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.SizeID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->TypeID->Visible) { // TypeID ?>
+<?php
+if (!$Page->TypeID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_TypeID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->TypeID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_TypeID"
+            name="x_TypeID[]"
+            class="form-control ew-select<?= $Page->TypeID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_TypeID"
+            data-table="job_order"
+            data-field="x_TypeID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->TypeID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->TypeID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->TypeID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->TypeID->editAttributes() ?>>
+            <?= $Page->TypeID->selectOptionListHtml("x_TypeID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->TypeID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_TypeID",
+                selectId: "fjob_ordersrch_x_TypeID",
+                ajax: { id: "x_TypeID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.TypeID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->Tanggal->Visible) { // Tanggal ?>
+<?php
+if (!$Page->Tanggal->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_Tanggal" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->Tanggal->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_Tanggal"
+            name="x_Tanggal[]"
+            class="form-control ew-select<?= $Page->Tanggal->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_Tanggal"
+            data-table="job_order"
+            data-field="x_Tanggal"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->Tanggal->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->Tanggal->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->Tanggal->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->Tanggal->editAttributes() ?>>
+            <?= $Page->Tanggal->selectOptionListHtml("x_Tanggal", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->Tanggal->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_Tanggal",
+                selectId: "fjob_ordersrch_x_Tanggal",
+                ajax: { id: "x_Tanggal", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.Tanggal.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->LokasiID->Visible) { // LokasiID ?>
+<?php
+if (!$Page->LokasiID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_LokasiID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->LokasiID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_LokasiID"
+            name="x_LokasiID[]"
+            class="form-control ew-select<?= $Page->LokasiID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_LokasiID"
+            data-table="job_order"
+            data-field="x_LokasiID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->LokasiID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->LokasiID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->LokasiID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->LokasiID->editAttributes() ?>>
+            <?= $Page->LokasiID->selectOptionListHtml("x_LokasiID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->LokasiID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_LokasiID",
+                selectId: "fjob_ordersrch_x_LokasiID",
+                ajax: { id: "x_LokasiID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.LokasiID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->PelabuhanID->Visible) { // PelabuhanID ?>
+<?php
+if (!$Page->PelabuhanID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_PelabuhanID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->PelabuhanID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_PelabuhanID"
+            name="x_PelabuhanID[]"
+            class="form-control ew-select<?= $Page->PelabuhanID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_PelabuhanID"
+            data-table="job_order"
+            data-field="x_PelabuhanID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->PelabuhanID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->PelabuhanID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->PelabuhanID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->PelabuhanID->editAttributes() ?>>
+            <?= $Page->PelabuhanID->selectOptionListHtml("x_PelabuhanID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->PelabuhanID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_PelabuhanID",
+                selectId: "fjob_ordersrch_x_PelabuhanID",
+                ajax: { id: "x_PelabuhanID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.PelabuhanID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->BL_Extra->Visible) { // BL_Extra ?>
+<?php
+if (!$Page->BL_Extra->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_BL_Extra" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->BL_Extra->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_BL_Extra"
+            name="x_BL_Extra[]"
+            class="form-control ew-select<?= $Page->BL_Extra->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_BL_Extra"
+            data-table="job_order"
+            data-field="x_BL_Extra"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->BL_Extra->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->BL_Extra->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->BL_Extra->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->BL_Extra->editAttributes() ?>>
+            <?= $Page->BL_Extra->selectOptionListHtml("x_BL_Extra", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->BL_Extra->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_BL_Extra",
+                selectId: "fjob_ordersrch_x_BL_Extra",
+                ajax: { id: "x_BL_Extra", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.BL_Extra.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->DepoID->Visible) { // DepoID ?>
+<?php
+if (!$Page->DepoID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_DepoID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->DepoID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_DepoID"
+            name="x_DepoID[]"
+            class="form-control ew-select<?= $Page->DepoID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_DepoID"
+            data-table="job_order"
+            data-field="x_DepoID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->DepoID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->DepoID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->DepoID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->DepoID->editAttributes() ?>>
+            <?= $Page->DepoID->selectOptionListHtml("x_DepoID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->DepoID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_DepoID",
+                selectId: "fjob_ordersrch_x_DepoID",
+                ajax: { id: "x_DepoID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.DepoID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->Ongkos->Visible) { // Ongkos ?>
+<?php
+if (!$Page->Ongkos->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_Ongkos" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->Ongkos->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_Ongkos"
+            name="x_Ongkos[]"
+            class="form-control ew-select<?= $Page->Ongkos->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_Ongkos"
+            data-table="job_order"
+            data-field="x_Ongkos"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->Ongkos->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->Ongkos->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->Ongkos->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->Ongkos->editAttributes() ?>>
+            <?= $Page->Ongkos->selectOptionListHtml("x_Ongkos", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->Ongkos->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_Ongkos",
+                selectId: "fjob_ordersrch_x_Ongkos",
+                ajax: { id: "x_Ongkos", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.Ongkos.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+<?php
+if (!$Page->IsShow->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_IsShow" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->IsShow->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_IsShow"
+            name="x_IsShow[]"
+            class="form-control ew-select<?= $Page->IsShow->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_IsShow"
+            data-table="job_order"
+            data-field="x_IsShow"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->IsShow->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->IsShow->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->IsShow->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->IsShow->editAttributes() ?>>
+            <?= $Page->IsShow->selectOptionListHtml("x_IsShow", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->IsShow->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_IsShow",
+                selectId: "fjob_ordersrch_x_IsShow",
+                ajax: { id: "x_IsShow", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.IsShow.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+<?php
+if (!$Page->IsOpen->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_IsOpen" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->IsOpen->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_IsOpen"
+            name="x_IsOpen[]"
+            class="form-control ew-select<?= $Page->IsOpen->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_IsOpen"
+            data-table="job_order"
+            data-field="x_IsOpen"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->IsOpen->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->IsOpen->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->IsOpen->editAttributes() ?>>
+            <?= $Page->IsOpen->selectOptionListHtml("x_IsOpen", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->IsOpen->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_IsOpen",
+                selectId: "fjob_ordersrch_x_IsOpen",
+                ajax: { id: "x_IsOpen", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.IsOpen.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+<?php
+if (!$Page->TakenByID->UseFilter) {
+    $Page->SearchColumnCount++;
+}
+?>
+    <div id="xs_TakenByID" class="col-sm-auto d-sm-flex align-items-start mb-3 px-0 pe-sm-2<?= $Page->TakenByID->UseFilter ? " ew-filter-field" : "" ?>">
+        <select
+            id="x_TakenByID"
+            name="x_TakenByID[]"
+            class="form-control ew-select<?= $Page->TakenByID->isInvalidClass() ?>"
+            data-select2-id="fjob_ordersrch_x_TakenByID"
+            data-table="job_order"
+            data-field="x_TakenByID"
+            data-caption="<?= HtmlEncode(RemoveHtml($Page->TakenByID->caption())) ?>"
+            data-filter="true"
+            multiple
+            size="1"
+            data-value-separator="<?= $Page->TakenByID->displayValueSeparatorAttribute() ?>"
+            data-placeholder="<?= HtmlEncode($Page->TakenByID->getPlaceHolder()) ?>"
+            data-ew-action="update-options"
+            <?= $Page->TakenByID->editAttributes() ?>>
+            <?= $Page->TakenByID->selectOptionListHtml("x_TakenByID", true) ?>
+        </select>
+        <div class="invalid-feedback"><?= $Page->TakenByID->getErrorMessage(false) ?></div>
+        <script>
+        loadjs.ready("fjob_ordersrch", function() {
+            var options = {
+                name: "x_TakenByID",
+                selectId: "fjob_ordersrch_x_TakenByID",
+                ajax: { id: "x_TakenByID", form: "fjob_ordersrch", limit: ew.FILTER_PAGE_SIZE, data: { ajax: "filter" } }
+            };
+            options = Object.assign({}, ew.filterOptions, options, ew.vars.tables.job_order.fields.TakenByID.filterOptions);
+            ew.createFilter(options);
+        });
+        </script>
+    </div><!-- /.col-sm-auto -->
+<?php } ?>
+<?php if ($Page->SearchColumnCount > 0) { ?>
+   <div class="col-sm-auto mb-3">
+       <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+   </div>
+<?php } ?>
+</div><!-- /.row -->
 </div><!-- /.ew-extended-search -->
 <?php } ?>
 <?php } ?>

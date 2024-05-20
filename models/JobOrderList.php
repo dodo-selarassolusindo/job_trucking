@@ -785,15 +785,20 @@ class JobOrderList extends JobOrder
         }
 
         // Get default search criteria
-        AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+        AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(true));
 
-        // Get basic search values
-        $this->loadBasicSearchValues();
+        // Get and validate search values for advanced search
+        if (EmptyValue($this->UserAction)) { // Skip if user action
+            $this->loadSearchValues();
+        }
 
         // Process filter list
         if ($this->processFilterList()) {
             $this->terminate();
             return;
+        }
+        if (!$this->validateSearch()) {
+            // Nothing to do
         }
 
         // Restore search parms from Session if not searching / reset / export
@@ -807,10 +812,13 @@ class JobOrderList extends JobOrder
         // Set up sorting order
         $this->setupSortOrder();
 
-        // Get basic search criteria
+        // Get advanced search criteria
         if (!$this->hasInvalidFields()) {
-            $srchBasic = $this->basicSearchWhere();
+            $srchAdvanced = $this->advancedSearchWhere();
         }
+
+        // Get query builder criteria
+        $query = $DashboardReport ? "" : $this->queryBuilderWhere();
 
         // Restore display records
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
@@ -822,11 +830,15 @@ class JobOrderList extends JobOrder
 
         // Load search default if no existing search criteria
         if (!$this->checkSearchParms() && !$query) {
-            // Load basic search from default
-            $this->BasicSearch->loadDefault();
-            if ($this->BasicSearch->Keyword != "") {
-                $srchBasic = $this->basicSearchWhere(); // Save to session
+            // Load advanced search from default
+            if ($this->loadAdvancedSearchDefault()) {
+                $srchAdvanced = $this->advancedSearchWhere(); // Save to session
             }
+        }
+
+        // Restore search settings from Session
+        if (!$this->hasInvalidFields()) {
+            $this->loadAdvancedSearch();
         }
 
         // Build search criteria
@@ -1076,10 +1088,6 @@ class JobOrderList extends JobOrder
         $filterList = Concat($filterList, $this->IsShow->AdvancedSearch->toJson(), ","); // Field IsShow
         $filterList = Concat($filterList, $this->IsOpen->AdvancedSearch->toJson(), ","); // Field IsOpen
         $filterList = Concat($filterList, $this->TakenByID->AdvancedSearch->toJson(), ","); // Field TakenByID
-        if ($this->BasicSearch->Keyword != "") {
-            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
-            $filterList = Concat($filterList, $wrk, ",");
-        }
 
         // Return filter list in JSON
         if ($filterList != "") {
@@ -1218,8 +1226,122 @@ class JobOrderList extends JobOrder
         $this->TakenByID->AdvancedSearch->SearchValue2 = @$filter["y_TakenByID"];
         $this->TakenByID->AdvancedSearch->SearchOperator2 = @$filter["w_TakenByID"];
         $this->TakenByID->AdvancedSearch->save();
-        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
-        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Advanced search WHERE clause based on QueryString
+    public function advancedSearchWhere($default = false)
+    {
+        global $Security;
+        $where = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $this->buildSearchSql($where, $this->JobOrderID, $default, false); // JobOrderID
+        $this->buildSearchSql($where, $this->Job2ID, $default, true); // Job2ID
+        $this->buildSearchSql($where, $this->SizeID, $default, true); // SizeID
+        $this->buildSearchSql($where, $this->TypeID, $default, true); // TypeID
+        $this->buildSearchSql($where, $this->Tanggal, $default, true); // Tanggal
+        $this->buildSearchSql($where, $this->LokasiID, $default, true); // LokasiID
+        $this->buildSearchSql($where, $this->PelabuhanID, $default, true); // PelabuhanID
+        $this->buildSearchSql($where, $this->BL_Extra, $default, true); // BL_Extra
+        $this->buildSearchSql($where, $this->DepoID, $default, true); // DepoID
+        $this->buildSearchSql($where, $this->Ongkos, $default, true); // Ongkos
+        $this->buildSearchSql($where, $this->IsShow, $default, true); // IsShow
+        $this->buildSearchSql($where, $this->IsOpen, $default, true); // IsOpen
+        $this->buildSearchSql($where, $this->TakenByID, $default, true); // TakenByID
+
+        // Set up search command
+        if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
+            $this->Command = "search";
+        }
+        if (!$default && $this->Command == "search") {
+            $this->JobOrderID->AdvancedSearch->save(); // JobOrderID
+            $this->Job2ID->AdvancedSearch->save(); // Job2ID
+            $this->SizeID->AdvancedSearch->save(); // SizeID
+            $this->TypeID->AdvancedSearch->save(); // TypeID
+            $this->Tanggal->AdvancedSearch->save(); // Tanggal
+            $this->LokasiID->AdvancedSearch->save(); // LokasiID
+            $this->PelabuhanID->AdvancedSearch->save(); // PelabuhanID
+            $this->BL_Extra->AdvancedSearch->save(); // BL_Extra
+            $this->DepoID->AdvancedSearch->save(); // DepoID
+            $this->Ongkos->AdvancedSearch->save(); // Ongkos
+            $this->IsShow->AdvancedSearch->save(); // IsShow
+            $this->IsOpen->AdvancedSearch->save(); // IsOpen
+            $this->TakenByID->AdvancedSearch->save(); // TakenByID
+
+            // Clear rules for QueryBuilder
+            $this->setSessionRules("");
+        }
+        return $where;
+    }
+
+    // Query builder rules
+    public function queryBuilderRules()
+    {
+        return Post("rules") ?? $this->getSessionRules();
+    }
+
+    // Quey builder WHERE clause
+    public function queryBuilderWhere($fieldName = "")
+    {
+        global $Security;
+        if (!$Security->canSearch()) {
+            return "";
+        }
+
+        // Get rules by query builder
+        $rules = $this->queryBuilderRules();
+
+        // Decode and parse rules
+        $where = $rules ? $this->parseRules(json_decode($rules, true), $fieldName) : "";
+
+        // Clear other search and save rules to session
+        if ($where && $fieldName == "") { // Skip if get query for specific field
+            $this->resetSearchParms();
+            $this->setSessionRules($rules);
+        }
+
+        // Return query
+        return $where;
+    }
+
+    // Build search SQL
+    protected function buildSearchSql(&$where, $fld, $default, $multiValue)
+    {
+        $fldParm = $fld->Param;
+        $fldVal = $default ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
+        $fldOpr = $default ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
+        $fldCond = $default ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
+        $fldVal2 = $default ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
+        $fldOpr2 = $default ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
+        $fldVal = ConvertSearchValue($fldVal, $fldOpr, $fld);
+        $fldVal2 = ConvertSearchValue($fldVal2, $fldOpr2, $fld);
+        $fldOpr = ConvertSearchOperator($fldOpr, $fld, $fldVal);
+        $fldOpr2 = ConvertSearchOperator($fldOpr2, $fld, $fldVal2);
+        $wrk = "";
+        $sep = $fld->UseFilter ? Config("FILTER_OPTION_SEPARATOR") : Config("MULTIPLE_OPTION_SEPARATOR");
+        if (is_array($fldVal)) {
+            $fldVal = implode($sep, $fldVal);
+        }
+        if (is_array($fldVal2)) {
+            $fldVal2 = implode($sep, $fldVal2);
+        }
+        if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 && !$fld->UseFilter || !IsMultiSearchOperator($fldOpr)) {
+            $multiValue = false;
+        }
+        if ($multiValue) {
+            $wrk = $fldVal != "" ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
+            $wrk2 = $fldVal2 != "" ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
+            AddFilter($wrk, $wrk2, $fldCond);
+        } else {
+            $wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
+        }
+        if ($this->SearchOption == "AUTO" && in_array($this->BasicSearch->getType(), ["AND", "OR"])) {
+            $cond = $this->BasicSearch->getType();
+        } else {
+            $cond = SameText($this->SearchOption, "OR") ? "OR" : "AND";
+        }
+        AddFilter($where, $wrk, $cond);
     }
 
     // Show list of filters
@@ -1231,8 +1353,122 @@ class JobOrderList extends JobOrder
         $filterList = "";
         $captionClass = $this->isExport("email") ? "ew-filter-caption-email" : "ew-filter-caption";
         $captionSuffix = $this->isExport("email") ? ": " : "";
-        if ($this->BasicSearch->Keyword != "") {
-            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $Language->phrase("BasicSearchKeyword") . "</span>" . $captionSuffix . $this->BasicSearch->Keyword . "</div>";
+
+        // Field JobOrderID
+        $filter = $this->queryBuilderWhere("JobOrderID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->JobOrderID, false, false);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->JobOrderID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Job2ID
+        $filter = $this->queryBuilderWhere("Job2ID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Job2ID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Job2ID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field SizeID
+        $filter = $this->queryBuilderWhere("SizeID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->SizeID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->SizeID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field TypeID
+        $filter = $this->queryBuilderWhere("TypeID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->TypeID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->TypeID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Tanggal
+        $filter = $this->queryBuilderWhere("Tanggal");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Tanggal, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Tanggal->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field LokasiID
+        $filter = $this->queryBuilderWhere("LokasiID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->LokasiID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->LokasiID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field PelabuhanID
+        $filter = $this->queryBuilderWhere("PelabuhanID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->PelabuhanID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->PelabuhanID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field BL_Extra
+        $filter = $this->queryBuilderWhere("BL_Extra");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->BL_Extra, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->BL_Extra->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field DepoID
+        $filter = $this->queryBuilderWhere("DepoID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->DepoID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->DepoID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field Ongkos
+        $filter = $this->queryBuilderWhere("Ongkos");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->Ongkos, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->Ongkos->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field IsShow
+        $filter = $this->queryBuilderWhere("IsShow");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->IsShow, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->IsShow->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field IsOpen
+        $filter = $this->queryBuilderWhere("IsOpen");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->IsOpen, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->IsOpen->caption() . "</span>" . $captionSuffix . $filter . "</div>";
+        }
+
+        // Field TakenByID
+        $filter = $this->queryBuilderWhere("TakenByID");
+        if (!$filter) {
+            $this->buildSearchSql($filter, $this->TakenByID, false, true);
+        }
+        if ($filter != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $this->TakenByID->caption() . "</span>" . $captionSuffix . $filter . "</div>";
         }
 
         // Show Filters
@@ -1246,44 +1482,46 @@ class JobOrderList extends JobOrder
         }
     }
 
-    // Return basic search WHERE clause based on search keyword and type
-    public function basicSearchWhere($default = false)
-    {
-        global $Security;
-        $searchStr = "";
-        if (!$Security->canSearch()) {
-            return "";
-        }
-
-        // Fields to search
-        $searchFlds = [];
-        $searchFlds[] = &$this->Job2ID;
-        $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-        $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-        // Get search SQL
-        if ($searchKeyword != "") {
-            $ar = $this->BasicSearch->keywordList($default);
-            $searchStr = GetQuickSearchFilter($searchFlds, $ar, $searchType, Config("BASIC_SEARCH_ANY_FIELDS"), $this->Dbid);
-            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
-                $this->Command = "search";
-            }
-        }
-        if (!$default && $this->Command == "search") {
-            $this->BasicSearch->setKeyword($searchKeyword);
-            $this->BasicSearch->setType($searchType);
-
-            // Clear rules for QueryBuilder
-            $this->setSessionRules("");
-        }
-        return $searchStr;
-    }
-
     // Check if search parm exists
     protected function checkSearchParms()
     {
-        // Check basic search
-        if ($this->BasicSearch->issetSession()) {
+        if ($this->JobOrderID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Job2ID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->SizeID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->TypeID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Tanggal->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->LokasiID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->PelabuhanID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->BL_Extra->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->DepoID->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->Ongkos->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->IsShow->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->IsOpen->AdvancedSearch->issetSession()) {
+            return true;
+        }
+        if ($this->TakenByID->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1296,8 +1534,11 @@ class JobOrderList extends JobOrder
         $this->SearchWhere = "";
         $this->setSearchWhere($this->SearchWhere);
 
-        // Clear basic search parameters
-        $this->resetBasicSearchParms();
+        // Clear advanced search parameters
+        $this->resetAdvancedSearchParms();
+
+        // Clear queryBuilder
+        $this->setSessionRules("");
     }
 
     // Load advanced search default values
@@ -1306,10 +1547,22 @@ class JobOrderList extends JobOrder
         return false;
     }
 
-    // Clear all basic search parameters
-    protected function resetBasicSearchParms()
+    // Clear all advanced search parameters
+    protected function resetAdvancedSearchParms()
     {
-        $this->BasicSearch->unsetSession();
+        $this->JobOrderID->AdvancedSearch->unsetSession();
+        $this->Job2ID->AdvancedSearch->unsetSession();
+        $this->SizeID->AdvancedSearch->unsetSession();
+        $this->TypeID->AdvancedSearch->unsetSession();
+        $this->Tanggal->AdvancedSearch->unsetSession();
+        $this->LokasiID->AdvancedSearch->unsetSession();
+        $this->PelabuhanID->AdvancedSearch->unsetSession();
+        $this->BL_Extra->AdvancedSearch->unsetSession();
+        $this->DepoID->AdvancedSearch->unsetSession();
+        $this->Ongkos->AdvancedSearch->unsetSession();
+        $this->IsShow->AdvancedSearch->unsetSession();
+        $this->IsOpen->AdvancedSearch->unsetSession();
+        $this->TakenByID->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1317,8 +1570,20 @@ class JobOrderList extends JobOrder
     {
         $this->RestoreSearch = true;
 
-        // Restore basic search values
-        $this->BasicSearch->load();
+        // Restore advanced search values
+        $this->JobOrderID->AdvancedSearch->load();
+        $this->Job2ID->AdvancedSearch->load();
+        $this->SizeID->AdvancedSearch->load();
+        $this->TypeID->AdvancedSearch->load();
+        $this->Tanggal->AdvancedSearch->load();
+        $this->LokasiID->AdvancedSearch->load();
+        $this->PelabuhanID->AdvancedSearch->load();
+        $this->BL_Extra->AdvancedSearch->load();
+        $this->DepoID->AdvancedSearch->load();
+        $this->Ongkos->AdvancedSearch->load();
+        $this->IsShow->AdvancedSearch->load();
+        $this->IsOpen->AdvancedSearch->load();
+        $this->TakenByID->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1983,14 +2248,123 @@ class JobOrderList extends JobOrder
         $this->renderListOptions();
     }
 
-    // Load basic search values
-    protected function loadBasicSearchValues()
+    // Load search values for validation
+    protected function loadSearchValues()
     {
-        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
-        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+        // Load search values
+        $hasValue = false;
+
+        // Load query builder rules
+        $rules = Post("rules");
+        if ($rules && $this->Command == "") {
+            $this->QueryRules = $rules;
             $this->Command = "search";
         }
-        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+
+        // JobOrderID
+        if ($this->JobOrderID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->JobOrderID->AdvancedSearch->SearchValue != "" || $this->JobOrderID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Job2ID
+        if ($this->Job2ID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Job2ID->AdvancedSearch->SearchValue != "" || $this->Job2ID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // SizeID
+        if ($this->SizeID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->SizeID->AdvancedSearch->SearchValue != "" || $this->SizeID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // TypeID
+        if ($this->TypeID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->TypeID->AdvancedSearch->SearchValue != "" || $this->TypeID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Tanggal
+        if ($this->Tanggal->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Tanggal->AdvancedSearch->SearchValue != "" || $this->Tanggal->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // LokasiID
+        if ($this->LokasiID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->LokasiID->AdvancedSearch->SearchValue != "" || $this->LokasiID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // PelabuhanID
+        if ($this->PelabuhanID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->PelabuhanID->AdvancedSearch->SearchValue != "" || $this->PelabuhanID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // BL_Extra
+        if ($this->BL_Extra->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->BL_Extra->AdvancedSearch->SearchValue != "" || $this->BL_Extra->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // DepoID
+        if ($this->DepoID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->DepoID->AdvancedSearch->SearchValue != "" || $this->DepoID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // Ongkos
+        if ($this->Ongkos->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->Ongkos->AdvancedSearch->SearchValue != "" || $this->Ongkos->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // IsShow
+        if ($this->IsShow->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->IsShow->AdvancedSearch->SearchValue != "" || $this->IsShow->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // IsOpen
+        if ($this->IsOpen->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->IsOpen->AdvancedSearch->SearchValue != "" || $this->IsOpen->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // TakenByID
+        if ($this->TakenByID->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->TakenByID->AdvancedSearch->SearchValue != "" || $this->TakenByID->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+        return $hasValue;
     }
 
     /**
@@ -2428,12 +2802,151 @@ class JobOrderList extends JobOrder
             // TakenByID
             $this->TakenByID->HrefValue = "";
             $this->TakenByID->TooltipValue = "";
+        } elseif ($this->RowType == RowType::SEARCH) {
+            // JobOrderID
+            $this->JobOrderID->setupEditAttributes();
+            $this->JobOrderID->EditValue = $this->JobOrderID->AdvancedSearch->SearchValue;
+            $this->JobOrderID->PlaceHolder = RemoveHtml($this->JobOrderID->caption());
+
+            // Job2ID
+            if ($this->Job2ID->UseFilter && !EmptyValue($this->Job2ID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->Job2ID->AdvancedSearch->SearchValue)) {
+                    $this->Job2ID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->Job2ID->AdvancedSearch->SearchValue);
+                }
+                $this->Job2ID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->Job2ID->AdvancedSearch->SearchValue);
+            }
+
+            // SizeID
+            if ($this->SizeID->UseFilter && !EmptyValue($this->SizeID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->SizeID->AdvancedSearch->SearchValue)) {
+                    $this->SizeID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->SizeID->AdvancedSearch->SearchValue);
+                }
+                $this->SizeID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->SizeID->AdvancedSearch->SearchValue);
+            }
+
+            // TypeID
+            if ($this->TypeID->UseFilter && !EmptyValue($this->TypeID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->TypeID->AdvancedSearch->SearchValue)) {
+                    $this->TypeID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->TypeID->AdvancedSearch->SearchValue);
+                }
+                $this->TypeID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->TypeID->AdvancedSearch->SearchValue);
+            }
+
+            // Tanggal
+            if ($this->Tanggal->UseFilter && !EmptyValue($this->Tanggal->AdvancedSearch->SearchValue)) {
+                if (is_array($this->Tanggal->AdvancedSearch->SearchValue)) {
+                    $this->Tanggal->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->Tanggal->AdvancedSearch->SearchValue);
+                }
+                $this->Tanggal->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->Tanggal->AdvancedSearch->SearchValue);
+            }
+
+            // LokasiID
+            if ($this->LokasiID->UseFilter && !EmptyValue($this->LokasiID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->LokasiID->AdvancedSearch->SearchValue)) {
+                    $this->LokasiID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->LokasiID->AdvancedSearch->SearchValue);
+                }
+                $this->LokasiID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->LokasiID->AdvancedSearch->SearchValue);
+            }
+
+            // PelabuhanID
+            if ($this->PelabuhanID->UseFilter && !EmptyValue($this->PelabuhanID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->PelabuhanID->AdvancedSearch->SearchValue)) {
+                    $this->PelabuhanID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->PelabuhanID->AdvancedSearch->SearchValue);
+                }
+                $this->PelabuhanID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->PelabuhanID->AdvancedSearch->SearchValue);
+            }
+
+            // BL_Extra
+            if ($this->BL_Extra->UseFilter && !EmptyValue($this->BL_Extra->AdvancedSearch->SearchValue)) {
+                if (is_array($this->BL_Extra->AdvancedSearch->SearchValue)) {
+                    $this->BL_Extra->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->BL_Extra->AdvancedSearch->SearchValue);
+                }
+                $this->BL_Extra->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->BL_Extra->AdvancedSearch->SearchValue);
+            }
+
+            // DepoID
+            if ($this->DepoID->UseFilter && !EmptyValue($this->DepoID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->DepoID->AdvancedSearch->SearchValue)) {
+                    $this->DepoID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->DepoID->AdvancedSearch->SearchValue);
+                }
+                $this->DepoID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->DepoID->AdvancedSearch->SearchValue);
+            }
+
+            // Ongkos
+            if ($this->Ongkos->UseFilter && !EmptyValue($this->Ongkos->AdvancedSearch->SearchValue)) {
+                if (is_array($this->Ongkos->AdvancedSearch->SearchValue)) {
+                    $this->Ongkos->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->Ongkos->AdvancedSearch->SearchValue);
+                }
+                $this->Ongkos->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->Ongkos->AdvancedSearch->SearchValue);
+            }
+
+            // IsShow
+            if ($this->IsShow->UseFilter && !EmptyValue($this->IsShow->AdvancedSearch->SearchValue)) {
+                if (is_array($this->IsShow->AdvancedSearch->SearchValue)) {
+                    $this->IsShow->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->IsShow->AdvancedSearch->SearchValue);
+                }
+                $this->IsShow->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->IsShow->AdvancedSearch->SearchValue);
+            }
+
+            // IsOpen
+            if ($this->IsOpen->UseFilter && !EmptyValue($this->IsOpen->AdvancedSearch->SearchValue)) {
+                if (is_array($this->IsOpen->AdvancedSearch->SearchValue)) {
+                    $this->IsOpen->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->IsOpen->AdvancedSearch->SearchValue);
+                }
+                $this->IsOpen->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->IsOpen->AdvancedSearch->SearchValue);
+            }
+
+            // TakenByID
+            if ($this->TakenByID->UseFilter && !EmptyValue($this->TakenByID->AdvancedSearch->SearchValue)) {
+                if (is_array($this->TakenByID->AdvancedSearch->SearchValue)) {
+                    $this->TakenByID->AdvancedSearch->SearchValue = implode(Config("FILTER_OPTION_SEPARATOR"), $this->TakenByID->AdvancedSearch->SearchValue);
+                }
+                $this->TakenByID->EditValue = explode(Config("FILTER_OPTION_SEPARATOR"), $this->TakenByID->AdvancedSearch->SearchValue);
+            }
         }
 
         // Call Row Rendered event
         if ($this->RowType != RowType::AGGREGATEINIT) {
             $this->rowRendered();
         }
+    }
+
+    // Validate search
+    protected function validateSearch()
+    {
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+
+        // Return validate result
+        $validateSearch = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateSearch = $validateSearch && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateSearch;
+    }
+
+    // Load advanced search
+    public function loadAdvancedSearch()
+    {
+        $this->JobOrderID->AdvancedSearch->load();
+        $this->Job2ID->AdvancedSearch->load();
+        $this->SizeID->AdvancedSearch->load();
+        $this->TypeID->AdvancedSearch->load();
+        $this->Tanggal->AdvancedSearch->load();
+        $this->LokasiID->AdvancedSearch->load();
+        $this->PelabuhanID->AdvancedSearch->load();
+        $this->BL_Extra->AdvancedSearch->load();
+        $this->DepoID->AdvancedSearch->load();
+        $this->Ongkos->AdvancedSearch->load();
+        $this->IsShow->AdvancedSearch->load();
+        $this->IsOpen->AdvancedSearch->load();
+        $this->TakenByID->AdvancedSearch->load();
     }
 
     // Get export HTML tag
@@ -2547,12 +3060,6 @@ class JobOrderList extends JobOrder
         $pageUrl = $this->pageUrl(false);
         $this->SearchOptions = new ListOptions(TagClassName: "ew-search-option");
 
-        // Search button
-        $item = &$this->SearchOptions->add("searchtoggle");
-        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fjob_ordersrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
-        $item->Visible = true;
-
         // Show all button
         $item = &$this->SearchOptions->add("showall");
         if ($this->UseCustomTemplate || !$this->UseAjaxActions) {
@@ -2585,7 +3092,7 @@ class JobOrderList extends JobOrder
     // Check if any search fields
     public function hasSearchFields()
     {
-        return true;
+        return $this->Job2ID->Visible || $this->SizeID->Visible || $this->TypeID->Visible || $this->Tanggal->Visible || $this->LokasiID->Visible || $this->PelabuhanID->Visible || $this->BL_Extra->Visible || $this->DepoID->Visible || $this->Ongkos->Visible || $this->IsShow->Visible || $this->IsOpen->Visible || $this->TakenByID->Visible;
     }
 
     // Render search options

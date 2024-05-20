@@ -166,7 +166,8 @@ class JobOrder extends DbTable
         $this->Job2ID->setSelectMultiple(false); // Select one
         $this->Job2ID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->Job2ID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Job2ID->Lookup = new Lookup($this->Job2ID, 'job2', false, 'Job2ID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->Job2ID->UseFilter = true; // Table header filter
+        $this->Job2ID->Lookup = new Lookup($this->Job2ID, 'job2', true, 'Job2ID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->Job2ID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Job2ID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Job2ID'] = &$this->Job2ID;
@@ -196,7 +197,8 @@ class JobOrder extends DbTable
         $this->SizeID->setSelectMultiple(false); // Select one
         $this->SizeID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->SizeID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', false, 'SizeID', ["Ukuran","","",""], '', '', [], ["x_TypeID"], [], [], [], [], false, '', '', "`Ukuran`");
+        $this->SizeID->UseFilter = true; // Table header filter
+        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', true, 'SizeID', ["Ukuran","","",""], '', '', [], ["x_TypeID"], [], [], [], [], false, '', '', "`Ukuran`");
         $this->SizeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->SizeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['SizeID'] = &$this->SizeID;
@@ -223,7 +225,8 @@ class JobOrder extends DbTable
         $this->TypeID->Raw = true;
         $this->TypeID->Nullable = false; // NOT NULL field
         $this->TypeID->Required = true; // Required field
-        $this->TypeID->Lookup = new Lookup($this->TypeID, 'size_type', false, 'TypeID', ["TypeNama","","",""], '', '', ["x_SizeID"], [], ["SizeID"], ["x_SizeID"], [], [], false, '', '', "(select Nama from type where type.TypeID = size_type.TypeID)");
+        $this->TypeID->UseFilter = true; // Table header filter
+        $this->TypeID->Lookup = new Lookup($this->TypeID, 'size_type', true, 'TypeID', ["TypeNama","","",""], '', '', ["x_SizeID"], [], ["SizeID"], ["x_SizeID"], [], [], false, '', '', "(select Nama from type where type.TypeID = size_type.TypeID)");
         $this->TypeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->TypeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TypeID'] = &$this->TypeID;
@@ -250,6 +253,8 @@ class JobOrder extends DbTable
         $this->Tanggal->Raw = true;
         $this->Tanggal->Nullable = false; // NOT NULL field
         $this->Tanggal->Required = true; // Required field
+        $this->Tanggal->UseFilter = true; // Table header filter
+        $this->Tanggal->Lookup = new Lookup($this->Tanggal, 'job_order', true, 'Tanggal', ["Tanggal","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->Tanggal->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->Tanggal->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Tanggal'] = &$this->Tanggal;
@@ -279,7 +284,8 @@ class JobOrder extends DbTable
         $this->LokasiID->setSelectMultiple(false); // Select one
         $this->LokasiID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->LokasiID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->LokasiID->Lookup = new Lookup($this->LokasiID, 'lokasi', false, 'LokasiID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
+        $this->LokasiID->UseFilter = true; // Table header filter
+        $this->LokasiID->Lookup = new Lookup($this->LokasiID, 'lokasi', true, 'LokasiID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
         $this->LokasiID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->LokasiID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['LokasiID'] = &$this->LokasiID;
@@ -309,7 +315,8 @@ class JobOrder extends DbTable
         $this->PelabuhanID->setSelectMultiple(false); // Select one
         $this->PelabuhanID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->PelabuhanID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->PelabuhanID->Lookup = new Lookup($this->PelabuhanID, 'pelabuhan', false, 'PelabuhanID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->PelabuhanID) . "',COALESCE(`Nama`,''))");
+        $this->PelabuhanID->UseFilter = true; // Table header filter
+        $this->PelabuhanID->Lookup = new Lookup($this->PelabuhanID, 'pelabuhan', true, 'PelabuhanID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->PelabuhanID) . "',COALESCE(`Nama`,''))");
         $this->PelabuhanID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->PelabuhanID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['PelabuhanID'] = &$this->PelabuhanID;
@@ -336,6 +343,8 @@ class JobOrder extends DbTable
         $this->BL_Extra->Raw = true;
         $this->BL_Extra->Nullable = false; // NOT NULL field
         $this->BL_Extra->Required = true; // Required field
+        $this->BL_Extra->UseFilter = true; // Table header filter
+        $this->BL_Extra->Lookup = new Lookup($this->BL_Extra, 'job_order', true, 'BL_Extra', ["BL_Extra","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->BL_Extra->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->BL_Extra->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['BL_Extra'] = &$this->BL_Extra;
@@ -365,7 +374,8 @@ class JobOrder extends DbTable
         $this->DepoID->setSelectMultiple(false); // Select one
         $this->DepoID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->DepoID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->DepoID->Lookup = new Lookup($this->DepoID, 'depo', false, 'DepoID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->DepoID) . "',COALESCE(`Nama`,''))");
+        $this->DepoID->UseFilter = true; // Table header filter
+        $this->DepoID->Lookup = new Lookup($this->DepoID, 'depo', true, 'DepoID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->DepoID) . "',COALESCE(`Nama`,''))");
         $this->DepoID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->DepoID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['DepoID'] = &$this->DepoID;
@@ -392,6 +402,8 @@ class JobOrder extends DbTable
         $this->Ongkos->Raw = true;
         $this->Ongkos->Nullable = false; // NOT NULL field
         $this->Ongkos->Required = true; // Required field
+        $this->Ongkos->UseFilter = true; // Table header filter
+        $this->Ongkos->Lookup = new Lookup($this->Ongkos, 'job_order', true, 'Ongkos', ["Ongkos","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->Ongkos->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Ongkos->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Ongkos'] = &$this->Ongkos;
@@ -418,7 +430,8 @@ class JobOrder extends DbTable
         $this->IsShow->Raw = true;
         $this->IsShow->Nullable = false; // NOT NULL field
         $this->IsShow->Required = true; // Required field
-        $this->IsShow->Lookup = new Lookup($this->IsShow, 'job_order', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
+        $this->IsShow->UseFilter = true; // Table header filter
+        $this->IsShow->Lookup = new Lookup($this->IsShow, 'job_order', true, 'IsShow', ["IsShow","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->IsShow->OptionCount = 2;
         $this->IsShow->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->IsShow->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
@@ -446,7 +459,8 @@ class JobOrder extends DbTable
         $this->IsOpen->Raw = true;
         $this->IsOpen->Nullable = false; // NOT NULL field
         $this->IsOpen->Required = true; // Required field
-        $this->IsOpen->Lookup = new Lookup($this->IsOpen, 'job_order', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
+        $this->IsOpen->UseFilter = true; // Table header filter
+        $this->IsOpen->Lookup = new Lookup($this->IsOpen, 'job_order', true, 'IsOpen', ["IsOpen","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
         $this->IsOpen->OptionCount = 2;
         $this->IsOpen->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->IsOpen->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
@@ -477,7 +491,8 @@ class JobOrder extends DbTable
         $this->TakenByID->setSelectMultiple(false); // Select one
         $this->TakenByID->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->TakenByID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->TakenByID->Lookup = new Lookup($this->TakenByID, 'taken_by', false, 'TakenByID', ["Nama","NomorHP","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Nama`, ''),'" . ValueSeparator(1, $this->TakenByID) . "',COALESCE(`NomorHP`,''))");
+        $this->TakenByID->UseFilter = true; // Table header filter
+        $this->TakenByID->Lookup = new Lookup($this->TakenByID, 'taken_by', true, 'TakenByID', ["Nama","NomorHP","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Nama`, ''),'" . ValueSeparator(1, $this->TakenByID) . "',COALESCE(`NomorHP`,''))");
         $this->TakenByID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->TakenByID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TakenByID'] = &$this->TakenByID;
