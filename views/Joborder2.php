@@ -10,4 +10,11 @@ $Page->showMessage();
 ?>
 <?php echo 'Hello - this detail page' ?>
 
+this detail is ::
+<?= $_GET['job2id'] ?>
+<br>
+<?= $_GET['sizeid'] ?>
+<br>
+<?= $_GET['typeid'] ?>
+<br>
 <?= GetDebugMessage() ?>
