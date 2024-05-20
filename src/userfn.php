@@ -68,22 +68,22 @@ function Language_Load()
         'size3',
         'TblCaption',
         'Job :: '
-        . $_GET['job']);
+        . $_GET['jobnama']);
     $this->setTablePhrase(
         'type2', 
         'TblCaption', 
         'Job :: '
-        . $_GET['job']
+        . $_GET['jobnama']
         . ' - '
-        . $_GET['ukuran']
+        . $_GET['sizeukuran']
     );
     $this->setTablePhrase(
         'joborder2', 
         'TblCaption', 
         'Job :: '
-        . $_GET['job']
+        . $_GET['jobnama']
         . ' - '
-        . $_GET['ukuran']
+        . $_GET['sizeukuran']
         . ' - '
         . $_GET['typenama']
     );

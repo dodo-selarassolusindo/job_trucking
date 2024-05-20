@@ -11,6 +11,7 @@ $Page->showMessage();
 <?php echo 'Hello - this detail page' ?>
 
 this detail is ::
+<br>
 <?= $_GET['job2id'] ?>
 <br>
 <?= $_GET['sizeid'] ?>
