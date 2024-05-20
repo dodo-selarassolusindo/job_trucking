@@ -73,6 +73,14 @@ function Language_Load()
         . ' - '
         . $_GET['ukuran']
     );
+    $this->setTablePhrase(
+        'joborder2', 
+        'TblCaption', 
+        'Job :: '
+        . $_GET['job']
+        . ' - '
+        . $_GET['ukuran']
+    );
 }
 
 function MenuItem_Adding($item)
