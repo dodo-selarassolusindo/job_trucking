@@ -16,7 +16,7 @@ $q = '
         size_type st
         left join type t on st.TypeID = t.TypeID
     where
-        st.SizeID = '.$_GET['size'].'
+        st.SizeID = '.$_GET['sizeid'].'
     ';
 $r = ExecuteRows($q);
 ?>
@@ -32,7 +32,7 @@ $r = ExecuteRows($q);
         from
             job_order
         where
-            SizeID = ' . $_GET['size']
+            SizeID = ' . $_GET['sizeid']
             . ' and TypeID = ' . $row['TypeID']
             . ' and Job2ID = ' . $_GET['job2id']
     );
@@ -49,7 +49,7 @@ $r = ExecuteRows($q);
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="joborder2?job=<?= $_GET['job'] ?>&job2id=<?= $_GET['job2id'] ?>&size=<?= $_GET['size'] ?>&ukuran=<?= htmlspecialchars($_GET['ukuran'], ENT_QUOTES) ?>&type=<?= $row['TypeID'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="joborder2?job=<?= $_GET['job'] ?>&job2id=<?= $_GET['job2id'] ?>&sizeid=<?= $_GET['sizeid'] ?>&ukuran=<?= htmlspecialchars($_GET['ukuran'], ENT_QUOTES) ?>&typeid=<?= $row['TypeID'] ?>&typenama=<?= $row['Nama'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     <?php } ?>
     <?php $rec_num++ ?>

@@ -39,7 +39,7 @@ $r = ExecuteRows($q);
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="type2?job=<?= $_GET['job'] ?>&job2id=<?= $_GET['job2id'] ?>&size=<?= $row['SizeID'] ?>&ukuran=<?= htmlspecialchars($row['Ukuran'], ENT_QUOTES) ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="type2?job=<?= $_GET['job'] ?>&job2id=<?= $_GET['job2id'] ?>&sizeid=<?= $row['SizeID'] ?>&ukuran=<?= htmlspecialchars($row['Ukuran'], ENT_QUOTES) ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     <?php } ?>
     <?php $rec_num++ ?>

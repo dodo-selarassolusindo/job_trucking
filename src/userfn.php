@@ -80,6 +80,8 @@ function Language_Load()
         . $_GET['job']
         . ' - '
         . $_GET['ukuran']
+        . ' - '
+        . $_GET['typenama']
     );
 }
 
