@@ -621,7 +621,7 @@ class EmployeesAdd extends Employees
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
-                    // Handle UseAjaxActions
+                    // Handle UseAjaxActions with return page
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
                         if (GetPageName($returnUrl) != "employeeslist") {
@@ -1287,7 +1287,7 @@ class EmployeesAdd extends Employees
             $this->_Username->ViewValue = $this->_Username->CurrentValue;
 
             // Password
-            $this->_Password->ViewValue = $this->_Password->CurrentValue;
+            $this->_Password->ViewValue = $Language->phrase("PasswordMask");
 
             // Email
             $this->_Email->ViewValue = $this->_Email->CurrentValue;
@@ -1556,10 +1556,6 @@ class EmployeesAdd extends Employees
 
             // Password
             $this->_Password->setupEditAttributes();
-            if (!$this->_Password->Raw) {
-                $this->_Password->CurrentValue = HtmlDecode($this->_Password->CurrentValue);
-            }
-            $this->_Password->EditValue = HtmlEncode($this->_Password->CurrentValue);
             $this->_Password->PlaceHolder = RemoveHtml($this->_Password->caption());
 
             // Email
@@ -2031,7 +2027,9 @@ class EmployeesAdd extends Employees
         $this->_Username->setDbValueDef($rsnew, $this->_Username->CurrentValue, false);
 
         // Password
-        $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, false);
+        if (!IsMaskedPassword($this->_Password->CurrentValue)) {
+            $this->_Password->setDbValueDef($rsnew, $this->_Password->CurrentValue, false);
+        }
 
         // Email
         $this->_Email->setDbValueDef($rsnew, $this->_Email->CurrentValue, false);

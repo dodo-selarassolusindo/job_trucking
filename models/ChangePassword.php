@@ -323,7 +323,16 @@ class ChangePassword extends Employees
             }
 
             // Find user
-            $user = FindUserByUserName($userName);
+            if ($this->UpdateTable != $this->TableName) { // Note: The username field name must be the same
+                $entityClass = GetEntityClass($this->UpdateTable);
+                if ($entityClass) {
+                    $user = GetUserEntityManager()->getRepository($entityClass)->findOneBy(["username" => $userName]);
+                } else {
+                    throw new \Exception("Entity class for UpdateTable not found.");
+                }
+            } else {
+                $user = FindUserByUserName($userName);
+            }
             if ($user) {
                 if (IsPasswordReset() || ComparePassword($user->get(Config("LOGIN_PASSWORD_FIELD_NAME")), $this->OldPassword->CurrentValue)) {
                     $validPwd = true;
@@ -331,7 +340,8 @@ class ChangePassword extends Employees
                         $validPwd = $this->userChangePassword($user->toArray(), $userName, $this->OldPassword->CurrentValue, $this->NewPassword->CurrentValue);
                     }
                     if ($validPwd) {
-                        $user->set(Config("LOGIN_PASSWORD_FIELD_NAME"), $this->NewPassword->CurrentValue)->flush(); // Change Password
+                        $user->set(Config("LOGIN_PASSWORD_FIELD_NAME"), $this->NewPassword->CurrentValue); // Change Password
+                        GetUserEntityManager()->flush();
                         $pwdUpdated = true;
                     } else {
                         $this->setFailureMessage($Language->phrase("InvalidNewPassword"));

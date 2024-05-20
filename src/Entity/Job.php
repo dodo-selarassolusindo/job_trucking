@@ -28,16 +28,6 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "job")]
 class Job extends AbstractEntity
 {
-    public static array $propertyNames = [
-        'JobID' => 'jobId',
-        'Tanggal' => 'tanggal',
-        'Nomor' => 'nomor',
-        'Tanggal_Muat' => 'tanggalMuat',
-        'Customer' => 'customer',
-        'Shipper' => 'shipper',
-        'Lokasi' => 'lokasi',
-    ];
-
     #[Id]
     #[Column(name: "JobID", type: "integer", unique: true)]
     #[GeneratedValue]

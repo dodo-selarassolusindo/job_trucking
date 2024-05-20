@@ -556,12 +556,12 @@ class Employees extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'PASSWORD' // Edit Tag
         );
         $this->_Password->InputTextType = "text";
         $this->_Password->Raw = true;
         $this->_Password->Required = true; // Required field
-        $this->_Password->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->_Password->SearchOperators = ["=", "<>", "IS NULL", "IS NOT NULL"];
         $this->Fields['Password'] = &$this->_Password;
 
         // Email
@@ -1861,7 +1861,7 @@ class Employees extends DbTable
         $this->_Username->ViewValue = $this->_Username->CurrentValue;
 
         // Password
-        $this->_Password->ViewValue = $this->_Password->CurrentValue;
+        $this->_Password->ViewValue = $Language->phrase("PasswordMask");
 
         // Email
         $this->_Email->ViewValue = $this->_Email->CurrentValue;
@@ -2184,10 +2184,7 @@ class Employees extends DbTable
 
         // Password
         $this->_Password->setupEditAttributes();
-        if (!$this->_Password->Raw) {
-            $this->_Password->CurrentValue = HtmlDecode($this->_Password->CurrentValue);
-        }
-        $this->_Password->EditValue = $this->_Password->CurrentValue;
+        $this->_Password->EditValue = $Language->phrase("PasswordMask"); // Show as masked password
         $this->_Password->PlaceHolder = RemoveHtml($this->_Password->caption());
 
         // Email

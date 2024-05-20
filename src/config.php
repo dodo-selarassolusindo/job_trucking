@@ -183,11 +183,12 @@ $CONFIG = [
         "curl" => "curl",
         "fileinfo" => "fileinfo",
         "intl" => "intl",
+        "hash" => "hash",
         "mbstring" => "mbstring",
-        "libxml" => "libxml",
         "openssl" => "openssl",
         "gd" => "image",
-        "xml" => "xml"
+        "xml" => "xml",
+        "libxml" => "libxml",
     ],
 
     // Check Token
@@ -480,7 +481,7 @@ $CONFIG = [
     // https://github.com/giggsey/libphonenumber-for-php/blob/master/docs/PhoneNumberUtil.md
     // - null => Use region code from locale (i.e. en-US => US)
     // - false => Skip formatting with PhoneNumberUtil
-    "SMS_REGION_CODE" => null,
+    "SMS_REGION_CODE" => false,
 
     // Email/SMS Templates // P2024
     "EMAIL_CHANGE_PASSWORD_TEMPLATE" => "ChangePassword.php",

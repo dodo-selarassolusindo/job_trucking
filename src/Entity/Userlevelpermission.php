@@ -28,12 +28,6 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "userlevelpermissions")]
 class Userlevelpermission extends AbstractEntity
 {
-    public static array $propertyNames = [
-        'userlevelid' => 'userlevelid',
-        'tablename' => 'tablename',
-        'permission' => 'permission',
-    ];
-
     #[Id]
     #[Column(type: "integer")]
     private int $userlevelid;

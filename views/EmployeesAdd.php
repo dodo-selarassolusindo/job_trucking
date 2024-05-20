@@ -168,6 +168,7 @@ loadjs.ready(["femployeesadd", "datetimepicker"], function () {
                     next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
                 },
                 components: {
+                    clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
                     hours: !!format.match(/h/i),
                     minutes: !!format.match(/m/),
                     seconds: !!format.match(/s/i)
@@ -208,6 +209,7 @@ loadjs.ready(["femployeesadd", "datetimepicker"], function () {
                     next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
                 },
                 components: {
+                    clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
                     hours: !!format.match(/h/i),
                     minutes: !!format.match(/m/),
                     seconds: !!format.match(/s/i)
@@ -401,7 +403,10 @@ loadjs.ready("femployeesadd", function() {
         <label id="elh_employees__Password" for="x__Password" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_Password->caption() ?><?= $Page->_Password->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_Password->cellAttributes() ?>>
 <span id="el_employees__Password">
-<input type="<?= $Page->_Password->getInputTextType() ?>" name="x__Password" id="x__Password" data-table="employees" data-field="x__Password" value="<?= $Page->_Password->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->_Password->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->_Password->formatPattern()) ?>"<?= $Page->_Password->editAttributes() ?> aria-describedby="x__Password_help">
+<div class="input-group">
+    <input type="password" name="x__Password" id="x__Password" autocomplete="new-password" data-table="employees" data-field="x__Password" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->_Password->getPlaceHolder()) ?>"<?= $Page->_Password->editAttributes() ?> aria-describedby="x__Password_help">
+    <button type="button" class="btn btn-default ew-toggle-password rounded-end" data-ew-action="password"><i class="fa-solid fa-eye"></i></button>
+</div>
 <?= $Page->_Password->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->_Password->getErrorMessage() ?></div>
 </span>
@@ -578,6 +583,7 @@ loadjs.ready(["femployeesadd", "datetimepicker"], function () {
                     next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
                 },
                 components: {
+                    clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
                     hours: !!format.match(/h/i),
                     minutes: !!format.match(/m/),
                     seconds: !!format.match(/s/i)
