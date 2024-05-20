@@ -37,7 +37,7 @@ $r = ExecuteRows($q);
         -->
         <!-- /.card-header -->
         <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-sm">
             <thead>
             <tr>
                 <!-- <th style="width: 10px">#</th> -->
@@ -59,7 +59,7 @@ $r = ExecuteRows($q);
                     <td><?= $row['PelabuhanNama'] ?></td>
                     <td><?= $row['BL_Extra'] ?></td>
                     <td><?= $row['DepoNama'] ?></td>
-                    <td><a href="wa.me/6288996628963">CALL</a></td>
+                    <td><a href="https://wa.me/6288996628963">CALL</a></td>
                 </tr>
                 <?php } ?>
 
