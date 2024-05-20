@@ -44,7 +44,7 @@ class PersonalData
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "joborder2controller";
+    public $CurrentPageName = "userlevelsdelete";
 
     // Page headings
     public $Heading = "";

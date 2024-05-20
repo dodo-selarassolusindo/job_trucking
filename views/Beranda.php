@@ -46,6 +46,14 @@ $r = ExecuteRows($q);
 <?php } ?>
 
 <!--
+log
+20-05-2024 12:13
+[ ] t job order, tambah field :: IsShow >> 1 show - 0 hide
+[ ] t job order, tambah field :: IsOpen >> 1 open - 0 close
+[ ] t job order, tambah field :: TakenBy >> UserTakenID
+-->
+
+<!--
 <div class="small-box bg-info">
     <a href="beranda" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Kembali</a>
 </div>

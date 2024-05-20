@@ -64,6 +64,9 @@ class JobOrder extends DbTable
     public $BL_Extra;
     public $DepoID;
     public $Ongkos;
+    public $IsShow;
+    public $IsOpen;
+    public $TakenBy;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -392,6 +395,84 @@ class JobOrder extends DbTable
         $this->Ongkos->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Ongkos->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['Ongkos'] = &$this->Ongkos;
+
+        // IsShow
+        $this->IsShow = new DbField(
+            $this, // Table
+            'x_IsShow', // Variable name
+            'IsShow', // Name
+            '`IsShow`', // Expression
+            '`IsShow`', // Basic search expression
+            16, // Type
+            4, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`IsShow`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->IsShow->InputTextType = "text";
+        $this->IsShow->Raw = true;
+        $this->IsShow->Nullable = false; // NOT NULL field
+        $this->IsShow->Required = true; // Required field
+        $this->IsShow->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->IsShow->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['IsShow'] = &$this->IsShow;
+
+        // IsOpen
+        $this->IsOpen = new DbField(
+            $this, // Table
+            'x_IsOpen', // Variable name
+            'IsOpen', // Name
+            '`IsOpen`', // Expression
+            '`IsOpen`', // Basic search expression
+            16, // Type
+            4, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`IsOpen`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->IsOpen->InputTextType = "text";
+        $this->IsOpen->Raw = true;
+        $this->IsOpen->Nullable = false; // NOT NULL field
+        $this->IsOpen->Required = true; // Required field
+        $this->IsOpen->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->IsOpen->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['IsOpen'] = &$this->IsOpen;
+
+        // TakenBy
+        $this->TakenBy = new DbField(
+            $this, // Table
+            'x_TakenBy', // Variable name
+            'TakenBy', // Name
+            '`TakenBy`', // Expression
+            '`TakenBy`', // Basic search expression
+            3, // Type
+            11, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`TakenBy`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->TakenBy->InputTextType = "text";
+        $this->TakenBy->Raw = true;
+        $this->TakenBy->Nullable = false; // NOT NULL field
+        $this->TakenBy->Required = true; // Required field
+        $this->TakenBy->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->TakenBy->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['TakenBy'] = &$this->TakenBy;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -935,6 +1016,9 @@ class JobOrder extends DbTable
         $this->BL_Extra->DbValue = $row['BL_Extra'];
         $this->DepoID->DbValue = $row['DepoID'];
         $this->Ongkos->DbValue = $row['Ongkos'];
+        $this->IsShow->DbValue = $row['IsShow'];
+        $this->IsOpen->DbValue = $row['IsOpen'];
+        $this->TakenBy->DbValue = $row['TakenBy'];
     }
 
     // Delete uploaded files
@@ -1304,6 +1388,9 @@ class JobOrder extends DbTable
         $this->BL_Extra->setDbValue($row['BL_Extra']);
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Ongkos->setDbValue($row['Ongkos']);
+        $this->IsShow->setDbValue($row['IsShow']);
+        $this->IsOpen->setDbValue($row['IsOpen']);
+        $this->TakenBy->setDbValue($row['TakenBy']);
     }
 
     // Render list content
@@ -1353,6 +1440,12 @@ class JobOrder extends DbTable
         // DepoID
 
         // Ongkos
+
+        // IsShow
+
+        // IsOpen
+
+        // TakenBy
 
         // JobOrderID
         $this->JobOrderID->ViewValue = $this->JobOrderID->CurrentValue;
@@ -1508,6 +1601,18 @@ class JobOrder extends DbTable
         $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
         $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
 
+        // IsShow
+        $this->IsShow->ViewValue = $this->IsShow->CurrentValue;
+        $this->IsShow->ViewValue = FormatNumber($this->IsShow->ViewValue, $this->IsShow->formatPattern());
+
+        // IsOpen
+        $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+        $this->IsOpen->ViewValue = FormatNumber($this->IsOpen->ViewValue, $this->IsOpen->formatPattern());
+
+        // TakenBy
+        $this->TakenBy->ViewValue = $this->TakenBy->CurrentValue;
+        $this->TakenBy->ViewValue = FormatNumber($this->TakenBy->ViewValue, $this->TakenBy->formatPattern());
+
         // JobOrderID
         $this->JobOrderID->HrefValue = "";
         $this->JobOrderID->TooltipValue = "";
@@ -1547,6 +1652,18 @@ class JobOrder extends DbTable
         // Ongkos
         $this->Ongkos->HrefValue = "";
         $this->Ongkos->TooltipValue = "";
+
+        // IsShow
+        $this->IsShow->HrefValue = "";
+        $this->IsShow->TooltipValue = "";
+
+        // IsOpen
+        $this->IsOpen->HrefValue = "";
+        $this->IsOpen->TooltipValue = "";
+
+        // TakenBy
+        $this->TakenBy->HrefValue = "";
+        $this->TakenBy->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1613,6 +1730,30 @@ class JobOrder extends DbTable
             $this->Ongkos->EditValue = FormatNumber($this->Ongkos->EditValue, null);
         }
 
+        // IsShow
+        $this->IsShow->setupEditAttributes();
+        $this->IsShow->EditValue = $this->IsShow->CurrentValue;
+        $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
+        if (strval($this->IsShow->EditValue) != "" && is_numeric($this->IsShow->EditValue)) {
+            $this->IsShow->EditValue = FormatNumber($this->IsShow->EditValue, null);
+        }
+
+        // IsOpen
+        $this->IsOpen->setupEditAttributes();
+        $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
+        $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
+        if (strval($this->IsOpen->EditValue) != "" && is_numeric($this->IsOpen->EditValue)) {
+            $this->IsOpen->EditValue = FormatNumber($this->IsOpen->EditValue, null);
+        }
+
+        // TakenBy
+        $this->TakenBy->setupEditAttributes();
+        $this->TakenBy->EditValue = $this->TakenBy->CurrentValue;
+        $this->TakenBy->PlaceHolder = RemoveHtml($this->TakenBy->caption());
+        if (strval($this->TakenBy->EditValue) != "" && is_numeric($this->TakenBy->EditValue)) {
+            $this->TakenBy->EditValue = FormatNumber($this->TakenBy->EditValue, null);
+        }
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1651,6 +1792,9 @@ class JobOrder extends DbTable
                     $doc->exportCaption($this->BL_Extra);
                     $doc->exportCaption($this->DepoID);
                     $doc->exportCaption($this->Ongkos);
+                    $doc->exportCaption($this->IsShow);
+                    $doc->exportCaption($this->IsOpen);
+                    $doc->exportCaption($this->TakenBy);
                 } else {
                     $doc->exportCaption($this->JobOrderID);
                     $doc->exportCaption($this->Job2ID);
@@ -1662,6 +1806,9 @@ class JobOrder extends DbTable
                     $doc->exportCaption($this->BL_Extra);
                     $doc->exportCaption($this->DepoID);
                     $doc->exportCaption($this->Ongkos);
+                    $doc->exportCaption($this->IsShow);
+                    $doc->exportCaption($this->IsOpen);
+                    $doc->exportCaption($this->TakenBy);
                 }
                 $doc->endExportRow();
             }
@@ -1698,6 +1845,9 @@ class JobOrder extends DbTable
                         $doc->exportField($this->BL_Extra);
                         $doc->exportField($this->DepoID);
                         $doc->exportField($this->Ongkos);
+                        $doc->exportField($this->IsShow);
+                        $doc->exportField($this->IsOpen);
+                        $doc->exportField($this->TakenBy);
                     } else {
                         $doc->exportField($this->JobOrderID);
                         $doc->exportField($this->Job2ID);
@@ -1709,6 +1859,9 @@ class JobOrder extends DbTable
                         $doc->exportField($this->BL_Extra);
                         $doc->exportField($this->DepoID);
                         $doc->exportField($this->Ongkos);
+                        $doc->exportField($this->IsShow);
+                        $doc->exportField($this->IsOpen);
+                        $doc->exportField($this->TakenBy);
                     }
                     $doc->endExportRow($rowCnt);
                 }

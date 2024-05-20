@@ -40,6 +40,8 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job_order","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job2","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}job2","0","0"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}joborder2.php","-2","72"],
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}joborder2.php","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}lokasi","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}pelabuhan","-2","0"],
@@ -61,9 +63,7 @@ $USER_LEVEL_PRIVS = [["{E946C152-A6FA-4AD7-93DD-22C0E875338D}audittrail","-2","0
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","-2","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevelpermissions","0","0"],
     ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","-2","0"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}joborder2.php","-2","72"],
-    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}joborder2.php","0","0"]];
+    ["{E946C152-A6FA-4AD7-93DD-22C0E875338D}userlevels","0","0"]];
 
 /**
  * Tables
@@ -85,6 +85,7 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["job","job","Job Order 0 (Semua)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joblist"],
     ["job_order","job_order","Job Order (Semua)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joborderlist"],
     ["job2","job2","Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","job2list"],
+    ["joborder2.php","joborder2","Container Detail Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joborder2"],
     ["lokasi","lokasi","Destination",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","lokasilist"],
     ["pelabuhan","pelabuhan","Pelabuhan",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","pelabuhanlist"],
     ["shipper","shipper","Shipper",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","shipperlist"],
@@ -95,5 +96,4 @@ $USER_LEVEL_TABLES = [["audittrail","audittrail","Log Activity",true,"{E946C152-
     ["type","type","Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","typelist"],
     ["type2.php","type2","Container Type",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","type2"],
     ["userlevelpermissions","userlevelpermissions","Hak Akses (Detail)",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelpermissionslist"],
-    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"],
-    ["joborder2.php","joborder2","Container Detail Job",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","joborder2"]];
+    ["userlevels","userlevels","Hak Akses",true,"{E946C152-A6FA-4AD7-93DD-22C0E875338D}","userlevelslist"]];

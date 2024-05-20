@@ -37,7 +37,10 @@ loadjs.ready(["wrapper", "head"], function () {
             ["PelabuhanID", [fields.PelabuhanID.visible && fields.PelabuhanID.required ? ew.Validators.required(fields.PelabuhanID.caption) : null], fields.PelabuhanID.isInvalid],
             ["BL_Extra", [fields.BL_Extra.visible && fields.BL_Extra.required ? ew.Validators.required(fields.BL_Extra.caption) : null, ew.Validators.float], fields.BL_Extra.isInvalid],
             ["DepoID", [fields.DepoID.visible && fields.DepoID.required ? ew.Validators.required(fields.DepoID.caption) : null], fields.DepoID.isInvalid],
-            ["Ongkos", [fields.Ongkos.visible && fields.Ongkos.required ? ew.Validators.required(fields.Ongkos.caption) : null, ew.Validators.float], fields.Ongkos.isInvalid]
+            ["Ongkos", [fields.Ongkos.visible && fields.Ongkos.required ? ew.Validators.required(fields.Ongkos.caption) : null, ew.Validators.float], fields.Ongkos.isInvalid],
+            ["IsShow", [fields.IsShow.visible && fields.IsShow.required ? ew.Validators.required(fields.IsShow.caption) : null, ew.Validators.integer], fields.IsShow.isInvalid],
+            ["IsOpen", [fields.IsOpen.visible && fields.IsOpen.required ? ew.Validators.required(fields.IsOpen.caption) : null, ew.Validators.integer], fields.IsOpen.isInvalid],
+            ["TakenBy", [fields.TakenBy.visible && fields.TakenBy.required ? ew.Validators.required(fields.TakenBy.caption) : null, ew.Validators.integer], fields.TakenBy.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -385,6 +388,42 @@ loadjs.ready("fjob_orderedit", function() {
 <input type="<?= $Page->Ongkos->getInputTextType() ?>" name="x_Ongkos" id="x_Ongkos" data-table="job_order" data-field="x_Ongkos" value="<?= $Page->Ongkos->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->Ongkos->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->Ongkos->formatPattern()) ?>"<?= $Page->Ongkos->editAttributes() ?> aria-describedby="x_Ongkos_help">
 <?= $Page->Ongkos->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->Ongkos->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+    <div id="r_IsShow"<?= $Page->IsShow->rowAttributes() ?>>
+        <label id="elh_job_order_IsShow" for="x_IsShow" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsShow->caption() ?><?= $Page->IsShow->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsShow->cellAttributes() ?>>
+<span id="el_job_order_IsShow">
+<input type="<?= $Page->IsShow->getInputTextType() ?>" name="x_IsShow" id="x_IsShow" data-table="job_order" data-field="x_IsShow" value="<?= $Page->IsShow->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->IsShow->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->IsShow->formatPattern()) ?>"<?= $Page->IsShow->editAttributes() ?> aria-describedby="x_IsShow_help">
+<?= $Page->IsShow->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->IsShow->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+    <div id="r_IsOpen"<?= $Page->IsOpen->rowAttributes() ?>>
+        <label id="elh_job_order_IsOpen" for="x_IsOpen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsOpen->caption() ?><?= $Page->IsOpen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsOpen->cellAttributes() ?>>
+<span id="el_job_order_IsOpen">
+<input type="<?= $Page->IsOpen->getInputTextType() ?>" name="x_IsOpen" id="x_IsOpen" data-table="job_order" data-field="x_IsOpen" value="<?= $Page->IsOpen->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->IsOpen->formatPattern()) ?>"<?= $Page->IsOpen->editAttributes() ?> aria-describedby="x_IsOpen_help">
+<?= $Page->IsOpen->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->IsOpen->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+    <div id="r_TakenBy"<?= $Page->TakenBy->rowAttributes() ?>>
+        <label id="elh_job_order_TakenBy" for="x_TakenBy" class="<?= $Page->LeftColumnClass ?>"><?= $Page->TakenBy->caption() ?><?= $Page->TakenBy->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->TakenBy->cellAttributes() ?>>
+<span id="el_job_order_TakenBy">
+<input type="<?= $Page->TakenBy->getInputTextType() ?>" name="x_TakenBy" id="x_TakenBy" data-table="job_order" data-field="x_TakenBy" value="<?= $Page->TakenBy->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->TakenBy->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TakenBy->formatPattern()) ?>"<?= $Page->TakenBy->editAttributes() ?> aria-describedby="x_TakenBy_help">
+<?= $Page->TakenBy->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->TakenBy->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

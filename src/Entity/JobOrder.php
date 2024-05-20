@@ -60,6 +60,15 @@ class JobOrder extends AbstractEntity
     #[Column(name: "Ongkos", type: "float")]
     private float $ongkos;
 
+    #[Column(name: "IsShow", type: "integer")]
+    private int $isShow;
+
+    #[Column(name: "IsOpen", type: "integer")]
+    private int $isOpen;
+
+    #[Column(name: "TakenBy", type: "integer")]
+    private int $takenBy;
+
     public function getJobOrderId(): int
     {
         return $this->jobOrderId;
@@ -167,6 +176,39 @@ class JobOrder extends AbstractEntity
     public function setOngkos(float $value): static
     {
         $this->ongkos = $value;
+        return $this;
+    }
+
+    public function getIsShow(): int
+    {
+        return $this->isShow;
+    }
+
+    public function setIsShow(int $value): static
+    {
+        $this->isShow = $value;
+        return $this;
+    }
+
+    public function getIsOpen(): int
+    {
+        return $this->isOpen;
+    }
+
+    public function setIsOpen(int $value): static
+    {
+        $this->isOpen = $value;
+        return $this;
+    }
+
+    public function getTakenBy(): int
+    {
+        return $this->takenBy;
+    }
+
+    public function setTakenBy(int $value): static
+    {
+        $this->takenBy = $value;
         return $this;
     }
 }

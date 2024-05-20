@@ -139,6 +139,9 @@ class JobOrderDelete extends JobOrder
         $this->BL_Extra->setVisibility();
         $this->DepoID->setVisibility();
         $this->Ongkos->setVisibility();
+        $this->IsShow->setVisibility();
+        $this->IsOpen->setVisibility();
+        $this->TakenBy->setVisibility();
     }
 
     // Constructor
@@ -615,6 +618,9 @@ class JobOrderDelete extends JobOrder
         $this->BL_Extra->setDbValue($row['BL_Extra']);
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Ongkos->setDbValue($row['Ongkos']);
+        $this->IsShow->setDbValue($row['IsShow']);
+        $this->IsOpen->setDbValue($row['IsOpen']);
+        $this->TakenBy->setDbValue($row['TakenBy']);
     }
 
     // Return a row with default values
@@ -631,6 +637,9 @@ class JobOrderDelete extends JobOrder
         $row['BL_Extra'] = $this->BL_Extra->DefaultValue;
         $row['DepoID'] = $this->DepoID->DefaultValue;
         $row['Ongkos'] = $this->Ongkos->DefaultValue;
+        $row['IsShow'] = $this->IsShow->DefaultValue;
+        $row['IsOpen'] = $this->IsOpen->DefaultValue;
+        $row['TakenBy'] = $this->TakenBy->DefaultValue;
         return $row;
     }
 
@@ -665,6 +674,12 @@ class JobOrderDelete extends JobOrder
         // DepoID
 
         // Ongkos
+
+        // IsShow
+
+        // IsOpen
+
+        // TakenBy
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -822,6 +837,18 @@ class JobOrderDelete extends JobOrder
             $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
             $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
 
+            // IsShow
+            $this->IsShow->ViewValue = $this->IsShow->CurrentValue;
+            $this->IsShow->ViewValue = FormatNumber($this->IsShow->ViewValue, $this->IsShow->formatPattern());
+
+            // IsOpen
+            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+            $this->IsOpen->ViewValue = FormatNumber($this->IsOpen->ViewValue, $this->IsOpen->formatPattern());
+
+            // TakenBy
+            $this->TakenBy->ViewValue = $this->TakenBy->CurrentValue;
+            $this->TakenBy->ViewValue = FormatNumber($this->TakenBy->ViewValue, $this->TakenBy->formatPattern());
+
             // JobOrderID
             $this->JobOrderID->HrefValue = "";
             $this->JobOrderID->TooltipValue = "";
@@ -861,6 +888,18 @@ class JobOrderDelete extends JobOrder
             // Ongkos
             $this->Ongkos->HrefValue = "";
             $this->Ongkos->TooltipValue = "";
+
+            // IsShow
+            $this->IsShow->HrefValue = "";
+            $this->IsShow->TooltipValue = "";
+
+            // IsOpen
+            $this->IsOpen->HrefValue = "";
+            $this->IsOpen->TooltipValue = "";
+
+            // TakenBy
+            $this->TakenBy->HrefValue = "";
+            $this->TakenBy->TooltipValue = "";
         }
 
         // Call Row Rendered event

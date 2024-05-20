@@ -315,6 +315,15 @@
       <field id="ongkos">
         <phrase id="fldcaption" value="Ongkos" />
       </field>
+      <field id="isshow">
+        <phrase id="fldcaption" value="Is Show" />
+      </field>
+      <field id="isopen">
+        <phrase id="fldcaption" value="Is Open" />
+      </field>
+      <field id="takenby">
+        <phrase id="fldcaption" value="Taken By" />
+      </field>
     </table>
     <table id="job2">
       <phrase id="tblcaption" value="Job" />
@@ -324,6 +333,9 @@
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />
       </field>
+    </table>
+    <table id="joborder2">
+      <phrase id="tblcaption" value="Container Detail Job" />
     </table>
     <table id="lokasi">
       <phrase id="tblcaption" value="Destination" />
@@ -423,9 +435,6 @@
       <field id="userlevelname">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
-    </table>
-    <table id="joborder2">
-      <phrase id="tblcaption" value="Container Detail Job" />
     </table>
   </project>
 </ew-language>

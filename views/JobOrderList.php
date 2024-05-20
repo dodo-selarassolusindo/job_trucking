@@ -111,6 +111,15 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->Ongkos->Visible) { // Ongkos ?>
         <th data-name="Ongkos" class="<?= $Page->Ongkos->headerCellClass() ?>"><div id="elh_job_order_Ongkos" class="job_order_Ongkos"><?= $Page->renderFieldHeader($Page->Ongkos) ?></div></th>
 <?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+        <th data-name="IsShow" class="<?= $Page->IsShow->headerCellClass() ?>"><div id="elh_job_order_IsShow" class="job_order_IsShow"><?= $Page->renderFieldHeader($Page->IsShow) ?></div></th>
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+        <th data-name="IsOpen" class="<?= $Page->IsOpen->headerCellClass() ?>"><div id="elh_job_order_IsOpen" class="job_order_IsOpen"><?= $Page->renderFieldHeader($Page->IsOpen) ?></div></th>
+<?php } ?>
+<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+        <th data-name="TakenBy" class="<?= $Page->TakenBy->headerCellClass() ?>"><div id="elh_job_order_TakenBy" class="job_order_TakenBy"><?= $Page->renderFieldHeader($Page->TakenBy) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -215,6 +224,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_Ongkos" class="el_job_order_Ongkos">
 <span<?= $Page->Ongkos->viewAttributes() ?>>
 <?= $Page->Ongkos->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->IsShow->Visible) { // IsShow ?>
+        <td data-name="IsShow"<?= $Page->IsShow->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_IsShow" class="el_job_order_IsShow">
+<span<?= $Page->IsShow->viewAttributes() ?>>
+<?= $Page->IsShow->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+        <td data-name="IsOpen"<?= $Page->IsOpen->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_IsOpen" class="el_job_order_IsOpen">
+<span<?= $Page->IsOpen->viewAttributes() ?>>
+<?= $Page->IsOpen->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+        <td data-name="TakenBy"<?= $Page->TakenBy->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_TakenBy" class="el_job_order_TakenBy">
+<span<?= $Page->TakenBy->viewAttributes() ?>>
+<?= $Page->TakenBy->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

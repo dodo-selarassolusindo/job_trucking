@@ -139,6 +139,9 @@ class JobOrderEdit extends JobOrder
         $this->BL_Extra->setVisibility();
         $this->DepoID->setVisibility();
         $this->Ongkos->setVisibility();
+        $this->IsShow->setVisibility();
+        $this->IsOpen->setVisibility();
+        $this->TakenBy->setVisibility();
     }
 
     // Constructor
@@ -811,6 +814,36 @@ class JobOrderEdit extends JobOrder
                 $this->Ongkos->setFormValue($val, true, $validate);
             }
         }
+
+        // Check field name 'IsShow' first before field var 'x_IsShow'
+        $val = $CurrentForm->hasValue("IsShow") ? $CurrentForm->getValue("IsShow") : $CurrentForm->getValue("x_IsShow");
+        if (!$this->IsShow->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->IsShow->Visible = false; // Disable update for API request
+            } else {
+                $this->IsShow->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'IsOpen' first before field var 'x_IsOpen'
+        $val = $CurrentForm->hasValue("IsOpen") ? $CurrentForm->getValue("IsOpen") : $CurrentForm->getValue("x_IsOpen");
+        if (!$this->IsOpen->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->IsOpen->Visible = false; // Disable update for API request
+            } else {
+                $this->IsOpen->setFormValue($val, true, $validate);
+            }
+        }
+
+        // Check field name 'TakenBy' first before field var 'x_TakenBy'
+        $val = $CurrentForm->hasValue("TakenBy") ? $CurrentForm->getValue("TakenBy") : $CurrentForm->getValue("x_TakenBy");
+        if (!$this->TakenBy->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->TakenBy->Visible = false; // Disable update for API request
+            } else {
+                $this->TakenBy->setFormValue($val, true, $validate);
+            }
+        }
     }
 
     // Restore form values
@@ -828,6 +861,9 @@ class JobOrderEdit extends JobOrder
         $this->BL_Extra->CurrentValue = $this->BL_Extra->FormValue;
         $this->DepoID->CurrentValue = $this->DepoID->FormValue;
         $this->Ongkos->CurrentValue = $this->Ongkos->FormValue;
+        $this->IsShow->CurrentValue = $this->IsShow->FormValue;
+        $this->IsOpen->CurrentValue = $this->IsOpen->FormValue;
+        $this->TakenBy->CurrentValue = $this->TakenBy->FormValue;
     }
 
     /**
@@ -878,6 +914,9 @@ class JobOrderEdit extends JobOrder
         $this->BL_Extra->setDbValue($row['BL_Extra']);
         $this->DepoID->setDbValue($row['DepoID']);
         $this->Ongkos->setDbValue($row['Ongkos']);
+        $this->IsShow->setDbValue($row['IsShow']);
+        $this->IsOpen->setDbValue($row['IsOpen']);
+        $this->TakenBy->setDbValue($row['TakenBy']);
     }
 
     // Return a row with default values
@@ -894,6 +933,9 @@ class JobOrderEdit extends JobOrder
         $row['BL_Extra'] = $this->BL_Extra->DefaultValue;
         $row['DepoID'] = $this->DepoID->DefaultValue;
         $row['Ongkos'] = $this->Ongkos->DefaultValue;
+        $row['IsShow'] = $this->IsShow->DefaultValue;
+        $row['IsOpen'] = $this->IsOpen->DefaultValue;
+        $row['TakenBy'] = $this->TakenBy->DefaultValue;
         return $row;
     }
 
@@ -957,6 +999,15 @@ class JobOrderEdit extends JobOrder
 
         // Ongkos
         $this->Ongkos->RowCssClass = "row";
+
+        // IsShow
+        $this->IsShow->RowCssClass = "row";
+
+        // IsOpen
+        $this->IsOpen->RowCssClass = "row";
+
+        // TakenBy
+        $this->TakenBy->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -1114,6 +1165,18 @@ class JobOrderEdit extends JobOrder
             $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
             $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
 
+            // IsShow
+            $this->IsShow->ViewValue = $this->IsShow->CurrentValue;
+            $this->IsShow->ViewValue = FormatNumber($this->IsShow->ViewValue, $this->IsShow->formatPattern());
+
+            // IsOpen
+            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+            $this->IsOpen->ViewValue = FormatNumber($this->IsOpen->ViewValue, $this->IsOpen->formatPattern());
+
+            // TakenBy
+            $this->TakenBy->ViewValue = $this->TakenBy->CurrentValue;
+            $this->TakenBy->ViewValue = FormatNumber($this->TakenBy->ViewValue, $this->TakenBy->formatPattern());
+
             // JobOrderID
             $this->JobOrderID->HrefValue = "";
 
@@ -1143,6 +1206,15 @@ class JobOrderEdit extends JobOrder
 
             // Ongkos
             $this->Ongkos->HrefValue = "";
+
+            // IsShow
+            $this->IsShow->HrefValue = "";
+
+            // IsOpen
+            $this->IsOpen->HrefValue = "";
+
+            // TakenBy
+            $this->TakenBy->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
             // JobOrderID
             $this->JobOrderID->setupEditAttributes();
@@ -1370,6 +1442,30 @@ class JobOrderEdit extends JobOrder
                 $this->Ongkos->EditValue = FormatNumber($this->Ongkos->EditValue, null);
             }
 
+            // IsShow
+            $this->IsShow->setupEditAttributes();
+            $this->IsShow->EditValue = $this->IsShow->CurrentValue;
+            $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
+            if (strval($this->IsShow->EditValue) != "" && is_numeric($this->IsShow->EditValue)) {
+                $this->IsShow->EditValue = FormatNumber($this->IsShow->EditValue, null);
+            }
+
+            // IsOpen
+            $this->IsOpen->setupEditAttributes();
+            $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
+            $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
+            if (strval($this->IsOpen->EditValue) != "" && is_numeric($this->IsOpen->EditValue)) {
+                $this->IsOpen->EditValue = FormatNumber($this->IsOpen->EditValue, null);
+            }
+
+            // TakenBy
+            $this->TakenBy->setupEditAttributes();
+            $this->TakenBy->EditValue = $this->TakenBy->CurrentValue;
+            $this->TakenBy->PlaceHolder = RemoveHtml($this->TakenBy->caption());
+            if (strval($this->TakenBy->EditValue) != "" && is_numeric($this->TakenBy->EditValue)) {
+                $this->TakenBy->EditValue = FormatNumber($this->TakenBy->EditValue, null);
+            }
+
             // Edit refer script
 
             // JobOrderID
@@ -1401,6 +1497,15 @@ class JobOrderEdit extends JobOrder
 
             // Ongkos
             $this->Ongkos->HrefValue = "";
+
+            // IsShow
+            $this->IsShow->HrefValue = "";
+
+            // IsOpen
+            $this->IsOpen->HrefValue = "";
+
+            // TakenBy
+            $this->TakenBy->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1483,6 +1588,30 @@ class JobOrderEdit extends JobOrder
             }
             if (!CheckNumber($this->Ongkos->FormValue)) {
                 $this->Ongkos->addErrorMessage($this->Ongkos->getErrorMessage(false));
+            }
+            if ($this->IsShow->Visible && $this->IsShow->Required) {
+                if (!$this->IsShow->IsDetailKey && EmptyValue($this->IsShow->FormValue)) {
+                    $this->IsShow->addErrorMessage(str_replace("%s", $this->IsShow->caption(), $this->IsShow->RequiredErrorMessage));
+                }
+            }
+            if (!CheckInteger($this->IsShow->FormValue)) {
+                $this->IsShow->addErrorMessage($this->IsShow->getErrorMessage(false));
+            }
+            if ($this->IsOpen->Visible && $this->IsOpen->Required) {
+                if (!$this->IsOpen->IsDetailKey && EmptyValue($this->IsOpen->FormValue)) {
+                    $this->IsOpen->addErrorMessage(str_replace("%s", $this->IsOpen->caption(), $this->IsOpen->RequiredErrorMessage));
+                }
+            }
+            if (!CheckInteger($this->IsOpen->FormValue)) {
+                $this->IsOpen->addErrorMessage($this->IsOpen->getErrorMessage(false));
+            }
+            if ($this->TakenBy->Visible && $this->TakenBy->Required) {
+                if (!$this->TakenBy->IsDetailKey && EmptyValue($this->TakenBy->FormValue)) {
+                    $this->TakenBy->addErrorMessage(str_replace("%s", $this->TakenBy->caption(), $this->TakenBy->RequiredErrorMessage));
+                }
+            }
+            if (!CheckInteger($this->TakenBy->FormValue)) {
+                $this->TakenBy->addErrorMessage($this->TakenBy->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1599,6 +1728,15 @@ class JobOrderEdit extends JobOrder
 
         // Ongkos
         $this->Ongkos->setDbValueDef($rsnew, $this->Ongkos->CurrentValue, $this->Ongkos->ReadOnly);
+
+        // IsShow
+        $this->IsShow->setDbValueDef($rsnew, $this->IsShow->CurrentValue, $this->IsShow->ReadOnly);
+
+        // IsOpen
+        $this->IsOpen->setDbValueDef($rsnew, $this->IsOpen->CurrentValue, $this->IsOpen->ReadOnly);
+
+        // TakenBy
+        $this->TakenBy->setDbValueDef($rsnew, $this->TakenBy->CurrentValue, $this->TakenBy->ReadOnly);
         return $rsnew;
     }
 
@@ -1634,6 +1772,15 @@ class JobOrderEdit extends JobOrder
         }
         if (isset($row['Ongkos'])) { // Ongkos
             $this->Ongkos->CurrentValue = $row['Ongkos'];
+        }
+        if (isset($row['IsShow'])) { // IsShow
+            $this->IsShow->CurrentValue = $row['IsShow'];
+        }
+        if (isset($row['IsOpen'])) { // IsOpen
+            $this->IsOpen->CurrentValue = $row['IsOpen'];
+        }
+        if (isset($row['TakenBy'])) { // TakenBy
+            $this->TakenBy->CurrentValue = $row['TakenBy'];
         }
     }
 

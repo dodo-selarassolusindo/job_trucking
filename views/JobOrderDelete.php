@@ -80,6 +80,15 @@ $Page->showMessage();
 <?php if ($Page->Ongkos->Visible) { // Ongkos ?>
         <th class="<?= $Page->Ongkos->headerCellClass() ?>"><span id="elh_job_order_Ongkos" class="job_order_Ongkos"><?= $Page->Ongkos->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+        <th class="<?= $Page->IsShow->headerCellClass() ?>"><span id="elh_job_order_IsShow" class="job_order_IsShow"><?= $Page->IsShow->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+        <th class="<?= $Page->IsOpen->headerCellClass() ?>"><span id="elh_job_order_IsOpen" class="job_order_IsOpen"><?= $Page->IsOpen->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+        <th class="<?= $Page->TakenBy->headerCellClass() ?>"><span id="elh_job_order_TakenBy" class="job_order_TakenBy"><?= $Page->TakenBy->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -178,6 +187,30 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->Ongkos->viewAttributes() ?>>
 <?= $Page->Ongkos->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+        <td<?= $Page->IsShow->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->IsShow->viewAttributes() ?>>
+<?= $Page->IsShow->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+        <td<?= $Page->IsOpen->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->IsOpen->viewAttributes() ?>>
+<?= $Page->IsOpen->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+        <td<?= $Page->TakenBy->cellAttributes() ?>>
+<span id="">
+<span<?= $Page->TakenBy->viewAttributes() ?>>
+<?= $Page->TakenBy->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

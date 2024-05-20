@@ -161,6 +161,39 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->IsShow->Visible) { // IsShow ?>
+    <tr id="r_IsShow"<?= $Page->IsShow->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_order_IsShow"><?= $Page->IsShow->caption() ?></span></td>
+        <td data-name="IsShow"<?= $Page->IsShow->cellAttributes() ?>>
+<span id="el_job_order_IsShow">
+<span<?= $Page->IsShow->viewAttributes() ?>>
+<?= $Page->IsShow->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->IsOpen->Visible) { // IsOpen ?>
+    <tr id="r_IsOpen"<?= $Page->IsOpen->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_order_IsOpen"><?= $Page->IsOpen->caption() ?></span></td>
+        <td data-name="IsOpen"<?= $Page->IsOpen->cellAttributes() ?>>
+<span id="el_job_order_IsOpen">
+<span<?= $Page->IsOpen->viewAttributes() ?>>
+<?= $Page->IsOpen->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
+    <tr id="r_TakenBy"<?= $Page->TakenBy->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_order_TakenBy"><?= $Page->TakenBy->caption() ?></span></td>
+        <td data-name="TakenBy"<?= $Page->TakenBy->cellAttributes() ?>>
+<span id="el_job_order_TakenBy">
+<span<?= $Page->TakenBy->viewAttributes() ?>>
+<?= $Page->TakenBy->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 </main>
