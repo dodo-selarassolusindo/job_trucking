@@ -46,36 +46,22 @@ $r = ExecuteRows($q);
                 <th>Pelabuhan</th>
                 <th>BL Extra</th>
                 <th>Depo</th>
+                <th>Ongkos</th>
                 <!-- <th style="width: 40px">Label</th> -->
             </tr>
             </thead>
             <tbody>
 
-            <?php
-            foreach($r as $row)
-            {
-            ?>
-            <tr>
-                <td><?= $row['Tanggal'] ?></td>
-                <td><?= $row['LokasiNama'] ?></td>
-                <td><?= $row['PelabuhanNama'] ?></td>
-                <td><?= $row['BL_Extra'] ?></td>
-                <td><?= $row['DepoNama'] ?></td>
-            </tr>
-            <?php
-            }
-            ?>
-
-            <tr>
-                <td>1.</td>
-                <td>Update software</td>
-                <td>
-                <div class="progress progress-xs">
-                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                </div>
-                </td>
-                <td><span class="badge bg-danger">55%</span></td>
-            </tr>
+                <?php foreach($r as $row) { ?>
+                <tr>
+                    <td><?= $row['Tanggal'] ?></td>
+                    <td><?= $row['LokasiNama'] ?></td>
+                    <td><?= $row['PelabuhanNama'] ?></td>
+                    <td><?= $row['BL_Extra'] ?></td>
+                    <td><?= $row['DepoNama'] ?></td>
+                    <td><a href="wa.me/6288996628963">CALL</a></td>
+                </tr>
+                <?php } ?>
 
             </tbody>
         </table>
