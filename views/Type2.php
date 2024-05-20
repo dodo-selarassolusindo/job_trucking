@@ -34,6 +34,7 @@ $r = ExecuteRows($q);
         where
             SizeID = ' . $_GET['size']
             . ' and TypeID = ' . $row['TypeID']
+            . ' and Job2ID = ' . $_GET['job2id']
     );
     if ($job_num == 0) {
         // continue;
@@ -48,7 +49,7 @@ $r = ExecuteRows($q);
             <div class="icon">
                 <i class="ion ion-bag"></i>
             </div>
-            <a href="joborder2" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="joborder2?job=<?= $_GET['job'] ?>&job2id=<?= $_GET['job2id'] ?>&size=<?= $_GET['size'] ?>&ukuran=<?= htmlspecialchars($_GET['ukuran'], ENT_QUOTES) ?>&type=<?= $row['TypeID'] ?>" class="small-box-footer">Lanjut <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     <?php } ?>
     <?php $rec_num++ ?>
