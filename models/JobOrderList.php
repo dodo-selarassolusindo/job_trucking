@@ -2070,7 +2070,7 @@ class JobOrderList extends JobOrder
         // Printer friendly
         $item = &$this->ExportOptions->add("print");
         $item->Body = $this->getExportTag("print");
-        $item->Visible = false;
+        $item->Visible = true;
 
         // Export to Excel
         $item = &$this->ExportOptions->add("excel");

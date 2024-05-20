@@ -76,7 +76,7 @@ function Language_Load()
     $this->setTablePhrase(
         'joborder2', 
         'TblCaption', 
-        'Job :: '
+        'Detail Job :: '
         . $_GET['job']
         . ' - '
         . $_GET['ukuran']
