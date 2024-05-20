@@ -44,6 +44,9 @@
     <menu id="21">
       <phrase id="menutext" value="Depo" />
     </menu>
+    <menu id="43">
+      <phrase id="menutext" value="User Taken" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Customer" />
     </menu>
@@ -317,11 +320,19 @@
       </field>
       <field id="isshow">
         <phrase id="fldcaption" value="Is Show" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Show" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="Hide" />
       </field>
       <field id="isopen">
         <phrase id="fldcaption" value="Is Open" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Opened" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="Closed" />
       </field>
-      <field id="takenby">
+      <field id="takenbyid">
         <phrase id="fldcaption" value="Taken By" />
       </field>
     </table>
@@ -402,6 +413,18 @@
     </table>
     <table id="size3">
       <phrase id="tblcaption" value="Container Size" />
+    </table>
+    <table id="taken_by">
+      <phrase id="tblcaption" value="User Taken" />
+      <field id="takenbyid">
+        <phrase id="fldcaption" value="Taken By ID" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="nomorhp">
+        <phrase id="fldcaption" value="Nomor HP" />
+      </field>
     </table>
     <table id="type">
       <phrase id="tblcaption" value="Type" />

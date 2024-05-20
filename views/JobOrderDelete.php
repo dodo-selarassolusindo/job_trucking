@@ -86,8 +86,8 @@ $Page->showMessage();
 <?php if ($Page->IsOpen->Visible) { // IsOpen ?>
         <th class="<?= $Page->IsOpen->headerCellClass() ?>"><span id="elh_job_order_IsOpen" class="job_order_IsOpen"><?= $Page->IsOpen->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-        <th class="<?= $Page->TakenBy->headerCellClass() ?>"><span id="elh_job_order_TakenBy" class="job_order_TakenBy"><?= $Page->TakenBy->caption() ?></span></th>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+        <th class="<?= $Page->TakenByID->headerCellClass() ?>"><span id="elh_job_order_TakenByID" class="job_order_TakenByID"><?= $Page->TakenByID->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -206,11 +206,11 @@ while ($Page->fetch()) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-        <td<?= $Page->TakenBy->cellAttributes() ?>>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+        <td<?= $Page->TakenByID->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->TakenBy->viewAttributes() ?>>
-<?= $Page->TakenBy->getViewValue() ?></span>
+<span<?= $Page->TakenByID->viewAttributes() ?>>
+<?= $Page->TakenByID->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

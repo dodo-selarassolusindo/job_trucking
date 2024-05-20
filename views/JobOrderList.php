@@ -117,8 +117,8 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->IsOpen->Visible) { // IsOpen ?>
         <th data-name="IsOpen" class="<?= $Page->IsOpen->headerCellClass() ?>"><div id="elh_job_order_IsOpen" class="job_order_IsOpen"><?= $Page->renderFieldHeader($Page->IsOpen) ?></div></th>
 <?php } ?>
-<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-        <th data-name="TakenBy" class="<?= $Page->TakenBy->headerCellClass() ?>"><div id="elh_job_order_TakenBy" class="job_order_TakenBy"><?= $Page->renderFieldHeader($Page->TakenBy) ?></div></th>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+        <th data-name="TakenByID" class="<?= $Page->TakenByID->headerCellClass() ?>"><div id="elh_job_order_TakenByID" class="job_order_TakenByID"><?= $Page->renderFieldHeader($Page->TakenByID) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -243,11 +243,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-        <td data-name="TakenBy"<?= $Page->TakenBy->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_TakenBy" class="el_job_order_TakenBy">
-<span<?= $Page->TakenBy->viewAttributes() ?>>
-<?= $Page->TakenBy->getViewValue() ?></span>
+    <?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+        <td data-name="TakenByID"<?= $Page->TakenByID->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_job_order_TakenByID" class="el_job_order_TakenByID">
+<span<?= $Page->TakenByID->viewAttributes() ?>>
+<?= $Page->TakenByID->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

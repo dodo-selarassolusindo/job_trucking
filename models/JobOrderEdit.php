@@ -141,7 +141,7 @@ class JobOrderEdit extends JobOrder
         $this->Ongkos->setVisibility();
         $this->IsShow->setVisibility();
         $this->IsOpen->setVisibility();
-        $this->TakenBy->setVisibility();
+        $this->TakenByID->setVisibility();
     }
 
     // Constructor
@@ -536,6 +536,8 @@ class JobOrderEdit extends JobOrder
         $this->setupLookupOptions($this->LokasiID);
         $this->setupLookupOptions($this->PelabuhanID);
         $this->setupLookupOptions($this->DepoID);
+        $this->setupLookupOptions($this->IsShow);
+        $this->setupLookupOptions($this->IsOpen);
 
         // Check modal
         if ($this->IsModal) {
@@ -821,7 +823,7 @@ class JobOrderEdit extends JobOrder
             if (IsApi() && $val === null) {
                 $this->IsShow->Visible = false; // Disable update for API request
             } else {
-                $this->IsShow->setFormValue($val, true, $validate);
+                $this->IsShow->setFormValue($val);
             }
         }
 
@@ -835,13 +837,13 @@ class JobOrderEdit extends JobOrder
             }
         }
 
-        // Check field name 'TakenBy' first before field var 'x_TakenBy'
-        $val = $CurrentForm->hasValue("TakenBy") ? $CurrentForm->getValue("TakenBy") : $CurrentForm->getValue("x_TakenBy");
-        if (!$this->TakenBy->IsDetailKey) {
+        // Check field name 'TakenByID' first before field var 'x_TakenByID'
+        $val = $CurrentForm->hasValue("TakenByID") ? $CurrentForm->getValue("TakenByID") : $CurrentForm->getValue("x_TakenByID");
+        if (!$this->TakenByID->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->TakenBy->Visible = false; // Disable update for API request
+                $this->TakenByID->Visible = false; // Disable update for API request
             } else {
-                $this->TakenBy->setFormValue($val, true, $validate);
+                $this->TakenByID->setFormValue($val, true, $validate);
             }
         }
     }
@@ -863,7 +865,7 @@ class JobOrderEdit extends JobOrder
         $this->Ongkos->CurrentValue = $this->Ongkos->FormValue;
         $this->IsShow->CurrentValue = $this->IsShow->FormValue;
         $this->IsOpen->CurrentValue = $this->IsOpen->FormValue;
-        $this->TakenBy->CurrentValue = $this->TakenBy->FormValue;
+        $this->TakenByID->CurrentValue = $this->TakenByID->FormValue;
     }
 
     /**
@@ -916,7 +918,7 @@ class JobOrderEdit extends JobOrder
         $this->Ongkos->setDbValue($row['Ongkos']);
         $this->IsShow->setDbValue($row['IsShow']);
         $this->IsOpen->setDbValue($row['IsOpen']);
-        $this->TakenBy->setDbValue($row['TakenBy']);
+        $this->TakenByID->setDbValue($row['TakenByID']);
     }
 
     // Return a row with default values
@@ -935,7 +937,7 @@ class JobOrderEdit extends JobOrder
         $row['Ongkos'] = $this->Ongkos->DefaultValue;
         $row['IsShow'] = $this->IsShow->DefaultValue;
         $row['IsOpen'] = $this->IsOpen->DefaultValue;
-        $row['TakenBy'] = $this->TakenBy->DefaultValue;
+        $row['TakenByID'] = $this->TakenByID->DefaultValue;
         return $row;
     }
 
@@ -1006,8 +1008,8 @@ class JobOrderEdit extends JobOrder
         // IsOpen
         $this->IsOpen->RowCssClass = "row";
 
-        // TakenBy
-        $this->TakenBy->RowCssClass = "row";
+        // TakenByID
+        $this->TakenByID->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
@@ -1166,16 +1168,18 @@ class JobOrderEdit extends JobOrder
             $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
 
             // IsShow
-            $this->IsShow->ViewValue = $this->IsShow->CurrentValue;
-            $this->IsShow->ViewValue = FormatNumber($this->IsShow->ViewValue, $this->IsShow->formatPattern());
+            if (strval($this->IsShow->CurrentValue) != "") {
+                $this->IsShow->ViewValue = $this->IsShow->optionCaption($this->IsShow->CurrentValue);
+            } else {
+                $this->IsShow->ViewValue = null;
+            }
 
             // IsOpen
             $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
-            $this->IsOpen->ViewValue = FormatNumber($this->IsOpen->ViewValue, $this->IsOpen->formatPattern());
 
-            // TakenBy
-            $this->TakenBy->ViewValue = $this->TakenBy->CurrentValue;
-            $this->TakenBy->ViewValue = FormatNumber($this->TakenBy->ViewValue, $this->TakenBy->formatPattern());
+            // TakenByID
+            $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
+            $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
 
             // JobOrderID
             $this->JobOrderID->HrefValue = "";
@@ -1213,8 +1217,8 @@ class JobOrderEdit extends JobOrder
             // IsOpen
             $this->IsOpen->HrefValue = "";
 
-            // TakenBy
-            $this->TakenBy->HrefValue = "";
+            // TakenByID
+            $this->TakenByID->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
             // JobOrderID
             $this->JobOrderID->setupEditAttributes();
@@ -1443,27 +1447,20 @@ class JobOrderEdit extends JobOrder
             }
 
             // IsShow
-            $this->IsShow->setupEditAttributes();
-            $this->IsShow->EditValue = $this->IsShow->CurrentValue;
+            $this->IsShow->EditValue = $this->IsShow->options(false);
             $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
-            if (strval($this->IsShow->EditValue) != "" && is_numeric($this->IsShow->EditValue)) {
-                $this->IsShow->EditValue = FormatNumber($this->IsShow->EditValue, null);
-            }
 
             // IsOpen
             $this->IsOpen->setupEditAttributes();
             $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
             $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
-            if (strval($this->IsOpen->EditValue) != "" && is_numeric($this->IsOpen->EditValue)) {
-                $this->IsOpen->EditValue = FormatNumber($this->IsOpen->EditValue, null);
-            }
 
-            // TakenBy
-            $this->TakenBy->setupEditAttributes();
-            $this->TakenBy->EditValue = $this->TakenBy->CurrentValue;
-            $this->TakenBy->PlaceHolder = RemoveHtml($this->TakenBy->caption());
-            if (strval($this->TakenBy->EditValue) != "" && is_numeric($this->TakenBy->EditValue)) {
-                $this->TakenBy->EditValue = FormatNumber($this->TakenBy->EditValue, null);
+            // TakenByID
+            $this->TakenByID->setupEditAttributes();
+            $this->TakenByID->EditValue = $this->TakenByID->CurrentValue;
+            $this->TakenByID->PlaceHolder = RemoveHtml($this->TakenByID->caption());
+            if (strval($this->TakenByID->EditValue) != "" && is_numeric($this->TakenByID->EditValue)) {
+                $this->TakenByID->EditValue = FormatNumber($this->TakenByID->EditValue, null);
             }
 
             // Edit refer script
@@ -1504,8 +1501,8 @@ class JobOrderEdit extends JobOrder
             // IsOpen
             $this->IsOpen->HrefValue = "";
 
-            // TakenBy
-            $this->TakenBy->HrefValue = "";
+            // TakenByID
+            $this->TakenByID->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1590,12 +1587,9 @@ class JobOrderEdit extends JobOrder
                 $this->Ongkos->addErrorMessage($this->Ongkos->getErrorMessage(false));
             }
             if ($this->IsShow->Visible && $this->IsShow->Required) {
-                if (!$this->IsShow->IsDetailKey && EmptyValue($this->IsShow->FormValue)) {
+                if ($this->IsShow->FormValue == "") {
                     $this->IsShow->addErrorMessage(str_replace("%s", $this->IsShow->caption(), $this->IsShow->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->IsShow->FormValue)) {
-                $this->IsShow->addErrorMessage($this->IsShow->getErrorMessage(false));
             }
             if ($this->IsOpen->Visible && $this->IsOpen->Required) {
                 if (!$this->IsOpen->IsDetailKey && EmptyValue($this->IsOpen->FormValue)) {
@@ -1605,13 +1599,13 @@ class JobOrderEdit extends JobOrder
             if (!CheckInteger($this->IsOpen->FormValue)) {
                 $this->IsOpen->addErrorMessage($this->IsOpen->getErrorMessage(false));
             }
-            if ($this->TakenBy->Visible && $this->TakenBy->Required) {
-                if (!$this->TakenBy->IsDetailKey && EmptyValue($this->TakenBy->FormValue)) {
-                    $this->TakenBy->addErrorMessage(str_replace("%s", $this->TakenBy->caption(), $this->TakenBy->RequiredErrorMessage));
+            if ($this->TakenByID->Visible && $this->TakenByID->Required) {
+                if (!$this->TakenByID->IsDetailKey && EmptyValue($this->TakenByID->FormValue)) {
+                    $this->TakenByID->addErrorMessage(str_replace("%s", $this->TakenByID->caption(), $this->TakenByID->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->TakenBy->FormValue)) {
-                $this->TakenBy->addErrorMessage($this->TakenBy->getErrorMessage(false));
+            if (!CheckInteger($this->TakenByID->FormValue)) {
+                $this->TakenByID->addErrorMessage($this->TakenByID->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1735,8 +1729,8 @@ class JobOrderEdit extends JobOrder
         // IsOpen
         $this->IsOpen->setDbValueDef($rsnew, $this->IsOpen->CurrentValue, $this->IsOpen->ReadOnly);
 
-        // TakenBy
-        $this->TakenBy->setDbValueDef($rsnew, $this->TakenBy->CurrentValue, $this->TakenBy->ReadOnly);
+        // TakenByID
+        $this->TakenByID->setDbValueDef($rsnew, $this->TakenByID->CurrentValue, $this->TakenByID->ReadOnly);
         return $rsnew;
     }
 
@@ -1779,8 +1773,8 @@ class JobOrderEdit extends JobOrder
         if (isset($row['IsOpen'])) { // IsOpen
             $this->IsOpen->CurrentValue = $row['IsOpen'];
         }
-        if (isset($row['TakenBy'])) { // TakenBy
-            $this->TakenBy->CurrentValue = $row['TakenBy'];
+        if (isset($row['TakenByID'])) { // TakenByID
+            $this->TakenByID->CurrentValue = $row['TakenByID'];
         }
     }
 
@@ -1819,6 +1813,10 @@ class JobOrderEdit extends JobOrder
                 case "x_PelabuhanID":
                     break;
                 case "x_DepoID":
+                    break;
+                case "x_IsShow":
+                    break;
+                case "x_IsOpen":
                     break;
                 default:
                     $lookupFilter = "";

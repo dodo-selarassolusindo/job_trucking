@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JobOrderList extends JobOrder
+class TakenByList extends TakenBy
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class JobOrderList extends JobOrder
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobOrderList";
+    public $PageObjName = "TakenByList";
 
     // View file path
     public $View = null;
@@ -38,13 +38,13 @@ class JobOrderList extends JobOrder
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fjob_orderlist";
+    public $FormName = "ftaken_bylist";
     public $FormActionName = "";
     public $FormBlankRowName = "";
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "joborderlist";
+    public $CurrentPageName = "takenbylist";
 
     // Page URLs
     public $AddUrl;
@@ -153,19 +153,9 @@ class JobOrderList extends JobOrder
     // Set field visibility
     public function setVisibility()
     {
-        $this->JobOrderID->setVisibility();
-        $this->Job2ID->setVisibility();
-        $this->SizeID->setVisibility();
-        $this->TypeID->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->LokasiID->setVisibility();
-        $this->PelabuhanID->setVisibility();
-        $this->BL_Extra->setVisibility();
-        $this->DepoID->setVisibility();
-        $this->Ongkos->setVisibility();
-        $this->IsShow->setVisibility();
-        $this->IsOpen->setVisibility();
         $this->TakenByID->setVisibility();
+        $this->Nama->setVisibility();
+        $this->NomorHP->setVisibility();
     }
 
     // Constructor
@@ -176,8 +166,8 @@ class JobOrderList extends JobOrder
         $this->FormActionName = Config("FORM_ROW_ACTION_NAME");
         $this->FormBlankRowName = Config("FORM_BLANK_ROW_NAME");
         $this->FormKeyCountName = Config("FORM_KEY_COUNT_NAME");
-        $this->TableVar = 'job_order';
-        $this->TableName = 'job_order';
+        $this->TableVar = 'taken_by';
+        $this->TableName = 'taken_by';
 
         // Table CSS class
         $this->TableClass = "table table-bordered table-hover table-sm ew-table";
@@ -197,26 +187,26 @@ class JobOrderList extends JobOrder
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job_order)
-        if (!isset($GLOBALS["job_order"]) || $GLOBALS["job_order"]::class == PROJECT_NAMESPACE . "job_order") {
-            $GLOBALS["job_order"] = &$this;
+        // Table object (taken_by)
+        if (!isset($GLOBALS["taken_by"]) || $GLOBALS["taken_by"]::class == PROJECT_NAMESPACE . "taken_by") {
+            $GLOBALS["taken_by"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "joborderadd";
+        $this->AddUrl = "takenbyadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "joborderdelete";
-        $this->MultiUpdateUrl = "joborderupdate";
+        $this->MultiDeleteUrl = "takenbydelete";
+        $this->MultiUpdateUrl = "takenbyupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_order');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'taken_by');
         }
 
         // Start timer
@@ -367,7 +357,7 @@ class JobOrderList extends JobOrder
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "joborderview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "takenbyview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -458,7 +448,7 @@ class JobOrderList extends JobOrder
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['JobOrderID'];
+            $key .= @$ar['TakenByID'];
         }
         return $key;
     }
@@ -471,7 +461,7 @@ class JobOrderList extends JobOrder
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->JobOrderID->Visible = false;
+            $this->TakenByID->Visible = false;
         }
     }
 
@@ -709,19 +699,9 @@ class JobOrderList extends JobOrder
         // Setup other options
         $this->setupOtherOptions();
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Job2ID);
-        $this->setupLookupOptions($this->SizeID);
-        $this->setupLookupOptions($this->TypeID);
-        $this->setupLookupOptions($this->LokasiID);
-        $this->setupLookupOptions($this->PelabuhanID);
-        $this->setupLookupOptions($this->DepoID);
-        $this->setupLookupOptions($this->IsShow);
-        $this->setupLookupOptions($this->IsOpen);
-
         // Update form name to avoid conflict
         if ($this->IsModal) {
-            $this->FormName = "fjob_ordergrid";
+            $this->FormName = "ftaken_bygrid";
         }
 
         // Set up page action
@@ -783,8 +763,33 @@ class JobOrderList extends JobOrder
             $this->OtherOptions->hideAllOptions();
         }
 
+        // Get default search criteria
+        AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+        // Get basic search values
+        $this->loadBasicSearchValues();
+
+        // Process filter list
+        if ($this->processFilterList()) {
+            $this->terminate();
+            return;
+        }
+
+        // Restore search parms from Session if not searching / reset / export
+        if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+            $this->restoreSearchParms();
+        }
+
+        // Call Recordset SearchValidated event
+        $this->recordsetSearchValidated();
+
         // Set up sorting order
         $this->setupSortOrder();
+
+        // Get basic search criteria
+        if (!$this->hasInvalidFields()) {
+            $srchBasic = $this->basicSearchWhere();
+        }
 
         // Restore display records
         if ($this->Command != "json" && $this->getRecordsPerPage() != "") {
@@ -792,6 +797,35 @@ class JobOrderList extends JobOrder
         } else {
             $this->DisplayRecords = 20; // Load default
             $this->setRecordsPerPage($this->DisplayRecords); // Save default to Session
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms() && !$query) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere(); // Save to session
+            }
+        }
+
+        // Build search criteria
+        if ($query) {
+            AddFilter($this->SearchWhere, $query);
+        } else {
+            AddFilter($this->SearchWhere, $srchAdvanced);
+            AddFilter($this->SearchWhere, $srchBasic);
+        }
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json" && !$query) {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -854,6 +888,13 @@ class JobOrderList extends JobOrder
                 } else {
                     $this->setWarningMessage($Language->phrase("NoRecord"));
                 }
+            }
+
+            // Audit trail on search
+            if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
+                $searchParm = ServerVar("QUERY_STRING");
+                $searchSql = $this->getSessionWhere();
+                $this->writeAuditTrailOnSearch($searchParm, $searchSql);
             }
         }
 
@@ -995,6 +1036,181 @@ class JobOrderList extends JobOrder
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->TakenByID->AdvancedSearch->toJson(), ","); // Field TakenByID
+        $filterList = Concat($filterList, $this->Nama->AdvancedSearch->toJson(), ","); // Field Nama
+        $filterList = Concat($filterList, $this->NomorHP->AdvancedSearch->toJson(), ","); // Field NomorHP
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            Profile()->setSearchFilters("ftaken_bysrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field TakenByID
+        $this->TakenByID->AdvancedSearch->SearchValue = @$filter["x_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchOperator = @$filter["z_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchCondition = @$filter["v_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchValue2 = @$filter["y_TakenByID"];
+        $this->TakenByID->AdvancedSearch->SearchOperator2 = @$filter["w_TakenByID"];
+        $this->TakenByID->AdvancedSearch->save();
+
+        // Field Nama
+        $this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
+        $this->Nama->AdvancedSearch->SearchCondition = @$filter["v_Nama"];
+        $this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
+        $this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
+        $this->Nama->AdvancedSearch->save();
+
+        // Field NomorHP
+        $this->NomorHP->AdvancedSearch->SearchValue = @$filter["x_NomorHP"];
+        $this->NomorHP->AdvancedSearch->SearchOperator = @$filter["z_NomorHP"];
+        $this->NomorHP->AdvancedSearch->SearchCondition = @$filter["v_NomorHP"];
+        $this->NomorHP->AdvancedSearch->SearchValue2 = @$filter["y_NomorHP"];
+        $this->NomorHP->AdvancedSearch->SearchOperator2 = @$filter["w_NomorHP"];
+        $this->NomorHP->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Show list of filters
+    public function showFilterList()
+    {
+        global $Language;
+
+        // Initialize
+        $filterList = "";
+        $captionClass = $this->isExport("email") ? "ew-filter-caption-email" : "ew-filter-caption";
+        $captionSuffix = $this->isExport("email") ? ": " : "";
+        if ($this->BasicSearch->Keyword != "") {
+            $filterList .= "<div><span class=\"" . $captionClass . "\">" . $Language->phrase("BasicSearchKeyword") . "</span>" . $captionSuffix . $this->BasicSearch->Keyword . "</div>";
+        }
+
+        // Show Filters
+        if ($filterList != "") {
+            $message = "<div id=\"ew-filter-list\" class=\"callout callout-info d-table\"><div id=\"ew-current-filters\">" .
+                $Language->phrase("CurrentFilters") . "</div>" . $filterList . "</div>";
+            $this->messageShowing($message, "");
+            Write($message);
+        } else { // Output empty tag
+            Write("<div id=\"ew-filter-list\"></div>");
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    public function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+
+        // Fields to search
+        $searchFlds = [];
+        $searchFlds[] = &$this->Nama;
+        $searchFlds[] = &$this->NomorHP;
+        $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            $searchStr = GetQuickSearchFilter($searchFlds, $ar, $searchType, Config("BASIC_SEARCH_ANY_FIELDS"), $this->Dbid);
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+
+            // Clear rules for QueryBuilder
+            $this->setSessionRules("");
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -1010,19 +1226,9 @@ class JobOrderList extends JobOrder
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->JobOrderID); // JobOrderID
-            $this->updateSort($this->Job2ID); // Job2ID
-            $this->updateSort($this->SizeID); // SizeID
-            $this->updateSort($this->TypeID); // TypeID
-            $this->updateSort($this->Tanggal); // Tanggal
-            $this->updateSort($this->LokasiID); // LokasiID
-            $this->updateSort($this->PelabuhanID); // PelabuhanID
-            $this->updateSort($this->BL_Extra); // BL_Extra
-            $this->updateSort($this->DepoID); // DepoID
-            $this->updateSort($this->Ongkos); // Ongkos
-            $this->updateSort($this->IsShow); // IsShow
-            $this->updateSort($this->IsOpen); // IsOpen
             $this->updateSort($this->TakenByID); // TakenByID
+            $this->updateSort($this->Nama); // Nama
+            $this->updateSort($this->NomorHP); // NomorHP
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1038,23 +1244,18 @@ class JobOrderList extends JobOrder
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->JobOrderID->setSort("");
-                $this->Job2ID->setSort("");
-                $this->SizeID->setSort("");
-                $this->TypeID->setSort("");
-                $this->Tanggal->setSort("");
-                $this->LokasiID->setSort("");
-                $this->PelabuhanID->setSort("");
-                $this->BL_Extra->setSort("");
-                $this->DepoID->setSort("");
-                $this->Ongkos->setSort("");
-                $this->IsShow->setSort("");
-                $this->IsOpen->setSort("");
                 $this->TakenByID->setSort("");
+                $this->Nama->setSort("");
+                $this->NomorHP->setSort("");
             }
 
             // Reset start position
@@ -1173,7 +1374,7 @@ class JobOrderList extends JobOrder
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
                 if ($this->ModalView && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"job_order\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"taken_by\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
                 }
@@ -1186,7 +1387,7 @@ class JobOrderList extends JobOrder
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
             if ($Security->canEdit()) {
                 if ($this->ModalEdit && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"job_order\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"taken_by\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
                 }
@@ -1199,7 +1400,7 @@ class JobOrderList extends JobOrder
             $copycaption = HtmlTitle($Language->phrase("CopyLink"));
             if ($Security->canAdd()) {
                 if ($this->ModalAdd && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"job_order\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"taken_by\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
                 }
@@ -1240,12 +1441,12 @@ class JobOrderList extends JobOrder
                         $icon = ($listAction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listAction->Icon)) . "\" data-caption=\"" . $title . "\"></i> " : "";
                         $link = $disabled
                             ? "<li><div class=\"alert alert-light\">" . $icon . " " . $caption . "</div></li>"
-                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjob_orderlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
+                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"ftaken_bylist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
                         $links[] = $link;
                         if ($body == "") { // Setup first button
                             $body = $disabled
                             ? "<div class=\"alert alert-light\">" . $icon . " " . $caption . "</div>"
-                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjob_orderlist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
+                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"ftaken_bylist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
                         }
                     }
                 }
@@ -1266,7 +1467,7 @@ class JobOrderList extends JobOrder
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->JobOrderID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->TakenByID->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1291,7 +1492,7 @@ class JobOrderList extends JobOrder
         $item = &$option->add("add");
         $addcaption = HtmlTitle($Language->phrase("AddLink"));
         if ($this->ModalAdd && !IsMobile()) {
-            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"job_order\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
+            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"taken_by\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
         } else {
             $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
         }
@@ -1304,19 +1505,9 @@ class JobOrderList extends JobOrder
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "JobOrderID");
-            $this->createColumnOption($option, "Job2ID");
-            $this->createColumnOption($option, "SizeID");
-            $this->createColumnOption($option, "TypeID");
-            $this->createColumnOption($option, "Tanggal");
-            $this->createColumnOption($option, "LokasiID");
-            $this->createColumnOption($option, "PelabuhanID");
-            $this->createColumnOption($option, "BL_Extra");
-            $this->createColumnOption($option, "DepoID");
-            $this->createColumnOption($option, "Ongkos");
-            $this->createColumnOption($option, "IsShow");
-            $this->createColumnOption($option, "IsOpen");
             $this->createColumnOption($option, "TakenByID");
+            $this->createColumnOption($option, "Nama");
+            $this->createColumnOption($option, "NomorHP");
         }
 
         // Set up custom actions
@@ -1341,11 +1532,11 @@ class JobOrderList extends JobOrder
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fjob_ordersrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"ftaken_bysrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fjob_ordersrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"ftaken_bysrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1404,7 +1595,7 @@ class JobOrderList extends JobOrder
                 $item = &$option->add("custom_" . $listAction->Action);
                 $caption = $listAction->Caption;
                 $icon = ($listAction->Icon != "") ? '<i class="' . HtmlEncode($listAction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fjob_orderlist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="ftaken_bylist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
                 $item->Visible = $listAction->Allowed;
             }
         }
@@ -1575,7 +1766,7 @@ class JobOrderList extends JobOrder
 
                 // Set row properties
                 $this->resetAttributes();
-                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_job_order", "data-rowtype" => RowType::ADD]);
+                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_taken_by", "data-rowtype" => RowType::ADD]);
                 $this->RowAttrs->appendClass("ew-template");
                 // Render row
                 $this->RowType = RowType::ADD;
@@ -1636,7 +1827,7 @@ class JobOrderList extends JobOrder
         $this->RowAttrs->merge([
             "data-rowindex" => $this->RowCount,
             "data-key" => $this->getKey(true),
-            "id" => "r" . $this->RowCount . "_job_order",
+            "id" => "r" . $this->RowCount . "_taken_by",
             "data-rowtype" => $this->RowType,
             "data-inline" => ($this->isAdd() || $this->isCopy() || $this->isEdit()) ? "true" : "false", // Inline-Add/Copy/Edit
             "class" => ($this->RowCount % 2 != 1) ? "ew-table-alt-row" : "",
@@ -1650,6 +1841,16 @@ class JobOrderList extends JobOrder
 
         // Render list options
         $this->renderListOptions();
+    }
+
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
     }
 
     /**
@@ -1745,38 +1946,18 @@ class JobOrderList extends JobOrder
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->JobOrderID->setDbValue($row['JobOrderID']);
-        $this->Job2ID->setDbValue($row['Job2ID']);
-        $this->SizeID->setDbValue($row['SizeID']);
-        $this->TypeID->setDbValue($row['TypeID']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->LokasiID->setDbValue($row['LokasiID']);
-        $this->PelabuhanID->setDbValue($row['PelabuhanID']);
-        $this->BL_Extra->setDbValue($row['BL_Extra']);
-        $this->DepoID->setDbValue($row['DepoID']);
-        $this->Ongkos->setDbValue($row['Ongkos']);
-        $this->IsShow->setDbValue($row['IsShow']);
-        $this->IsOpen->setDbValue($row['IsOpen']);
         $this->TakenByID->setDbValue($row['TakenByID']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->NomorHP->setDbValue($row['NomorHP']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['JobOrderID'] = $this->JobOrderID->DefaultValue;
-        $row['Job2ID'] = $this->Job2ID->DefaultValue;
-        $row['SizeID'] = $this->SizeID->DefaultValue;
-        $row['TypeID'] = $this->TypeID->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['LokasiID'] = $this->LokasiID->DefaultValue;
-        $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
-        $row['BL_Extra'] = $this->BL_Extra->DefaultValue;
-        $row['DepoID'] = $this->DepoID->DefaultValue;
-        $row['Ongkos'] = $this->Ongkos->DefaultValue;
-        $row['IsShow'] = $this->IsShow->DefaultValue;
-        $row['IsOpen'] = $this->IsOpen->DefaultValue;
         $row['TakenByID'] = $this->TakenByID->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['NomorHP'] = $this->NomorHP->DefaultValue;
         return $row;
     }
 
@@ -1817,253 +1998,34 @@ class JobOrderList extends JobOrder
 
         // Common render codes for all row types
 
-        // JobOrderID
-
-        // Job2ID
-
-        // SizeID
-
-        // TypeID
-
-        // Tanggal
-
-        // LokasiID
-
-        // PelabuhanID
-
-        // BL_Extra
-
-        // DepoID
-
-        // Ongkos
-
-        // IsShow
-
-        // IsOpen
-
         // TakenByID
+
+        // Nama
+
+        // NomorHP
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // JobOrderID
-            $this->JobOrderID->ViewValue = $this->JobOrderID->CurrentValue;
-
-            // Job2ID
-            $curVal = strval($this->Job2ID->CurrentValue);
-            if ($curVal != "") {
-                $this->Job2ID->ViewValue = $this->Job2ID->lookupCacheOption($curVal);
-                if ($this->Job2ID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchExpression(), "=", $curVal, $this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchDataType(), "");
-                    $sqlWrk = $this->Job2ID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Job2ID->Lookup->renderViewRow($rswrk[0]);
-                        $this->Job2ID->ViewValue = $this->Job2ID->displayValue($arwrk);
-                    } else {
-                        $this->Job2ID->ViewValue = FormatNumber($this->Job2ID->CurrentValue, $this->Job2ID->formatPattern());
-                    }
-                }
-            } else {
-                $this->Job2ID->ViewValue = null;
-            }
-
-            // SizeID
-            $curVal = strval($this->SizeID->CurrentValue);
-            if ($curVal != "") {
-                $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
-                if ($this->SizeID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
-                    $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
-                        $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
-                    } else {
-                        $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
-                    }
-                }
-            } else {
-                $this->SizeID->ViewValue = null;
-            }
-
-            // TypeID
-            $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-            $curVal = strval($this->TypeID->CurrentValue);
-            if ($curVal != "") {
-                $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
-                if ($this->TypeID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
-                    $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
-                        $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
-                    } else {
-                        $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
-                    }
-                }
-            } else {
-                $this->TypeID->ViewValue = null;
-            }
-
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // LokasiID
-            $curVal = strval($this->LokasiID->CurrentValue);
-            if ($curVal != "") {
-                $this->LokasiID->ViewValue = $this->LokasiID->lookupCacheOption($curVal);
-                if ($this->LokasiID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
-                    $sqlWrk = $this->LokasiID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->LokasiID->Lookup->renderViewRow($rswrk[0]);
-                        $this->LokasiID->ViewValue = $this->LokasiID->displayValue($arwrk);
-                    } else {
-                        $this->LokasiID->ViewValue = FormatNumber($this->LokasiID->CurrentValue, $this->LokasiID->formatPattern());
-                    }
-                }
-            } else {
-                $this->LokasiID->ViewValue = null;
-            }
-
-            // PelabuhanID
-            $curVal = strval($this->PelabuhanID->CurrentValue);
-            if ($curVal != "") {
-                $this->PelabuhanID->ViewValue = $this->PelabuhanID->lookupCacheOption($curVal);
-                if ($this->PelabuhanID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchExpression(), "=", $curVal, $this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchDataType(), "");
-                    $sqlWrk = $this->PelabuhanID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->PelabuhanID->Lookup->renderViewRow($rswrk[0]);
-                        $this->PelabuhanID->ViewValue = $this->PelabuhanID->displayValue($arwrk);
-                    } else {
-                        $this->PelabuhanID->ViewValue = FormatNumber($this->PelabuhanID->CurrentValue, $this->PelabuhanID->formatPattern());
-                    }
-                }
-            } else {
-                $this->PelabuhanID->ViewValue = null;
-            }
-
-            // BL_Extra
-            $this->BL_Extra->ViewValue = $this->BL_Extra->CurrentValue;
-            $this->BL_Extra->ViewValue = FormatNumber($this->BL_Extra->ViewValue, $this->BL_Extra->formatPattern());
-
-            // DepoID
-            $curVal = strval($this->DepoID->CurrentValue);
-            if ($curVal != "") {
-                $this->DepoID->ViewValue = $this->DepoID->lookupCacheOption($curVal);
-                if ($this->DepoID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchExpression(), "=", $curVal, $this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchDataType(), "");
-                    $sqlWrk = $this->DepoID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->DepoID->Lookup->renderViewRow($rswrk[0]);
-                        $this->DepoID->ViewValue = $this->DepoID->displayValue($arwrk);
-                    } else {
-                        $this->DepoID->ViewValue = FormatNumber($this->DepoID->CurrentValue, $this->DepoID->formatPattern());
-                    }
-                }
-            } else {
-                $this->DepoID->ViewValue = null;
-            }
-
-            // Ongkos
-            $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
-            $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
-
-            // IsShow
-            if (strval($this->IsShow->CurrentValue) != "") {
-                $this->IsShow->ViewValue = $this->IsShow->optionCaption($this->IsShow->CurrentValue);
-            } else {
-                $this->IsShow->ViewValue = null;
-            }
-
-            // IsOpen
-            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
-
             // TakenByID
             $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-            $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
 
-            // JobOrderID
-            $this->JobOrderID->HrefValue = "";
-            $this->JobOrderID->TooltipValue = "";
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Job2ID
-            $this->Job2ID->HrefValue = "";
-            $this->Job2ID->TooltipValue = "";
-
-            // SizeID
-            $this->SizeID->HrefValue = "";
-            $this->SizeID->TooltipValue = "";
-
-            // TypeID
-            $this->TypeID->HrefValue = "";
-            $this->TypeID->TooltipValue = "";
-
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-            $this->Tanggal->TooltipValue = "";
-
-            // LokasiID
-            $this->LokasiID->HrefValue = "";
-            $this->LokasiID->TooltipValue = "";
-
-            // PelabuhanID
-            $this->PelabuhanID->HrefValue = "";
-            $this->PelabuhanID->TooltipValue = "";
-
-            // BL_Extra
-            $this->BL_Extra->HrefValue = "";
-            $this->BL_Extra->TooltipValue = "";
-
-            // DepoID
-            $this->DepoID->HrefValue = "";
-            $this->DepoID->TooltipValue = "";
-
-            // Ongkos
-            $this->Ongkos->HrefValue = "";
-            $this->Ongkos->TooltipValue = "";
-
-            // IsShow
-            $this->IsShow->HrefValue = "";
-            $this->IsShow->TooltipValue = "";
-
-            // IsOpen
-            $this->IsOpen->HrefValue = "";
-            $this->IsOpen->TooltipValue = "";
+            // NomorHP
+            $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
 
             // TakenByID
             $this->TakenByID->HrefValue = "";
             $this->TakenByID->TooltipValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
+
+            // NomorHP
+            $this->NomorHP->HrefValue = "";
+            $this->NomorHP->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2084,19 +2046,19 @@ class JobOrderList extends JobOrder
         }
         if (SameText($type, "excel")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\" form=\"fjob_orderlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\" form=\"ftaken_bylist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"excel\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToExcel") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcel", true)) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
             }
         } elseif (SameText($type, "word")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\" form=\"fjob_orderlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\" form=\"ftaken_bylist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"word\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToWord") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWord", true)) . "\">" . $Language->phrase("ExportToWord") . "</a>";
             }
         } elseif (SameText($type, "pdf")) {
             if ($custom) {
-                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\" form=\"fjob_orderlist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
+                return "<button type=\"button\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\" form=\"ftaken_bylist\" data-url=\"$exportUrl\" data-ew-action=\"export\" data-export=\"pdf\" data-custom=\"true\" data-export-selected=\"false\">" . $Language->phrase("ExportToPdf") . "</button>";
             } else {
                 return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPdf", true)) . "\">" . $Language->phrase("ExportToPdf") . "</a>";
             }
@@ -2108,7 +2070,7 @@ class JobOrderList extends JobOrder
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsv", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsv", true)) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
         } elseif (SameText($type, "email")) {
             $url = $custom ? ' data-url="' . $exportUrl . '"' : '';
-            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmail", true) . '" data-caption="' . $Language->phrase("ExportToEmail", true) . '" form="fjob_orderlist" data-ew-action="email" data-custom="false" data-hdr="' . $Language->phrase("ExportToEmail", true) . '" data-exported-selected="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
+            return '<button type="button" class="btn btn-default ew-export-link ew-email" title="' . $Language->phrase("ExportToEmail", true) . '" data-caption="' . $Language->phrase("ExportToEmail", true) . '" form="ftaken_bylist" data-ew-action="email" data-custom="false" data-hdr="' . $Language->phrase("ExportToEmail", true) . '" data-exported-selected="false"' . $url . '>' . $Language->phrase("ExportToEmail") . '</button>';
         } elseif (SameText($type, "print")) {
             return "<a href=\"$exportUrl\" class=\"btn btn-default ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("PrinterFriendly", true)) . "\" data-caption=\"" . HtmlEncode($Language->phrase("PrinterFriendly", true)) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
         }
@@ -2183,6 +2145,21 @@ class JobOrderList extends JobOrder
         $pageUrl = $this->pageUrl(false);
         $this->SearchOptions = new ListOptions(TagClassName: "ew-search-option");
 
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"ftaken_bysrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        if ($this->UseCustomTemplate || !$this->UseAjaxActions) {
+            $item->Body = "<a class=\"btn btn-default ew-show-all\" role=\"button\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        } else {
+            $item->Body = "<a class=\"btn btn-default ew-show-all\" role=\"button\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" data-ew-action=\"refresh\" data-url=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        }
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
+
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
         $this->SearchOptions->UseButtonGroup = true;
@@ -2206,7 +2183,7 @@ class JobOrderList extends JobOrder
     // Check if any search fields
     public function hasSearchFields()
     {
-        return false;
+        return true;
     }
 
     // Render search options
@@ -2300,22 +2277,6 @@ class JobOrderList extends JobOrder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Job2ID":
-                    break;
-                case "x_SizeID":
-                    break;
-                case "x_TypeID":
-                    break;
-                case "x_LokasiID":
-                    break;
-                case "x_PelabuhanID":
-                    break;
-                case "x_DepoID":
-                    break;
-                case "x_IsShow":
-                    break;
-                case "x_IsOpen":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

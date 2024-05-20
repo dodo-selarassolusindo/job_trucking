@@ -13,9 +13,9 @@ use Slim\App;
 use Closure;
 
 /**
- * Table class for job_order
+ * Table class for taken_by
  */
-class JobOrder extends DbTable
+class TakenBy extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -54,19 +54,9 @@ class JobOrder extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $JobOrderID;
-    public $Job2ID;
-    public $SizeID;
-    public $TypeID;
-    public $Tanggal;
-    public $LokasiID;
-    public $PelabuhanID;
-    public $BL_Extra;
-    public $DepoID;
-    public $Ongkos;
-    public $IsShow;
-    public $IsOpen;
     public $TakenByID;
+    public $Nama;
+    public $NomorHP;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -79,14 +69,14 @@ class JobOrder extends DbTable
 
         // Language object
         $Language = Container("app.language");
-        $this->TableVar = "job_order";
-        $this->TableName = 'job_order';
+        $this->TableVar = "taken_by";
+        $this->TableName = 'taken_by';
         $this->TableType = "TABLE";
         $this->ImportUseTransaction = $this->supportsTransaction() && Config("IMPORT_USE_TRANSACTION");
         $this->UseTransaction = $this->supportsTransaction() && Config("USE_TRANSACTION");
 
         // Update Table
-        $this->UpdateTable = "job_order";
+        $this->UpdateTable = "taken_by";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -114,344 +104,6 @@ class JobOrder extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // JobOrderID
-        $this->JobOrderID = new DbField(
-            $this, // Table
-            'x_JobOrderID', // Variable name
-            'JobOrderID', // Name
-            '`JobOrderID`', // Expression
-            '`JobOrderID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`JobOrderID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'NO' // Edit Tag
-        );
-        $this->JobOrderID->InputTextType = "text";
-        $this->JobOrderID->Raw = true;
-        $this->JobOrderID->IsAutoIncrement = true; // Autoincrement field
-        $this->JobOrderID->IsPrimaryKey = true; // Primary key field
-        $this->JobOrderID->Nullable = false; // NOT NULL field
-        $this->JobOrderID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->JobOrderID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['JobOrderID'] = &$this->JobOrderID;
-
-        // Job2ID
-        $this->Job2ID = new DbField(
-            $this, // Table
-            'x_Job2ID', // Variable name
-            'Job2ID', // Name
-            '`Job2ID`', // Expression
-            '`Job2ID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Job2ID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->Job2ID->InputTextType = "text";
-        $this->Job2ID->Raw = true;
-        $this->Job2ID->Nullable = false; // NOT NULL field
-        $this->Job2ID->Required = true; // Required field
-        $this->Job2ID->setSelectMultiple(false); // Select one
-        $this->Job2ID->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->Job2ID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->Job2ID->Lookup = new Lookup($this->Job2ID, 'job2', false, 'Job2ID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->Job2ID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->Job2ID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Job2ID'] = &$this->Job2ID;
-
-        // SizeID
-        $this->SizeID = new DbField(
-            $this, // Table
-            'x_SizeID', // Variable name
-            'SizeID', // Name
-            '`SizeID`', // Expression
-            '`SizeID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`SizeID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->SizeID->InputTextType = "text";
-        $this->SizeID->Raw = true;
-        $this->SizeID->Nullable = false; // NOT NULL field
-        $this->SizeID->Required = true; // Required field
-        $this->SizeID->setSelectMultiple(false); // Select one
-        $this->SizeID->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->SizeID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->SizeID->Lookup = new Lookup($this->SizeID, 'size', false, 'SizeID', ["Ukuran","","",""], '', '', [], ["x_TypeID"], [], [], [], [], false, '', '', "`Ukuran`");
-        $this->SizeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->SizeID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['SizeID'] = &$this->SizeID;
-
-        // TypeID
-        $this->TypeID = new DbField(
-            $this, // Table
-            'x_TypeID', // Variable name
-            'TypeID', // Name
-            '`TypeID`', // Expression
-            '`TypeID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`TypeID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->TypeID->InputTextType = "text";
-        $this->TypeID->Raw = true;
-        $this->TypeID->Nullable = false; // NOT NULL field
-        $this->TypeID->Required = true; // Required field
-        $this->TypeID->Lookup = new Lookup($this->TypeID, 'size_type', false, 'TypeID', ["TypeNama","","",""], '', '', ["x_SizeID"], [], ["SizeID"], ["x_SizeID"], [], [], false, '', '', "(select Nama from type where type.TypeID = size_type.TypeID)");
-        $this->TypeID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->TypeID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['TypeID'] = &$this->TypeID;
-
-        // Tanggal
-        $this->Tanggal = new DbField(
-            $this, // Table
-            'x_Tanggal', // Variable name
-            'Tanggal', // Name
-            '`Tanggal`', // Expression
-            CastDateFieldForLike("`Tanggal`", 7, "DB"), // Basic search expression
-            133, // Type
-            10, // Size
-            7, // Date/Time format
-            false, // Is upload field
-            '`Tanggal`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->Tanggal->InputTextType = "text";
-        $this->Tanggal->Raw = true;
-        $this->Tanggal->Nullable = false; // NOT NULL field
-        $this->Tanggal->Required = true; // Required field
-        $this->Tanggal->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
-        $this->Tanggal->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Tanggal'] = &$this->Tanggal;
-
-        // LokasiID
-        $this->LokasiID = new DbField(
-            $this, // Table
-            'x_LokasiID', // Variable name
-            'LokasiID', // Name
-            '`LokasiID`', // Expression
-            '`LokasiID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`LokasiID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->LokasiID->InputTextType = "text";
-        $this->LokasiID->Raw = true;
-        $this->LokasiID->Nullable = false; // NOT NULL field
-        $this->LokasiID->Required = true; // Required field
-        $this->LokasiID->setSelectMultiple(false); // Select one
-        $this->LokasiID->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->LokasiID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->LokasiID->Lookup = new Lookup($this->LokasiID, 'lokasi', false, 'LokasiID', ["Nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`Nama`");
-        $this->LokasiID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->LokasiID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['LokasiID'] = &$this->LokasiID;
-
-        // PelabuhanID
-        $this->PelabuhanID = new DbField(
-            $this, // Table
-            'x_PelabuhanID', // Variable name
-            'PelabuhanID', // Name
-            '`PelabuhanID`', // Expression
-            '`PelabuhanID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`PelabuhanID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->PelabuhanID->InputTextType = "text";
-        $this->PelabuhanID->Raw = true;
-        $this->PelabuhanID->Nullable = false; // NOT NULL field
-        $this->PelabuhanID->Required = true; // Required field
-        $this->PelabuhanID->setSelectMultiple(false); // Select one
-        $this->PelabuhanID->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->PelabuhanID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->PelabuhanID->Lookup = new Lookup($this->PelabuhanID, 'pelabuhan', false, 'PelabuhanID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->PelabuhanID) . "',COALESCE(`Nama`,''))");
-        $this->PelabuhanID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->PelabuhanID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['PelabuhanID'] = &$this->PelabuhanID;
-
-        // BL_Extra
-        $this->BL_Extra = new DbField(
-            $this, // Table
-            'x_BL_Extra', // Variable name
-            'BL_Extra', // Name
-            '`BL_Extra`', // Expression
-            '`BL_Extra`', // Basic search expression
-            5, // Type
-            22, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`BL_Extra`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->BL_Extra->InputTextType = "text";
-        $this->BL_Extra->Raw = true;
-        $this->BL_Extra->Nullable = false; // NOT NULL field
-        $this->BL_Extra->Required = true; // Required field
-        $this->BL_Extra->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
-        $this->BL_Extra->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['BL_Extra'] = &$this->BL_Extra;
-
-        // DepoID
-        $this->DepoID = new DbField(
-            $this, // Table
-            'x_DepoID', // Variable name
-            'DepoID', // Name
-            '`DepoID`', // Expression
-            '`DepoID`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`DepoID`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->DepoID->InputTextType = "text";
-        $this->DepoID->Raw = true;
-        $this->DepoID->Nullable = false; // NOT NULL field
-        $this->DepoID->Required = true; // Required field
-        $this->DepoID->setSelectMultiple(false); // Select one
-        $this->DepoID->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->DepoID->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->DepoID->Lookup = new Lookup($this->DepoID, 'depo', false, 'DepoID', ["Kode","Nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`Kode`, ''),'" . ValueSeparator(1, $this->DepoID) . "',COALESCE(`Nama`,''))");
-        $this->DepoID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->DepoID->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['DepoID'] = &$this->DepoID;
-
-        // Ongkos
-        $this->Ongkos = new DbField(
-            $this, // Table
-            'x_Ongkos', // Variable name
-            'Ongkos', // Name
-            '`Ongkos`', // Expression
-            '`Ongkos`', // Basic search expression
-            5, // Type
-            22, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`Ongkos`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->Ongkos->InputTextType = "text";
-        $this->Ongkos->Raw = true;
-        $this->Ongkos->Nullable = false; // NOT NULL field
-        $this->Ongkos->Required = true; // Required field
-        $this->Ongkos->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
-        $this->Ongkos->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['Ongkos'] = &$this->Ongkos;
-
-        // IsShow
-        $this->IsShow = new DbField(
-            $this, // Table
-            'x_IsShow', // Variable name
-            'IsShow', // Name
-            '`IsShow`', // Expression
-            '`IsShow`', // Basic search expression
-            16, // Type
-            4, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`IsShow`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'RADIO' // Edit Tag
-        );
-        $this->IsShow->InputTextType = "text";
-        $this->IsShow->Raw = true;
-        $this->IsShow->Nullable = false; // NOT NULL field
-        $this->IsShow->Required = true; // Required field
-        $this->IsShow->Lookup = new Lookup($this->IsShow, 'job_order', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
-        $this->IsShow->OptionCount = 2;
-        $this->IsShow->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->IsShow->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['IsShow'] = &$this->IsShow;
-
-        // IsOpen
-        $this->IsOpen = new DbField(
-            $this, // Table
-            'x_IsOpen', // Variable name
-            'IsOpen', // Name
-            '`IsOpen`', // Expression
-            '`IsOpen`', // Basic search expression
-            16, // Type
-            4, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`IsOpen`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->IsOpen->InputTextType = "text";
-        $this->IsOpen->Raw = true;
-        $this->IsOpen->Nullable = false; // NOT NULL field
-        $this->IsOpen->Required = true; // Required field
-        $this->IsOpen->Lookup = new Lookup($this->IsOpen, 'job_order', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
-        $this->IsOpen->OptionCount = 2;
-        $this->IsOpen->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->IsOpen->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['IsOpen'] = &$this->IsOpen;
-
         // TakenByID
         $this->TakenByID = new DbField(
             $this, // Table
@@ -468,15 +120,64 @@ class JobOrder extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'NO' // Edit Tag
         );
         $this->TakenByID->InputTextType = "text";
         $this->TakenByID->Raw = true;
+        $this->TakenByID->IsAutoIncrement = true; // Autoincrement field
+        $this->TakenByID->IsPrimaryKey = true; // Primary key field
         $this->TakenByID->Nullable = false; // NOT NULL field
-        $this->TakenByID->Required = true; // Required field
         $this->TakenByID->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->TakenByID->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['TakenByID'] = &$this->TakenByID;
+
+        // Nama
+        $this->Nama = new DbField(
+            $this, // Table
+            'x_Nama', // Variable name
+            'Nama', // Name
+            '`Nama`', // Expression
+            '`Nama`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Nama`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Nama->InputTextType = "text";
+        $this->Nama->Nullable = false; // NOT NULL field
+        $this->Nama->Required = true; // Required field
+        $this->Nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['Nama'] = &$this->Nama;
+
+        // NomorHP
+        $this->NomorHP = new DbField(
+            $this, // Table
+            'x_NomorHP', // Variable name
+            'NomorHP', // Name
+            '`NomorHP`', // Expression
+            '`NomorHP`', // Basic search expression
+            200, // Type
+            25, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`NomorHP`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->NomorHP->InputTextType = "text";
+        $this->NomorHP->Nullable = false; // NOT NULL field
+        $this->NomorHP->Required = true; // Required field
+        $this->NomorHP->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY"];
+        $this->Fields['NomorHP'] = &$this->NomorHP;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -545,7 +246,7 @@ class JobOrder extends DbTable
     // Get FROM clause
     public function getSqlFrom()
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "job_order";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "taken_by";
     }
 
     // Get FROM clause (for backward compatibility)
@@ -888,8 +589,8 @@ class JobOrder extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
-            $this->JobOrderID->setDbValue($conn->lastInsertId());
-            $rs['JobOrderID'] = $this->JobOrderID->DbValue;
+            $this->TakenByID->setDbValue($conn->lastInsertId());
+            $rs['TakenByID'] = $this->TakenByID->DbValue;
             if ($this->AuditTrailOnAdd) {
                 $this->writeAuditTrailOnAdd($rs);
             }
@@ -945,13 +646,13 @@ class JobOrder extends DbTable
 
         // Return auto increment field
         if ($success) {
-            if (!isset($rs['JobOrderID']) && !EmptyValue($this->JobOrderID->CurrentValue)) {
-                $rs['JobOrderID'] = $this->JobOrderID->CurrentValue;
+            if (!isset($rs['TakenByID']) && !EmptyValue($this->TakenByID->CurrentValue)) {
+                $rs['TakenByID'] = $this->TakenByID->CurrentValue;
             }
         }
         if ($success && $this->AuditTrailOnEdit && $rsold) {
             $rsaudit = $rs;
-            $fldname = 'JobOrderID';
+            $fldname = 'TakenByID';
             if (!array_key_exists($fldname, $rsaudit)) {
                 $rsaudit[$fldname] = $rsold[$fldname];
             }
@@ -976,8 +677,8 @@ class JobOrder extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('JobOrderID', $rs)) {
-                AddFilter($where, QuotedName('JobOrderID', $this->Dbid) . '=' . QuotedValue($rs['JobOrderID'], $this->JobOrderID->DataType, $this->Dbid));
+            if (array_key_exists('TakenByID', $rs)) {
+                AddFilter($where, QuotedName('TakenByID', $this->Dbid) . '=' . QuotedValue($rs['TakenByID'], $this->TakenByID->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -1010,19 +711,9 @@ class JobOrder extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->JobOrderID->DbValue = $row['JobOrderID'];
-        $this->Job2ID->DbValue = $row['Job2ID'];
-        $this->SizeID->DbValue = $row['SizeID'];
-        $this->TypeID->DbValue = $row['TypeID'];
-        $this->Tanggal->DbValue = $row['Tanggal'];
-        $this->LokasiID->DbValue = $row['LokasiID'];
-        $this->PelabuhanID->DbValue = $row['PelabuhanID'];
-        $this->BL_Extra->DbValue = $row['BL_Extra'];
-        $this->DepoID->DbValue = $row['DepoID'];
-        $this->Ongkos->DbValue = $row['Ongkos'];
-        $this->IsShow->DbValue = $row['IsShow'];
-        $this->IsOpen->DbValue = $row['IsOpen'];
         $this->TakenByID->DbValue = $row['TakenByID'];
+        $this->Nama->DbValue = $row['Nama'];
+        $this->NomorHP->DbValue = $row['NomorHP'];
     }
 
     // Delete uploaded files
@@ -1034,14 +725,14 @@ class JobOrder extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`JobOrderID` = @JobOrderID@";
+        return "`TakenByID` = @TakenByID@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->JobOrderID->CurrentValue : $this->JobOrderID->OldValue;
+        $val = $current ? $this->TakenByID->CurrentValue : $this->TakenByID->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -1059,9 +750,9 @@ class JobOrder extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->JobOrderID->CurrentValue = $keys[0];
+                $this->TakenByID->CurrentValue = $keys[0];
             } else {
-                $this->JobOrderID->OldValue = $keys[0];
+                $this->TakenByID->OldValue = $keys[0];
             }
         }
     }
@@ -1071,9 +762,9 @@ class JobOrder extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('JobOrderID', $row) ? $row['JobOrderID'] : null;
+            $val = array_key_exists('TakenByID', $row) ? $row['TakenByID'] : null;
         } else {
-            $val = !EmptyValue($this->JobOrderID->OldValue) && !$current ? $this->JobOrderID->OldValue : $this->JobOrderID->CurrentValue;
+            $val = !EmptyValue($this->TakenByID->OldValue) && !$current ? $this->TakenByID->OldValue : $this->TakenByID->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -1081,7 +772,7 @@ class JobOrder extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@JobOrderID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@TakenByID@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -1096,7 +787,7 @@ class JobOrder extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("joborderlist");
+        return $_SESSION[$name] ?? GetUrl("takenbylist");
     }
 
     // Set return page URL
@@ -1110,9 +801,9 @@ class JobOrder extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "joborderview" => $Language->phrase("View"),
-            "joborderedit" => $Language->phrase("Edit"),
-            "joborderadd" => $Language->phrase("Add"),
+            "takenbyview" => $Language->phrase("View"),
+            "takenbyedit" => $Language->phrase("Edit"),
+            "takenbyadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -1120,18 +811,18 @@ class JobOrder extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "joborderlist";
+        return "takenbylist";
     }
 
     // API page name
     public function getApiPageName($action)
     {
         return match (strtolower($action)) {
-            Config("API_VIEW_ACTION") => "JobOrderView",
-            Config("API_ADD_ACTION") => "JobOrderAdd",
-            Config("API_EDIT_ACTION") => "JobOrderEdit",
-            Config("API_DELETE_ACTION") => "JobOrderDelete",
-            Config("API_LIST_ACTION") => "JobOrderList",
+            Config("API_VIEW_ACTION") => "TakenByView",
+            Config("API_ADD_ACTION") => "TakenByAdd",
+            Config("API_EDIT_ACTION") => "TakenByEdit",
+            Config("API_DELETE_ACTION") => "TakenByDelete",
+            Config("API_LIST_ACTION") => "TakenByList",
             default => ""
         };
     }
@@ -1151,16 +842,16 @@ class JobOrder extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "joborderlist";
+        return "takenbylist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("joborderview", $parm);
+            $url = $this->keyUrl("takenbyview", $parm);
         } else {
-            $url = $this->keyUrl("joborderview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("takenbyview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -1169,9 +860,9 @@ class JobOrder extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "joborderadd?" . $parm;
+            $url = "takenbyadd?" . $parm;
         } else {
-            $url = "joborderadd";
+            $url = "takenbyadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -1179,28 +870,28 @@ class JobOrder extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("joborderedit", $parm);
+        $url = $this->keyUrl("takenbyedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("joborderlist", "action=edit");
+        $url = $this->keyUrl("takenbylist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("joborderadd", $parm);
+        $url = $this->keyUrl("takenbyadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("joborderlist", "action=copy");
+        $url = $this->keyUrl("takenbylist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -1210,7 +901,7 @@ class JobOrder extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("joborderdelete", $parm);
+            return $this->keyUrl("takenbydelete", $parm);
         }
     }
 
@@ -1223,7 +914,7 @@ class JobOrder extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"JobOrderID\":" . VarToJson($this->JobOrderID->CurrentValue, "number");
+        $json .= "\"TakenByID\":" . VarToJson($this->TakenByID->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1234,8 +925,8 @@ class JobOrder extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->JobOrderID->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->JobOrderID->CurrentValue);
+        if ($this->TakenByID->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->TakenByID->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1311,7 +1002,7 @@ class JobOrder extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("JobOrderID") ?? Route("JobOrderID")) !== null) {
+            if (($keyValue = Param("TakenByID") ?? Route("TakenByID")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1355,9 +1046,9 @@ class JobOrder extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->JobOrderID->CurrentValue = $key;
+                $this->TakenByID->CurrentValue = $key;
             } else {
-                $this->JobOrderID->OldValue = $key;
+                $this->TakenByID->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1382,26 +1073,16 @@ class JobOrder extends DbTable
         } else {
             return;
         }
-        $this->JobOrderID->setDbValue($row['JobOrderID']);
-        $this->Job2ID->setDbValue($row['Job2ID']);
-        $this->SizeID->setDbValue($row['SizeID']);
-        $this->TypeID->setDbValue($row['TypeID']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->LokasiID->setDbValue($row['LokasiID']);
-        $this->PelabuhanID->setDbValue($row['PelabuhanID']);
-        $this->BL_Extra->setDbValue($row['BL_Extra']);
-        $this->DepoID->setDbValue($row['DepoID']);
-        $this->Ongkos->setDbValue($row['Ongkos']);
-        $this->IsShow->setDbValue($row['IsShow']);
-        $this->IsOpen->setDbValue($row['IsOpen']);
         $this->TakenByID->setDbValue($row['TakenByID']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->NomorHP->setDbValue($row['NomorHP']);
     }
 
     // Render list content
     public function renderListContent($filter)
     {
         global $Response;
-        $listPage = "JobOrderList";
+        $listPage = "TakenByList";
         $listClass = PROJECT_NAMESPACE . $listPage;
         $page = new $listClass();
         $page->loadRecordsetFromFilter($filter);
@@ -1425,251 +1106,32 @@ class JobOrder extends DbTable
 
         // Common render codes
 
-        // JobOrderID
-
-        // Job2ID
-
-        // SizeID
-
-        // TypeID
-
-        // Tanggal
-
-        // LokasiID
-
-        // PelabuhanID
-
-        // BL_Extra
-
-        // DepoID
-
-        // Ongkos
-
-        // IsShow
-
-        // IsOpen
-
         // TakenByID
 
-        // JobOrderID
-        $this->JobOrderID->ViewValue = $this->JobOrderID->CurrentValue;
+        // Nama
 
-        // Job2ID
-        $curVal = strval($this->Job2ID->CurrentValue);
-        if ($curVal != "") {
-            $this->Job2ID->ViewValue = $this->Job2ID->lookupCacheOption($curVal);
-            if ($this->Job2ID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchExpression(), "=", $curVal, $this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchDataType(), "");
-                $sqlWrk = $this->Job2ID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->Job2ID->Lookup->renderViewRow($rswrk[0]);
-                    $this->Job2ID->ViewValue = $this->Job2ID->displayValue($arwrk);
-                } else {
-                    $this->Job2ID->ViewValue = FormatNumber($this->Job2ID->CurrentValue, $this->Job2ID->formatPattern());
-                }
-            }
-        } else {
-            $this->Job2ID->ViewValue = null;
-        }
-
-        // SizeID
-        $curVal = strval($this->SizeID->CurrentValue);
-        if ($curVal != "") {
-            $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
-            if ($this->SizeID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
-                $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
-                    $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
-                } else {
-                    $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
-                }
-            }
-        } else {
-            $this->SizeID->ViewValue = null;
-        }
-
-        // TypeID
-        $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-        $curVal = strval($this->TypeID->CurrentValue);
-        if ($curVal != "") {
-            $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
-            if ($this->TypeID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
-                $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
-                    $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
-                } else {
-                    $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
-                }
-            }
-        } else {
-            $this->TypeID->ViewValue = null;
-        }
-
-        // Tanggal
-        $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-        $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-        // LokasiID
-        $curVal = strval($this->LokasiID->CurrentValue);
-        if ($curVal != "") {
-            $this->LokasiID->ViewValue = $this->LokasiID->lookupCacheOption($curVal);
-            if ($this->LokasiID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
-                $sqlWrk = $this->LokasiID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->LokasiID->Lookup->renderViewRow($rswrk[0]);
-                    $this->LokasiID->ViewValue = $this->LokasiID->displayValue($arwrk);
-                } else {
-                    $this->LokasiID->ViewValue = FormatNumber($this->LokasiID->CurrentValue, $this->LokasiID->formatPattern());
-                }
-            }
-        } else {
-            $this->LokasiID->ViewValue = null;
-        }
-
-        // PelabuhanID
-        $curVal = strval($this->PelabuhanID->CurrentValue);
-        if ($curVal != "") {
-            $this->PelabuhanID->ViewValue = $this->PelabuhanID->lookupCacheOption($curVal);
-            if ($this->PelabuhanID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchExpression(), "=", $curVal, $this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchDataType(), "");
-                $sqlWrk = $this->PelabuhanID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->PelabuhanID->Lookup->renderViewRow($rswrk[0]);
-                    $this->PelabuhanID->ViewValue = $this->PelabuhanID->displayValue($arwrk);
-                } else {
-                    $this->PelabuhanID->ViewValue = FormatNumber($this->PelabuhanID->CurrentValue, $this->PelabuhanID->formatPattern());
-                }
-            }
-        } else {
-            $this->PelabuhanID->ViewValue = null;
-        }
-
-        // BL_Extra
-        $this->BL_Extra->ViewValue = $this->BL_Extra->CurrentValue;
-        $this->BL_Extra->ViewValue = FormatNumber($this->BL_Extra->ViewValue, $this->BL_Extra->formatPattern());
-
-        // DepoID
-        $curVal = strval($this->DepoID->CurrentValue);
-        if ($curVal != "") {
-            $this->DepoID->ViewValue = $this->DepoID->lookupCacheOption($curVal);
-            if ($this->DepoID->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchExpression(), "=", $curVal, $this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchDataType(), "");
-                $sqlWrk = $this->DepoID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->DepoID->Lookup->renderViewRow($rswrk[0]);
-                    $this->DepoID->ViewValue = $this->DepoID->displayValue($arwrk);
-                } else {
-                    $this->DepoID->ViewValue = FormatNumber($this->DepoID->CurrentValue, $this->DepoID->formatPattern());
-                }
-            }
-        } else {
-            $this->DepoID->ViewValue = null;
-        }
-
-        // Ongkos
-        $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
-        $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
-
-        // IsShow
-        if (strval($this->IsShow->CurrentValue) != "") {
-            $this->IsShow->ViewValue = $this->IsShow->optionCaption($this->IsShow->CurrentValue);
-        } else {
-            $this->IsShow->ViewValue = null;
-        }
-
-        // IsOpen
-        $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
+        // NomorHP
 
         // TakenByID
         $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-        $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
 
-        // JobOrderID
-        $this->JobOrderID->HrefValue = "";
-        $this->JobOrderID->TooltipValue = "";
+        // Nama
+        $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-        // Job2ID
-        $this->Job2ID->HrefValue = "";
-        $this->Job2ID->TooltipValue = "";
-
-        // SizeID
-        $this->SizeID->HrefValue = "";
-        $this->SizeID->TooltipValue = "";
-
-        // TypeID
-        $this->TypeID->HrefValue = "";
-        $this->TypeID->TooltipValue = "";
-
-        // Tanggal
-        $this->Tanggal->HrefValue = "";
-        $this->Tanggal->TooltipValue = "";
-
-        // LokasiID
-        $this->LokasiID->HrefValue = "";
-        $this->LokasiID->TooltipValue = "";
-
-        // PelabuhanID
-        $this->PelabuhanID->HrefValue = "";
-        $this->PelabuhanID->TooltipValue = "";
-
-        // BL_Extra
-        $this->BL_Extra->HrefValue = "";
-        $this->BL_Extra->TooltipValue = "";
-
-        // DepoID
-        $this->DepoID->HrefValue = "";
-        $this->DepoID->TooltipValue = "";
-
-        // Ongkos
-        $this->Ongkos->HrefValue = "";
-        $this->Ongkos->TooltipValue = "";
-
-        // IsShow
-        $this->IsShow->HrefValue = "";
-        $this->IsShow->TooltipValue = "";
-
-        // IsOpen
-        $this->IsOpen->HrefValue = "";
-        $this->IsOpen->TooltipValue = "";
+        // NomorHP
+        $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
 
         // TakenByID
         $this->TakenByID->HrefValue = "";
         $this->TakenByID->TooltipValue = "";
+
+        // Nama
+        $this->Nama->HrefValue = "";
+        $this->Nama->TooltipValue = "";
+
+        // NomorHP
+        $this->NomorHP->HrefValue = "";
+        $this->NomorHP->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1686,72 +1148,25 @@ class JobOrder extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // JobOrderID
-        $this->JobOrderID->setupEditAttributes();
-        $this->JobOrderID->EditValue = $this->JobOrderID->CurrentValue;
-
-        // Job2ID
-        $this->Job2ID->setupEditAttributes();
-        $this->Job2ID->PlaceHolder = RemoveHtml($this->Job2ID->caption());
-
-        // SizeID
-        $this->SizeID->setupEditAttributes();
-        $this->SizeID->PlaceHolder = RemoveHtml($this->SizeID->caption());
-
-        // TypeID
-        $this->TypeID->setupEditAttributes();
-        $this->TypeID->EditValue = $this->TypeID->CurrentValue;
-        $this->TypeID->PlaceHolder = RemoveHtml($this->TypeID->caption());
-
-        // Tanggal
-        $this->Tanggal->setupEditAttributes();
-        $this->Tanggal->EditValue = FormatDateTime($this->Tanggal->CurrentValue, $this->Tanggal->formatPattern());
-        $this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
-
-        // LokasiID
-        $this->LokasiID->setupEditAttributes();
-        $this->LokasiID->PlaceHolder = RemoveHtml($this->LokasiID->caption());
-
-        // PelabuhanID
-        $this->PelabuhanID->setupEditAttributes();
-        $this->PelabuhanID->PlaceHolder = RemoveHtml($this->PelabuhanID->caption());
-
-        // BL_Extra
-        $this->BL_Extra->setupEditAttributes();
-        $this->BL_Extra->EditValue = $this->BL_Extra->CurrentValue;
-        $this->BL_Extra->PlaceHolder = RemoveHtml($this->BL_Extra->caption());
-        if (strval($this->BL_Extra->EditValue) != "" && is_numeric($this->BL_Extra->EditValue)) {
-            $this->BL_Extra->EditValue = FormatNumber($this->BL_Extra->EditValue, null);
-        }
-
-        // DepoID
-        $this->DepoID->setupEditAttributes();
-        $this->DepoID->PlaceHolder = RemoveHtml($this->DepoID->caption());
-
-        // Ongkos
-        $this->Ongkos->setupEditAttributes();
-        $this->Ongkos->EditValue = $this->Ongkos->CurrentValue;
-        $this->Ongkos->PlaceHolder = RemoveHtml($this->Ongkos->caption());
-        if (strval($this->Ongkos->EditValue) != "" && is_numeric($this->Ongkos->EditValue)) {
-            $this->Ongkos->EditValue = FormatNumber($this->Ongkos->EditValue, null);
-        }
-
-        // IsShow
-        $this->IsShow->EditValue = $this->IsShow->options(false);
-        $this->IsShow->PlaceHolder = RemoveHtml($this->IsShow->caption());
-
-        // IsOpen
-        $this->IsOpen->setupEditAttributes();
-        $this->IsOpen->EditValue = $this->IsOpen->CurrentValue;
-        $this->IsOpen->PlaceHolder = RemoveHtml($this->IsOpen->caption());
-
         // TakenByID
         $this->TakenByID->setupEditAttributes();
         $this->TakenByID->EditValue = $this->TakenByID->CurrentValue;
-        $this->TakenByID->PlaceHolder = RemoveHtml($this->TakenByID->caption());
-        if (strval($this->TakenByID->EditValue) != "" && is_numeric($this->TakenByID->EditValue)) {
-            $this->TakenByID->EditValue = FormatNumber($this->TakenByID->EditValue, null);
+
+        // Nama
+        $this->Nama->setupEditAttributes();
+        if (!$this->Nama->Raw) {
+            $this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
         }
+        $this->Nama->EditValue = $this->Nama->CurrentValue;
+        $this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
+
+        // NomorHP
+        $this->NomorHP->setupEditAttributes();
+        if (!$this->NomorHP->Raw) {
+            $this->NomorHP->CurrentValue = HtmlDecode($this->NomorHP->CurrentValue);
+        }
+        $this->NomorHP->EditValue = $this->NomorHP->CurrentValue;
+        $this->NomorHP->PlaceHolder = RemoveHtml($this->NomorHP->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1781,33 +1196,13 @@ class JobOrder extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->JobOrderID);
-                    $doc->exportCaption($this->Job2ID);
-                    $doc->exportCaption($this->SizeID);
-                    $doc->exportCaption($this->TypeID);
-                    $doc->exportCaption($this->Tanggal);
-                    $doc->exportCaption($this->LokasiID);
-                    $doc->exportCaption($this->PelabuhanID);
-                    $doc->exportCaption($this->BL_Extra);
-                    $doc->exportCaption($this->DepoID);
-                    $doc->exportCaption($this->Ongkos);
-                    $doc->exportCaption($this->IsShow);
-                    $doc->exportCaption($this->IsOpen);
                     $doc->exportCaption($this->TakenByID);
+                    $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->NomorHP);
                 } else {
-                    $doc->exportCaption($this->JobOrderID);
-                    $doc->exportCaption($this->Job2ID);
-                    $doc->exportCaption($this->SizeID);
-                    $doc->exportCaption($this->TypeID);
-                    $doc->exportCaption($this->Tanggal);
-                    $doc->exportCaption($this->LokasiID);
-                    $doc->exportCaption($this->PelabuhanID);
-                    $doc->exportCaption($this->BL_Extra);
-                    $doc->exportCaption($this->DepoID);
-                    $doc->exportCaption($this->Ongkos);
-                    $doc->exportCaption($this->IsShow);
-                    $doc->exportCaption($this->IsOpen);
                     $doc->exportCaption($this->TakenByID);
+                    $doc->exportCaption($this->Nama);
+                    $doc->exportCaption($this->NomorHP);
                 }
                 $doc->endExportRow();
             }
@@ -1834,33 +1229,13 @@ class JobOrder extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->JobOrderID);
-                        $doc->exportField($this->Job2ID);
-                        $doc->exportField($this->SizeID);
-                        $doc->exportField($this->TypeID);
-                        $doc->exportField($this->Tanggal);
-                        $doc->exportField($this->LokasiID);
-                        $doc->exportField($this->PelabuhanID);
-                        $doc->exportField($this->BL_Extra);
-                        $doc->exportField($this->DepoID);
-                        $doc->exportField($this->Ongkos);
-                        $doc->exportField($this->IsShow);
-                        $doc->exportField($this->IsOpen);
                         $doc->exportField($this->TakenByID);
+                        $doc->exportField($this->Nama);
+                        $doc->exportField($this->NomorHP);
                     } else {
-                        $doc->exportField($this->JobOrderID);
-                        $doc->exportField($this->Job2ID);
-                        $doc->exportField($this->SizeID);
-                        $doc->exportField($this->TypeID);
-                        $doc->exportField($this->Tanggal);
-                        $doc->exportField($this->LokasiID);
-                        $doc->exportField($this->PelabuhanID);
-                        $doc->exportField($this->BL_Extra);
-                        $doc->exportField($this->DepoID);
-                        $doc->exportField($this->Ongkos);
-                        $doc->exportField($this->IsShow);
-                        $doc->exportField($this->IsOpen);
                         $doc->exportField($this->TakenByID);
+                        $doc->exportField($this->Nama);
+                        $doc->exportField($this->NomorHP);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1888,7 +1263,7 @@ class JobOrder extends DbTable
     // Write audit trail start/end for grid update
     public function writeAuditTrailDummy($typ)
     {
-        WriteAuditLog(CurrentUserIdentifier(), $typ, 'job_order');
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'taken_by');
     }
 
     // Write audit trail (add page)
@@ -1904,7 +1279,7 @@ class JobOrder extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['JobOrderID'];
+        $key .= $rs['TakenByID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1919,7 +1294,7 @@ class JobOrder extends DbTable
                 } else {
                     $newvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "A", 'job_order', $fldname, $key, "", $newvalue);
+                WriteAuditLog($usr, "A", 'taken_by', $fldname, $key, "", $newvalue);
             }
         }
     }
@@ -1937,7 +1312,7 @@ class JobOrder extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rsold['JobOrderID'];
+        $key .= $rsold['TakenByID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1962,7 +1337,7 @@ class JobOrder extends DbTable
                         $oldvalue = $rsold[$fldname];
                         $newvalue = $rsnew[$fldname];
                     }
-                    WriteAuditLog($usr, "U", 'job_order', $fldname, $key, $oldvalue, $newvalue);
+                    WriteAuditLog($usr, "U", 'taken_by', $fldname, $key, $oldvalue, $newvalue);
                 }
             }
         }
@@ -1981,7 +1356,7 @@ class JobOrder extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['JobOrderID'];
+        $key .= $rs['TakenByID'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1996,7 +1371,7 @@ class JobOrder extends DbTable
                 } else {
                     $oldvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "D", 'job_order', $fldname, $key, $oldvalue);
+                WriteAuditLog($usr, "D", 'taken_by', $fldname, $key, $oldvalue);
             }
         }
     }

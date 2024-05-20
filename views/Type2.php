@@ -35,6 +35,8 @@ $r = ExecuteRows($q);
             SizeID = ' . $_GET['sizeid']
             . ' and TypeID = ' . $row['TypeID']
             . ' and Job2ID = ' . $_GET['job2id']
+            . ' and IsOpen = 1 '
+            . ' and IsShow = 1 '
     );
     if ($job_num == 0) {
         // continue;

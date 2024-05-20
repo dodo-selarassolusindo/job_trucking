@@ -22,6 +22,7 @@ C:\xampp\htdocs\job_trucking\controllers\Size2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\Size3Controller.php
 C:\xampp\htdocs\job_trucking\controllers\SizeController.php
 C:\xampp\htdocs\job_trucking\controllers\SizeTypeController.php
+C:\xampp\htdocs\job_trucking\controllers\TakenByController.php
 C:\xampp\htdocs\job_trucking\controllers\Type2Controller.php
 C:\xampp\htdocs\job_trucking\controllers\TypeController.php
 C:\xampp\htdocs\job_trucking\controllers\UserlevelpermissionsController.php
@@ -117,6 +118,12 @@ C:\xampp\htdocs\job_trucking\models\SizeTypeEdit.php
 C:\xampp\htdocs\job_trucking\models\SizeTypeList.php
 C:\xampp\htdocs\job_trucking\models\SizeTypeView.php
 C:\xampp\htdocs\job_trucking\models\SizeView.php
+C:\xampp\htdocs\job_trucking\models\TakenBy.php
+C:\xampp\htdocs\job_trucking\models\TakenByAdd.php
+C:\xampp\htdocs\job_trucking\models\TakenByDelete.php
+C:\xampp\htdocs\job_trucking\models\TakenByEdit.php
+C:\xampp\htdocs\job_trucking\models\TakenByList.php
+C:\xampp\htdocs\job_trucking\models\TakenByView.php
 C:\xampp\htdocs\job_trucking\models\Type.php
 C:\xampp\htdocs\job_trucking\models\Type2.php
 C:\xampp\htdocs\job_trucking\models\TypeAdd.php
@@ -198,6 +205,7 @@ C:\xampp\htdocs\job_trucking\src\Entity\Pelabuhan.php
 C:\xampp\htdocs\job_trucking\src\Entity\Shipper.php
 C:\xampp\htdocs\job_trucking\src\Entity\Size.php
 C:\xampp\htdocs\job_trucking\src\Entity\SizeType.php
+C:\xampp\htdocs\job_trucking\src\Entity\TakenBy.php
 C:\xampp\htdocs\job_trucking\src\Entity\Type.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevel.php
 C:\xampp\htdocs\job_trucking\src\Entity\Userlevelpermission.php
@@ -355,6 +363,11 @@ C:\xampp\htdocs\job_trucking\views\SizeTypeEdit.php
 C:\xampp\htdocs\job_trucking\views\SizeTypeList.php
 C:\xampp\htdocs\job_trucking\views\SizeTypeView.php
 C:\xampp\htdocs\job_trucking\views\SizeView.php
+C:\xampp\htdocs\job_trucking\views\TakenByAdd.php
+C:\xampp\htdocs\job_trucking\views\TakenByDelete.php
+C:\xampp\htdocs\job_trucking\views\TakenByEdit.php
+C:\xampp\htdocs\job_trucking\views\TakenByList.php
+C:\xampp\htdocs\job_trucking\views\TakenByView.php
 C:\xampp\htdocs\job_trucking\views\Type2.php
 C:\xampp\htdocs\job_trucking\views\TypeAdd.php
 C:\xampp\htdocs\job_trucking\views\TypeDelete.php

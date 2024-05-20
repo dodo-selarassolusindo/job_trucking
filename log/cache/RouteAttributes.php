@@ -86,6 +86,11 @@
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_job_trucking\\Attributes\\Map'],
     ],
     null,
     [
@@ -517,6 +522,31 @@
                     'POST',
                     'OPTIONS',
                 ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
             ],
             'pattern' => [
                 '/audittraillist[/{Id}]',
@@ -589,6 +619,11 @@
                 '/sizetypeview[/{Size_Type_ID}]',
                 '/sizetypeedit[/{Size_Type_ID}]',
                 '/sizetypedelete[/{Size_Type_ID}]',
+                '/takenbylist[/{TakenByID}]',
+                '/takenbyadd[/{TakenByID}]',
+                '/takenbyview[/{TakenByID}]',
+                '/takenbyedit[/{TakenByID}]',
+                '/takenbydelete[/{TakenByID}]',
                 '/type2[/{params:.*}]',
                 '/typelist[/{TypeID}]',
                 '/typeadd[/{TypeID}]',
@@ -677,6 +712,11 @@
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:view',
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:edit',
                 'PHPMaker2024\\prj_job_trucking\\SizeTypeController:delete',
+                'PHPMaker2024\\prj_job_trucking\\TakenByController:list',
+                'PHPMaker2024\\prj_job_trucking\\TakenByController:add',
+                'PHPMaker2024\\prj_job_trucking\\TakenByController:view',
+                'PHPMaker2024\\prj_job_trucking\\TakenByController:edit',
+                'PHPMaker2024\\prj_job_trucking\\TakenByController:delete',
                 'PHPMaker2024\\prj_job_trucking\\Type2Controller:custom',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:list',
                 'PHPMaker2024\\prj_job_trucking\\TypeController:add',
@@ -951,6 +991,21 @@
                 [
                     'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
                 ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_job_trucking\\PermissionMiddleware',
+                ],
             ],
             'name' => [
                 'list.audittrail',
@@ -1023,6 +1078,11 @@
                 'view.size_type',
                 'edit.size_type',
                 'delete.size_type',
+                'list.taken_by',
+                'add.taken_by',
+                'view.taken_by',
+                'edit.taken_by',
+                'delete.taken_by',
                 'custom.type2',
                 'list.type',
                 'add.type',
@@ -1041,6 +1101,11 @@
                 'delete.userlevels',
             ],
             'options' => [
+                [],
+                [],
+                [],
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -1217,6 +1282,11 @@
         $o[83],
         $o[84],
         $o[85],
+        $o[86],
+        $o[87],
+        $o[88],
+        $o[89],
+        $o[90],
     ],
     []
 );

@@ -38,9 +38,9 @@ loadjs.ready(["wrapper", "head"], function () {
             ["BL_Extra", [fields.BL_Extra.visible && fields.BL_Extra.required ? ew.Validators.required(fields.BL_Extra.caption) : null, ew.Validators.float], fields.BL_Extra.isInvalid],
             ["DepoID", [fields.DepoID.visible && fields.DepoID.required ? ew.Validators.required(fields.DepoID.caption) : null], fields.DepoID.isInvalid],
             ["Ongkos", [fields.Ongkos.visible && fields.Ongkos.required ? ew.Validators.required(fields.Ongkos.caption) : null, ew.Validators.float], fields.Ongkos.isInvalid],
-            ["IsShow", [fields.IsShow.visible && fields.IsShow.required ? ew.Validators.required(fields.IsShow.caption) : null, ew.Validators.integer], fields.IsShow.isInvalid],
+            ["IsShow", [fields.IsShow.visible && fields.IsShow.required ? ew.Validators.required(fields.IsShow.caption) : null], fields.IsShow.isInvalid],
             ["IsOpen", [fields.IsOpen.visible && fields.IsOpen.required ? ew.Validators.required(fields.IsOpen.caption) : null, ew.Validators.integer], fields.IsOpen.isInvalid],
-            ["TakenBy", [fields.TakenBy.visible && fields.TakenBy.required ? ew.Validators.required(fields.TakenBy.caption) : null, ew.Validators.integer], fields.TakenBy.isInvalid]
+            ["TakenByID", [fields.TakenByID.visible && fields.TakenByID.required ? ew.Validators.required(fields.TakenByID.caption) : null, ew.Validators.integer], fields.TakenByID.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -62,6 +62,8 @@ loadjs.ready(["wrapper", "head"], function () {
             "LokasiID": <?= $Page->LokasiID->toClientList($Page) ?>,
             "PelabuhanID": <?= $Page->PelabuhanID->toClientList($Page) ?>,
             "DepoID": <?= $Page->DepoID->toClientList($Page) ?>,
+            "IsShow": <?= $Page->IsShow->toClientList($Page) ?>,
+            "IsOpen": <?= $Page->IsOpen->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -394,10 +396,29 @@ loadjs.ready("fjob_orderedit", function() {
 <?php } ?>
 <?php if ($Page->IsShow->Visible) { // IsShow ?>
     <div id="r_IsShow"<?= $Page->IsShow->rowAttributes() ?>>
-        <label id="elh_job_order_IsShow" for="x_IsShow" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsShow->caption() ?><?= $Page->IsShow->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_job_order_IsShow" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsShow->caption() ?><?= $Page->IsShow->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsShow->cellAttributes() ?>>
 <span id="el_job_order_IsShow">
-<input type="<?= $Page->IsShow->getInputTextType() ?>" name="x_IsShow" id="x_IsShow" data-table="job_order" data-field="x_IsShow" value="<?= $Page->IsShow->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->IsShow->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->IsShow->formatPattern()) ?>"<?= $Page->IsShow->editAttributes() ?> aria-describedby="x_IsShow_help">
+<template id="tp_x_IsShow">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="job_order" data-field="x_IsShow" name="x_IsShow" id="x_IsShow"<?= $Page->IsShow->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_IsShow" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_IsShow"
+    name="x_IsShow"
+    value="<?= HtmlEncode($Page->IsShow->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_IsShow"
+    data-target="dsl_x_IsShow"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->IsShow->isInvalidClass() ?>"
+    data-table="job_order"
+    data-field="x_IsShow"
+    data-value-separator="<?= $Page->IsShow->displayValueSeparatorAttribute() ?>"
+    <?= $Page->IsShow->editAttributes() ?>></selection-list>
 <?= $Page->IsShow->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->IsShow->getErrorMessage() ?></div>
 </span>
@@ -406,24 +427,37 @@ loadjs.ready("fjob_orderedit", function() {
 <?php } ?>
 <?php if ($Page->IsOpen->Visible) { // IsOpen ?>
     <div id="r_IsOpen"<?= $Page->IsOpen->rowAttributes() ?>>
-        <label id="elh_job_order_IsOpen" for="x_IsOpen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsOpen->caption() ?><?= $Page->IsOpen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_job_order_IsOpen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->IsOpen->caption() ?><?= $Page->IsOpen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->IsOpen->cellAttributes() ?>>
 <span id="el_job_order_IsOpen">
-<input type="<?= $Page->IsOpen->getInputTextType() ?>" name="x_IsOpen" id="x_IsOpen" data-table="job_order" data-field="x_IsOpen" value="<?= $Page->IsOpen->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->IsOpen->formatPattern()) ?>"<?= $Page->IsOpen->editAttributes() ?> aria-describedby="x_IsOpen_help">
+<?php
+if (IsRTL()) {
+    $Page->IsOpen->EditAttrs["dir"] = "rtl";
+}
+?>
+<span id="as_x_IsOpen" class="ew-auto-suggest">
+    <input type="<?= $Page->IsOpen->getInputTextType() ?>" class="form-control" name="sv_x_IsOpen" id="sv_x_IsOpen" value="<?= RemoveHtml($Page->IsOpen->EditValue) ?>" autocomplete="off" size="30" placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->IsOpen->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->IsOpen->formatPattern()) ?>"<?= $Page->IsOpen->editAttributes() ?> aria-describedby="x_IsOpen_help">
+</span>
+<selection-list hidden class="form-control" data-table="job_order" data-field="x_IsOpen" data-input="sv_x_IsOpen" data-value-separator="<?= $Page->IsOpen->displayValueSeparatorAttribute() ?>" name="x_IsOpen" id="x_IsOpen" value="<?= HtmlEncode($Page->IsOpen->CurrentValue) ?>"></selection-list>
 <?= $Page->IsOpen->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->IsOpen->getErrorMessage() ?></div>
+<script>
+loadjs.ready("fjob_orderedit", function() {
+    fjob_orderedit.createAutoSuggest(Object.assign({"id":"x_IsOpen","forceSelect":false}, { lookupAllDisplayFields: <?= $Page->IsOpen->Lookup->LookupAllDisplayFields ? "true" : "false" ?> }, ew.vars.tables.job_order.fields.IsOpen.autoSuggestOptions));
+});
+</script>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-    <div id="r_TakenBy"<?= $Page->TakenBy->rowAttributes() ?>>
-        <label id="elh_job_order_TakenBy" for="x_TakenBy" class="<?= $Page->LeftColumnClass ?>"><?= $Page->TakenBy->caption() ?><?= $Page->TakenBy->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->TakenBy->cellAttributes() ?>>
-<span id="el_job_order_TakenBy">
-<input type="<?= $Page->TakenBy->getInputTextType() ?>" name="x_TakenBy" id="x_TakenBy" data-table="job_order" data-field="x_TakenBy" value="<?= $Page->TakenBy->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->TakenBy->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TakenBy->formatPattern()) ?>"<?= $Page->TakenBy->editAttributes() ?> aria-describedby="x_TakenBy_help">
-<?= $Page->TakenBy->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->TakenBy->getErrorMessage() ?></div>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+    <div id="r_TakenByID"<?= $Page->TakenByID->rowAttributes() ?>>
+        <label id="elh_job_order_TakenByID" for="x_TakenByID" class="<?= $Page->LeftColumnClass ?>"><?= $Page->TakenByID->caption() ?><?= $Page->TakenByID->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->TakenByID->cellAttributes() ?>>
+<span id="el_job_order_TakenByID">
+<input type="<?= $Page->TakenByID->getInputTextType() ?>" name="x_TakenByID" id="x_TakenByID" data-table="job_order" data-field="x_TakenByID" value="<?= $Page->TakenByID->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->TakenByID->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->TakenByID->formatPattern()) ?>"<?= $Page->TakenByID->editAttributes() ?> aria-describedby="x_TakenByID_help">
+<?= $Page->TakenByID->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->TakenByID->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

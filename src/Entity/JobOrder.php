@@ -66,8 +66,8 @@ class JobOrder extends AbstractEntity
     #[Column(name: "IsOpen", type: "integer")]
     private int $isOpen;
 
-    #[Column(name: "TakenBy", type: "integer")]
-    private int $takenBy;
+    #[Column(name: "TakenByID", type: "integer")]
+    private int $takenById;
 
     public function getJobOrderId(): int
     {
@@ -201,14 +201,14 @@ class JobOrder extends AbstractEntity
         return $this;
     }
 
-    public function getTakenBy(): int
+    public function getTakenById(): int
     {
-        return $this->takenBy;
+        return $this->takenById;
     }
 
-    public function setTakenBy(int $value): static
+    public function setTakenById(int $value): static
     {
-        $this->takenBy = $value;
+        $this->takenById = $value;
         return $this;
     }
 }

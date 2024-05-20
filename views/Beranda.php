@@ -25,6 +25,8 @@ $r = ExecuteRows($q);
             job_order
         where
             Job2ID = ' . $row['Job2ID']
+            . ' and IsOpen = 1 '
+            . ' and IsShow = 1 '
     );
     if ($job_num == 0) {
         // continue;

@@ -183,13 +183,13 @@ loadjs.ready("head", function () {
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->TakenBy->Visible) { // TakenBy ?>
-    <tr id="r_TakenBy"<?= $Page->TakenBy->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_order_TakenBy"><?= $Page->TakenBy->caption() ?></span></td>
-        <td data-name="TakenBy"<?= $Page->TakenBy->cellAttributes() ?>>
-<span id="el_job_order_TakenBy">
-<span<?= $Page->TakenBy->viewAttributes() ?>>
-<?= $Page->TakenBy->getViewValue() ?></span>
+<?php if ($Page->TakenByID->Visible) { // TakenByID ?>
+    <tr id="r_TakenByID"<?= $Page->TakenByID->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_job_order_TakenByID"><?= $Page->TakenByID->caption() ?></span></td>
+        <td data-name="TakenByID"<?= $Page->TakenByID->cellAttributes() ?>>
+<span id="el_job_order_TakenByID">
+<span<?= $Page->TakenByID->viewAttributes() ?>>
+<?= $Page->TakenByID->getViewValue() ?></span>
 </span>
 </td>
     </tr>

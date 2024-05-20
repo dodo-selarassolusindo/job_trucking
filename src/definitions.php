@@ -96,6 +96,7 @@ return [
     "size_type" => \DI\create(SizeType::class),
     "size2" => \DI\create(Size2::class),
     "size3" => \DI\create(Size3::class),
+    "taken_by" => \DI\create(TakenBy::class),
     "type" => \DI\create(Type::class),
     "type2" => \DI\create(Type2::class),
     "userlevelpermissions" => \DI\create(Userlevelpermissions::class),

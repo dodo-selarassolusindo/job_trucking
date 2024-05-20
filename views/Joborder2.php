@@ -21,10 +21,12 @@ $q = '
         left join pelabuhan pel on jo.PelabuhanID = pel.PelabuhanID
         left join depo dep on jo.DepoID = dep.DepoID
     where
-        Job2ID = ' . $_GET['job2id'] . '
-        and SizeID = ' . $_GET['sizeid'] . '
-        and TypeID = ' . $_GET['typeid'] . '
-    ';
+        Job2ID = ' . $_GET['job2id']
+        . ' and SizeID = ' . $_GET['sizeid']
+        . ' and TypeID = ' . $_GET['typeid']
+        . ' and IsOpen = 1 '
+        . ' and IsShow = 1 '
+    ;
 $r = ExecuteRows($q);
 ?>
 

@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JobOrderView extends JobOrder
+class TakenByView extends TakenBy
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class JobOrderView extends JobOrder
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JobOrderView";
+    public $PageObjName = "TakenByView";
 
     // View file path
     public $View = null;
@@ -38,7 +38,7 @@ class JobOrderView extends JobOrder
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "joborderview";
+    public $CurrentPageName = "takenbyview";
 
     // Page URLs
     public $AddUrl;
@@ -147,19 +147,9 @@ class JobOrderView extends JobOrder
     // Set field visibility
     public function setVisibility()
     {
-        $this->JobOrderID->setVisibility();
-        $this->Job2ID->setVisibility();
-        $this->SizeID->setVisibility();
-        $this->TypeID->setVisibility();
-        $this->Tanggal->setVisibility();
-        $this->LokasiID->setVisibility();
-        $this->PelabuhanID->setVisibility();
-        $this->BL_Extra->setVisibility();
-        $this->DepoID->setVisibility();
-        $this->Ongkos->setVisibility();
-        $this->IsShow->setVisibility();
-        $this->IsOpen->setVisibility();
         $this->TakenByID->setVisibility();
+        $this->Nama->setVisibility();
+        $this->NomorHP->setVisibility();
     }
 
     // Constructor
@@ -167,8 +157,8 @@ class JobOrderView extends JobOrder
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer, $UserTable;
-        $this->TableVar = 'job_order';
-        $this->TableName = 'job_order';
+        $this->TableVar = 'taken_by';
+        $this->TableName = 'taken_by';
 
         // Table CSS class
         $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-view-table";
@@ -179,19 +169,19 @@ class JobOrderView extends JobOrder
         // Language object
         $Language = Container("app.language");
 
-        // Table object (job_order)
-        if (!isset($GLOBALS["job_order"]) || $GLOBALS["job_order"]::class == PROJECT_NAMESPACE . "job_order") {
-            $GLOBALS["job_order"] = &$this;
+        // Table object (taken_by)
+        if (!isset($GLOBALS["taken_by"]) || $GLOBALS["taken_by"]::class == PROJECT_NAMESPACE . "taken_by") {
+            $GLOBALS["taken_by"] = &$this;
         }
 
         // Set up record key
-        if (($keyValue = Get("JobOrderID") ?? Route("JobOrderID")) !== null) {
-            $this->RecKey["JobOrderID"] = $keyValue;
+        if (($keyValue = Get("TakenByID") ?? Route("TakenByID")) !== null) {
+            $this->RecKey["TakenByID"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'job_order');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'taken_by');
         }
 
         // Start timer
@@ -311,7 +301,7 @@ class JobOrderView extends JobOrder
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "joborderview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "takenbyview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -399,7 +389,7 @@ class JobOrderView extends JobOrder
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['JobOrderID'];
+            $key .= @$ar['TakenByID'];
         }
         return $key;
     }
@@ -412,7 +402,7 @@ class JobOrderView extends JobOrder
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->JobOrderID->Visible = false;
+            $this->TakenByID->Visible = false;
         }
     }
 
@@ -548,16 +538,6 @@ class JobOrderView extends JobOrder
             $this->InlineDelete = true;
         }
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->Job2ID);
-        $this->setupLookupOptions($this->SizeID);
-        $this->setupLookupOptions($this->TypeID);
-        $this->setupLookupOptions($this->LokasiID);
-        $this->setupLookupOptions($this->PelabuhanID);
-        $this->setupLookupOptions($this->DepoID);
-        $this->setupLookupOptions($this->IsShow);
-        $this->setupLookupOptions($this->IsOpen);
-
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -567,17 +547,17 @@ class JobOrderView extends JobOrder
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-        if (($keyValue = Get("JobOrderID") ?? Route("JobOrderID")) !== null) {
-            $this->JobOrderID->setQueryStringValue($keyValue);
-            $this->RecKey["JobOrderID"] = $this->JobOrderID->QueryStringValue;
-        } elseif (Post("JobOrderID") !== null) {
-            $this->JobOrderID->setFormValue(Post("JobOrderID"));
-            $this->RecKey["JobOrderID"] = $this->JobOrderID->FormValue;
+        if (($keyValue = Get("TakenByID") ?? Route("TakenByID")) !== null) {
+            $this->TakenByID->setQueryStringValue($keyValue);
+            $this->RecKey["TakenByID"] = $this->TakenByID->QueryStringValue;
+        } elseif (Post("TakenByID") !== null) {
+            $this->TakenByID->setFormValue(Post("TakenByID"));
+            $this->RecKey["TakenByID"] = $this->TakenByID->FormValue;
         } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-            $this->JobOrderID->setQueryStringValue($keyValue);
-            $this->RecKey["JobOrderID"] = $this->JobOrderID->QueryStringValue;
+            $this->TakenByID->setQueryStringValue($keyValue);
+            $this->RecKey["TakenByID"] = $this->TakenByID->QueryStringValue;
         } elseif (!$loadCurrentRecord) {
-            $returnUrl = "joborderlist"; // Return to list
+            $returnUrl = "takenbylist"; // Return to list
         }
 
         // Get action
@@ -599,7 +579,7 @@ class JobOrderView extends JobOrder
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "joborderlist"; // No matching record, return to list
+                        $returnUrl = "takenbylist"; // No matching record, return to list
                     }
                 break;
         }
@@ -759,38 +739,18 @@ class JobOrderView extends JobOrder
         if ($this->AuditTrailOnView) {
             $this->writeAuditTrailOnView($row);
         }
-        $this->JobOrderID->setDbValue($row['JobOrderID']);
-        $this->Job2ID->setDbValue($row['Job2ID']);
-        $this->SizeID->setDbValue($row['SizeID']);
-        $this->TypeID->setDbValue($row['TypeID']);
-        $this->Tanggal->setDbValue($row['Tanggal']);
-        $this->LokasiID->setDbValue($row['LokasiID']);
-        $this->PelabuhanID->setDbValue($row['PelabuhanID']);
-        $this->BL_Extra->setDbValue($row['BL_Extra']);
-        $this->DepoID->setDbValue($row['DepoID']);
-        $this->Ongkos->setDbValue($row['Ongkos']);
-        $this->IsShow->setDbValue($row['IsShow']);
-        $this->IsOpen->setDbValue($row['IsOpen']);
         $this->TakenByID->setDbValue($row['TakenByID']);
+        $this->Nama->setDbValue($row['Nama']);
+        $this->NomorHP->setDbValue($row['NomorHP']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['JobOrderID'] = $this->JobOrderID->DefaultValue;
-        $row['Job2ID'] = $this->Job2ID->DefaultValue;
-        $row['SizeID'] = $this->SizeID->DefaultValue;
-        $row['TypeID'] = $this->TypeID->DefaultValue;
-        $row['Tanggal'] = $this->Tanggal->DefaultValue;
-        $row['LokasiID'] = $this->LokasiID->DefaultValue;
-        $row['PelabuhanID'] = $this->PelabuhanID->DefaultValue;
-        $row['BL_Extra'] = $this->BL_Extra->DefaultValue;
-        $row['DepoID'] = $this->DepoID->DefaultValue;
-        $row['Ongkos'] = $this->Ongkos->DefaultValue;
-        $row['IsShow'] = $this->IsShow->DefaultValue;
-        $row['IsOpen'] = $this->IsOpen->DefaultValue;
         $row['TakenByID'] = $this->TakenByID->DefaultValue;
+        $row['Nama'] = $this->Nama->DefaultValue;
+        $row['NomorHP'] = $this->NomorHP->DefaultValue;
         return $row;
     }
 
@@ -812,253 +772,34 @@ class JobOrderView extends JobOrder
 
         // Common render codes for all row types
 
-        // JobOrderID
-
-        // Job2ID
-
-        // SizeID
-
-        // TypeID
-
-        // Tanggal
-
-        // LokasiID
-
-        // PelabuhanID
-
-        // BL_Extra
-
-        // DepoID
-
-        // Ongkos
-
-        // IsShow
-
-        // IsOpen
-
         // TakenByID
+
+        // Nama
+
+        // NomorHP
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // JobOrderID
-            $this->JobOrderID->ViewValue = $this->JobOrderID->CurrentValue;
-
-            // Job2ID
-            $curVal = strval($this->Job2ID->CurrentValue);
-            if ($curVal != "") {
-                $this->Job2ID->ViewValue = $this->Job2ID->lookupCacheOption($curVal);
-                if ($this->Job2ID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchExpression(), "=", $curVal, $this->Job2ID->Lookup->getTable()->Fields["Job2ID"]->searchDataType(), "");
-                    $sqlWrk = $this->Job2ID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->Job2ID->Lookup->renderViewRow($rswrk[0]);
-                        $this->Job2ID->ViewValue = $this->Job2ID->displayValue($arwrk);
-                    } else {
-                        $this->Job2ID->ViewValue = FormatNumber($this->Job2ID->CurrentValue, $this->Job2ID->formatPattern());
-                    }
-                }
-            } else {
-                $this->Job2ID->ViewValue = null;
-            }
-
-            // SizeID
-            $curVal = strval($this->SizeID->CurrentValue);
-            if ($curVal != "") {
-                $this->SizeID->ViewValue = $this->SizeID->lookupCacheOption($curVal);
-                if ($this->SizeID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchExpression(), "=", $curVal, $this->SizeID->Lookup->getTable()->Fields["SizeID"]->searchDataType(), "");
-                    $sqlWrk = $this->SizeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->SizeID->Lookup->renderViewRow($rswrk[0]);
-                        $this->SizeID->ViewValue = $this->SizeID->displayValue($arwrk);
-                    } else {
-                        $this->SizeID->ViewValue = FormatNumber($this->SizeID->CurrentValue, $this->SizeID->formatPattern());
-                    }
-                }
-            } else {
-                $this->SizeID->ViewValue = null;
-            }
-
-            // TypeID
-            $this->TypeID->ViewValue = $this->TypeID->CurrentValue;
-            $curVal = strval($this->TypeID->CurrentValue);
-            if ($curVal != "") {
-                $this->TypeID->ViewValue = $this->TypeID->lookupCacheOption($curVal);
-                if ($this->TypeID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchExpression(), "=", $curVal, $this->TypeID->Lookup->getTable()->Fields["TypeID"]->searchDataType(), "");
-                    $sqlWrk = $this->TypeID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->TypeID->Lookup->renderViewRow($rswrk[0]);
-                        $this->TypeID->ViewValue = $this->TypeID->displayValue($arwrk);
-                    } else {
-                        $this->TypeID->ViewValue = FormatNumber($this->TypeID->CurrentValue, $this->TypeID->formatPattern());
-                    }
-                }
-            } else {
-                $this->TypeID->ViewValue = null;
-            }
-
-            // Tanggal
-            $this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-            $this->Tanggal->ViewValue = FormatDateTime($this->Tanggal->ViewValue, $this->Tanggal->formatPattern());
-
-            // LokasiID
-            $curVal = strval($this->LokasiID->CurrentValue);
-            if ($curVal != "") {
-                $this->LokasiID->ViewValue = $this->LokasiID->lookupCacheOption($curVal);
-                if ($this->LokasiID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchExpression(), "=", $curVal, $this->LokasiID->Lookup->getTable()->Fields["LokasiID"]->searchDataType(), "");
-                    $sqlWrk = $this->LokasiID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->LokasiID->Lookup->renderViewRow($rswrk[0]);
-                        $this->LokasiID->ViewValue = $this->LokasiID->displayValue($arwrk);
-                    } else {
-                        $this->LokasiID->ViewValue = FormatNumber($this->LokasiID->CurrentValue, $this->LokasiID->formatPattern());
-                    }
-                }
-            } else {
-                $this->LokasiID->ViewValue = null;
-            }
-
-            // PelabuhanID
-            $curVal = strval($this->PelabuhanID->CurrentValue);
-            if ($curVal != "") {
-                $this->PelabuhanID->ViewValue = $this->PelabuhanID->lookupCacheOption($curVal);
-                if ($this->PelabuhanID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchExpression(), "=", $curVal, $this->PelabuhanID->Lookup->getTable()->Fields["PelabuhanID"]->searchDataType(), "");
-                    $sqlWrk = $this->PelabuhanID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->PelabuhanID->Lookup->renderViewRow($rswrk[0]);
-                        $this->PelabuhanID->ViewValue = $this->PelabuhanID->displayValue($arwrk);
-                    } else {
-                        $this->PelabuhanID->ViewValue = FormatNumber($this->PelabuhanID->CurrentValue, $this->PelabuhanID->formatPattern());
-                    }
-                }
-            } else {
-                $this->PelabuhanID->ViewValue = null;
-            }
-
-            // BL_Extra
-            $this->BL_Extra->ViewValue = $this->BL_Extra->CurrentValue;
-            $this->BL_Extra->ViewValue = FormatNumber($this->BL_Extra->ViewValue, $this->BL_Extra->formatPattern());
-
-            // DepoID
-            $curVal = strval($this->DepoID->CurrentValue);
-            if ($curVal != "") {
-                $this->DepoID->ViewValue = $this->DepoID->lookupCacheOption($curVal);
-                if ($this->DepoID->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchExpression(), "=", $curVal, $this->DepoID->Lookup->getTable()->Fields["DepoID"]->searchDataType(), "");
-                    $sqlWrk = $this->DepoID->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->DepoID->Lookup->renderViewRow($rswrk[0]);
-                        $this->DepoID->ViewValue = $this->DepoID->displayValue($arwrk);
-                    } else {
-                        $this->DepoID->ViewValue = FormatNumber($this->DepoID->CurrentValue, $this->DepoID->formatPattern());
-                    }
-                }
-            } else {
-                $this->DepoID->ViewValue = null;
-            }
-
-            // Ongkos
-            $this->Ongkos->ViewValue = $this->Ongkos->CurrentValue;
-            $this->Ongkos->ViewValue = FormatNumber($this->Ongkos->ViewValue, $this->Ongkos->formatPattern());
-
-            // IsShow
-            if (strval($this->IsShow->CurrentValue) != "") {
-                $this->IsShow->ViewValue = $this->IsShow->optionCaption($this->IsShow->CurrentValue);
-            } else {
-                $this->IsShow->ViewValue = null;
-            }
-
-            // IsOpen
-            $this->IsOpen->ViewValue = $this->IsOpen->CurrentValue;
-
             // TakenByID
             $this->TakenByID->ViewValue = $this->TakenByID->CurrentValue;
-            $this->TakenByID->ViewValue = FormatNumber($this->TakenByID->ViewValue, $this->TakenByID->formatPattern());
 
-            // JobOrderID
-            $this->JobOrderID->HrefValue = "";
-            $this->JobOrderID->TooltipValue = "";
+            // Nama
+            $this->Nama->ViewValue = $this->Nama->CurrentValue;
 
-            // Job2ID
-            $this->Job2ID->HrefValue = "";
-            $this->Job2ID->TooltipValue = "";
-
-            // SizeID
-            $this->SizeID->HrefValue = "";
-            $this->SizeID->TooltipValue = "";
-
-            // TypeID
-            $this->TypeID->HrefValue = "";
-            $this->TypeID->TooltipValue = "";
-
-            // Tanggal
-            $this->Tanggal->HrefValue = "";
-            $this->Tanggal->TooltipValue = "";
-
-            // LokasiID
-            $this->LokasiID->HrefValue = "";
-            $this->LokasiID->TooltipValue = "";
-
-            // PelabuhanID
-            $this->PelabuhanID->HrefValue = "";
-            $this->PelabuhanID->TooltipValue = "";
-
-            // BL_Extra
-            $this->BL_Extra->HrefValue = "";
-            $this->BL_Extra->TooltipValue = "";
-
-            // DepoID
-            $this->DepoID->HrefValue = "";
-            $this->DepoID->TooltipValue = "";
-
-            // Ongkos
-            $this->Ongkos->HrefValue = "";
-            $this->Ongkos->TooltipValue = "";
-
-            // IsShow
-            $this->IsShow->HrefValue = "";
-            $this->IsShow->TooltipValue = "";
-
-            // IsOpen
-            $this->IsOpen->HrefValue = "";
-            $this->IsOpen->TooltipValue = "";
+            // NomorHP
+            $this->NomorHP->ViewValue = $this->NomorHP->CurrentValue;
 
             // TakenByID
             $this->TakenByID->HrefValue = "";
             $this->TakenByID->TooltipValue = "";
+
+            // Nama
+            $this->Nama->HrefValue = "";
+            $this->Nama->TooltipValue = "";
+
+            // NomorHP
+            $this->NomorHP->HrefValue = "";
+            $this->NomorHP->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1073,7 +814,7 @@ class JobOrderView extends JobOrder
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("joborderlist"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("takenbylist"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }
@@ -1091,22 +832,6 @@ class JobOrderView extends JobOrder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_Job2ID":
-                    break;
-                case "x_SizeID":
-                    break;
-                case "x_TypeID":
-                    break;
-                case "x_LokasiID":
-                    break;
-                case "x_PelabuhanID":
-                    break;
-                case "x_DepoID":
-                    break;
-                case "x_IsShow":
-                    break;
-                case "x_IsOpen":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
