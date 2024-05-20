@@ -16,8 +16,8 @@ $q = '
         job_order jo
     where
         Job2ID = ' . $_GET['job2id'] . '
-        SizeID = ' . $_GET['sizeid'] . '
-        TypeID = ' . $_GET['typeid'] . '
+        and SizeID = ' . $_GET['sizeid'] . '
+        and TypeID = ' . $_GET['typeid'] . '
     ';
 $r = ExecuteRows($q);
 ?>
