@@ -36,6 +36,7 @@ $r = ExecuteRows($q);
         <!-- <div class="card-body"> -->
         <div class="card-body table-responsive p-0">
             <!-- <table class="table table-bordered table-sm"> -->
+            <?php foreach($r as $row) { ?>
             <table class="table table-hover text-nowrap">
                 <!--
                 <thead>
@@ -51,7 +52,7 @@ $r = ExecuteRows($q);
                 -->
                 <tbody>
 
-                    <?php foreach($r as $row) { ?>
+                    <?php // foreach($r as $row) { ?>
                     <tr>
                         <th>Tanggal</th><td><?= $row['Tanggal_Indo'] ?></td>
                     </tr>
@@ -70,13 +71,17 @@ $r = ExecuteRows($q);
                     <tr>
                         <th>Ongkos</th><td><a href="https://wa.me/6288996628963">CALL</a></td>
                     </tr>
+                    <!--
                     <tr>
                         <td>&nbsp;</td><td>&nbsp;</td>
                     </tr>
-                    <?php } ?>
+                    -->
+                    <?php // } ?>
 
                 </tbody>
             </table>
+            <br>
+            <?php } ?>
         </div>
         <!-- /.card-body -->
     </div>
