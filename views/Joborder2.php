@@ -81,6 +81,7 @@ $r = ExecuteRows($q);
                 </tbody>
             </table>
             <br>
+            <br>
             <?php } ?>
         </div>
         <!-- /.card-body -->
