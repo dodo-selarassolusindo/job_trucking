@@ -77,15 +77,23 @@ function Language_Load()
         . ' - '
         . $_GET['sizeukuran']
     );
+    // $this->setTablePhrase(
+    //     'joborder2', 
+    //     'TblCaption', 
+    //     'Job :: '
+    //     . $_GET['job2nama']
+    //     . ' - '
+    //     . $_GET['sizeukuran']
+    //     . ' - '
+    //     . $_GET['typenama']
+    // );
     $this->setTablePhrase(
         'joborder2', 
         'TblCaption', 
-        'Job :: '
-        . $_GET['job2nama']
-        . ' - '
-        . $_GET['sizeukuran']
-        . ' - '
-        . $_GET['typenama']
+        'Job ::<br>'
+        . $_GET['job2nama'] . '<br>'
+        . $_GET['sizeukuran'] . '<br>'
+        . $_GET['typenama'] . '<br>'
     );
 }
 
