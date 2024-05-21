@@ -34,9 +34,9 @@ $r = ExecuteRows($q);
 <div class="col-md-12">
     <div class="card">
         <!-- <div class="card-body"> -->
+        <?php foreach($r as $row) { ?>
         <div class="card-body table-responsive p-0">
             <!-- <table class="table table-bordered table-sm"> -->
-            <?php foreach($r as $row) { ?>
             <table class="table table-hover text-nowrap">
                 <!--
                 <thead>
@@ -80,10 +80,9 @@ $r = ExecuteRows($q);
 
                 </tbody>
             </table>
-            <br>
-            <br>
-            <?php } ?>
+            
         </div>
+        <?php } ?>
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
