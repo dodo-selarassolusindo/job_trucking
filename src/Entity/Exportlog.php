@@ -28,6 +28,17 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "exportlog")]
 class Exportlog extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'FileId' => 'fileId',
+        'DateTime' => 'dateTime',
+        'User' => 'user',
+        'ExportType' => 'exportType',
+        'Table' => 'table',
+        'KeyValue' => 'keyValue',
+        'Filename' => 'filename',
+        'Request' => 'request',
+    ];
+
     #[Id]
     #[Column(name: "FileId", type: "string", unique: true)]
     private string $fileId;
@@ -41,7 +52,7 @@ class Exportlog extends AbstractEntity
     #[Column(name: "ExportType", type: "string")]
     private string $exportType;
 
-    #[Column(name: "`Table`", options: ["name" => "Table"], type: "string")]
+    #[Column(name: "`Table`", type: "string")]
     private string $table;
 
     #[Column(name: "KeyValue", type: "string", nullable: true)]

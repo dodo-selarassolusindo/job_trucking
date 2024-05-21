@@ -329,17 +329,7 @@ class PersonalData
     {
         global $Language, $UserTable;
         $pwd = Post($this->Password->FieldVar, "");
-        $userName = CurrentUserName();
-        if ($UserTable->UpdateTable != $UserTable->TableName) { // Note: The username and password field name must be the same
-            $entityClass = GetEntityClass($UserTable->UpdateTable);
-            if ($entityClass) {
-                $user = GetUserEntityManager()->getRepository($entityClass)->findOneBy(["username" => $userName]);
-            } else {
-                throw new \Exception("Entity class for UpdateTable not found.");
-            }
-        } else {
-            $user = FindUserByUserName($userName);
-        }
+        $user = FindUserByUserName(CurrentUserName());
         if ($user) {
             if (ComparePassword($user->get(Config("LOGIN_PASSWORD_FIELD_NAME")), $pwd)) {
                 $row = $user->toArray();

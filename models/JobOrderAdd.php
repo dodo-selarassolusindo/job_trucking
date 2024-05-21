@@ -613,7 +613,7 @@ class JobOrderAdd extends JobOrder
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
-                    // Handle UseAjaxActions with return page
+                    // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
                         if (GetPageName($returnUrl) != "joborderlist") {

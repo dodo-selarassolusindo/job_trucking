@@ -28,6 +28,36 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "employees")]
 class Employee extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'EmployeeID' => 'employeeId',
+        'LastName' => 'lastName',
+        'FirstName' => 'firstName',
+        'Title' => 'title',
+        'TitleOfCourtesy' => 'titleOfCourtesy',
+        'BirthDate' => 'birthDate',
+        'HireDate' => 'hireDate',
+        'Address' => 'address',
+        'City' => 'city',
+        'Region' => 'region',
+        'PostalCode' => 'postalCode',
+        'Country' => 'country',
+        'HomePhone' => 'homePhone',
+        'Extension' => 'extension',
+        'Photo' => 'photo',
+        'Notes' => 'notes',
+        'ReportsTo' => 'reportsTo',
+        'Username' => 'username',
+        'Password' => 'password',
+        'Email' => 'email',
+        'Activated' => 'activated',
+        'Profile' => 'profile',
+        'UserLevel' => 'userLevel',
+        'Avatar' => 'avatar',
+        'ActiveStatus' => 'activeStatus',
+        'MessengerColor' => 'messengerColor',
+        'CreatedAt' => 'createdAt',
+    ];
+
     #[Id]
     #[Column(name: "EmployeeID", type: "integer", unique: true)]
     #[GeneratedValue]
@@ -97,7 +127,7 @@ class Employee extends AbstractEntity
     private ?string $profile;
 
     #[Column(name: "UserLevel", type: "integer", nullable: true)]
-    private ?int $userLevel;
+    private ?int $userLevel = 0;
 
     #[Column(name: "Avatar", type: "string", nullable: true)]
     private ?string $avatar;
@@ -110,11 +140,6 @@ class Employee extends AbstractEntity
 
     #[Column(name: "CreatedAt", type: "datetime", nullable: true)]
     private ?DateTime $createdAt;
-
-    public function __construct()
-    {
-        $this->userLevel = 0;
-    }
 
     public function getEmployeeId(): int
     {
@@ -426,5 +451,11 @@ class Employee extends AbstractEntity
             "userLevel" => $this->get('UserLevel') ?? AdvancedSecurity::ANONYMOUS_USER_LEVEL_ID,
             "userPrimaryKey" => $this->get('EmployeeID'),
         ];
+    }
+
+    // Flush
+    public function flush()
+    {
+        EntityManager("DB")->flush();
     }
 }

@@ -1009,9 +1009,7 @@ class JobOrderDelete extends JobOrder
         }
         if ($deleteRows) {
             if ($this->UseTransaction) { // Commit transaction
-                if ($conn->isTransactionActive()) {
-                    $conn->commit();
-                }
+                $conn->commit();
             }
 
             // Set warning message if delete some records failed
@@ -1023,9 +1021,7 @@ class JobOrderDelete extends JobOrder
             }
         } else {
             if ($this->UseTransaction) { // Rollback transaction
-                if ($conn->isTransactionActive()) {
-                    $conn->rollback();
-                }
+                $conn->rollback();
             }
             if ($this->AuditTrailOnDelete) {
                 $this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback

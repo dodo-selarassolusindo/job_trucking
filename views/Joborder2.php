@@ -36,6 +36,7 @@ $r = ExecuteRows($q);
         <div class="card-body table-responsive p-0">
             <!-- <table class="table table-bordered table-sm"> -->
             <table class="table table-hover text-nowrap">
+                <!--
                 <thead>
                 <tr>
                     <th>Tanggal</th>
@@ -46,16 +47,27 @@ $r = ExecuteRows($q);
                     <th>Ongkos</th>
                 </tr>
                 </thead>
+                -->
                 <tbody>
 
                     <?php foreach($r as $row) { ?>
                     <tr>
-                        <td><?= $row['Tanggal'] ?></td>
-                        <td><?= $row['LokasiNama'] ?></td>
-                        <td><?= $row['PelabuhanNama'] ?></td>
-                        <td><?= $row['BL_Extra'] ?></td>
-                        <td><?= $row['DepoNama'] ?></td>
-                        <td><a href="https://wa.me/6288996628963">CALL</a></td>
+                        <th>Tanggal</th><td><?= $row['Tanggal'] ?></td>
+                    </tr>
+                    <tr>
+                        <th>Lokasi</th><td><?= $row['LokasiNama'] ?></td>
+                    </tr>
+                    <tr>
+                        <th>Pelabuhan</th><td><?= $row['PelabuhanNama'] ?></td>
+                    </tr>
+                    <tr>
+                        <th>BL Extra</th><td><?= $row['BL_Extra'] ?></td>
+                    </tr>
+                    <tr>
+                        <th>Depo</th><td><?= $row['DepoNama'] ?></td>
+                    </tr>
+                    <tr>
+                        <th>Ongkos</th><td><a href="https://wa.me/6288996628963">CALL</a></td>
                     </tr>
                     <?php } ?>
 
