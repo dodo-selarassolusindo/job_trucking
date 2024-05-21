@@ -70,6 +70,9 @@ $r = ExecuteRows($q);
                     <tr>
                         <th>Ongkos</th><td><a href="https://wa.me/6288996628963">CALL</a></td>
                     </tr>
+                    <tr>
+                        <td>&nbsp;</td><td>&nbsp;</td>
+                    </tr>
                     <?php } ?>
 
                 </tbody>
