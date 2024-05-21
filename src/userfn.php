@@ -90,10 +90,9 @@ function Language_Load()
     $this->setTablePhrase(
         'joborder2', 
         'TblCaption', 
-        'Job ::<br>'
-        . $_GET['job2nama'] . '<br>'
-        . $_GET['sizeukuran'] . '<br>'
-        . $_GET['typenama'] . '<br>'
+        $_GET['job2nama'] . ' '
+        . $_GET['sizeukuran'] . ' '
+        . $_GET['typenama']
     );
 }
 
