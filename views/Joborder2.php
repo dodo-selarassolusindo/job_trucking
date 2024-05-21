@@ -12,6 +12,7 @@ $Page->showMessage();
 $q = '
     select
         jo.*
+        , date_format(jo.Tanggal, "%d-%m-%Y") as Tanggal_Indo
         , lok.Nama as LokasiNama
         , pel.Nama as PelabuhanNama
         , dep.Nama as DepoNama
@@ -52,7 +53,7 @@ $r = ExecuteRows($q);
 
                     <?php foreach($r as $row) { ?>
                     <tr>
-                        <th>Tanggal</th><td><?= $row['Tanggal'] ?></td>
+                        <th>Tanggal</th><td><?= $row['Tanggal_Indo'] ?></td>
                     </tr>
                     <tr>
                         <th>Lokasi</th><td><?= $row['LokasiNama'] ?></td>
