@@ -28,22 +28,6 @@ use function PHPMaker2024\prj_job_trucking\EncryptPassword;
 #[Table(name: "job_order")]
 class JobOrder extends AbstractEntity
 {
-    public static array $propertyNames = [
-        'JobOrderID' => 'jobOrderId',
-        'Job2ID' => 'job2Id',
-        'SizeID' => 'sizeId',
-        'TypeID' => 'typeId',
-        'Tanggal' => 'tanggal',
-        'LokasiID' => 'lokasiId',
-        'PelabuhanID' => 'pelabuhanId',
-        'BL_Extra' => 'blExtra',
-        'DepoID' => 'depoId',
-        'Ongkos' => 'ongkos',
-        'IsShow' => 'isShow',
-        'IsOpen' => 'isOpen',
-        'TakenByID' => 'takenById',
-    ];
-
     #[Id]
     #[Column(name: "JobOrderID", type: "integer", unique: true)]
     #[GeneratedValue]
@@ -76,11 +60,11 @@ class JobOrder extends AbstractEntity
     #[Column(name: "Ongkos", type: "float")]
     private float $ongkos;
 
-    #[Column(name: "IsShow", type: "boolean")]
-    private bool $isShow;
+    #[Column(name: "IsShow", type: "integer")]
+    private int $isShow;
 
-    #[Column(name: "IsOpen", type: "boolean")]
-    private bool $isOpen;
+    #[Column(name: "IsOpen", type: "integer")]
+    private int $isOpen;
 
     #[Column(name: "TakenByID", type: "integer")]
     private int $takenById;
@@ -195,23 +179,23 @@ class JobOrder extends AbstractEntity
         return $this;
     }
 
-    public function getIsShow(): bool
+    public function getIsShow(): int
     {
         return $this->isShow;
     }
 
-    public function setIsShow(bool $value): static
+    public function setIsShow(int $value): static
     {
         $this->isShow = $value;
         return $this;
     }
 
-    public function getIsOpen(): bool
+    public function getIsOpen(): int
     {
         return $this->isOpen;
     }
 
-    public function setIsOpen(bool $value): static
+    public function setIsOpen(int $value): static
     {
         $this->isOpen = $value;
         return $this;
