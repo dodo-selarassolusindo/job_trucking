@@ -52,7 +52,7 @@ $r = ExecuteRows($q);
 
                     <?php // foreach($r as $row) { ?>
                     <tr>
-                        <th>Tanggal</th><td><?= $row['Tanggal_Indo'] ?></td>
+                        <th style="width: 50%">Tanggal</th><td><?= $row['Tanggal_Indo'] ?></td>
                     </tr>
                     <tr>
                         <th>Lokasi</th><td><?= $row['LokasiNama'] ?></td>
