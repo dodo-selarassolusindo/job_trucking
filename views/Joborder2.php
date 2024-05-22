@@ -14,8 +14,8 @@ $q = '
         jo.*
         , date_format(jo.Tanggal, "%d-%m-%Y") as Tanggal_Indo
         , lok.Nama as LokasiNama
-        , pel.Nama as PelabuhanNama
-        , dep.Nama as DepoNama
+        , concat(pel.Kode, " - ", pel.Nama) as PelabuhanNama
+        , concat(dep.Kode, " - ", dep.Nama) as DepoNama
     from
         job_order jo
         left join lokasi lok on jo.LokasiID = lok.LokasiID
